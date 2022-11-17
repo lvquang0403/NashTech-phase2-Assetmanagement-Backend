@@ -33,7 +33,7 @@ public class AssetResponseDto {
     @Data
     static class LocationDto {
         private Integer id;
-        private Integer cityName;
+        private String cityName;
     }
 
 }
