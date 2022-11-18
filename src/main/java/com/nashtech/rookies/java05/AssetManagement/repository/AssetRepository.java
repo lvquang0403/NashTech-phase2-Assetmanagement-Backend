@@ -14,8 +14,6 @@ import java.util.List;
 
 @Repository
 public interface AssetRepository extends JpaRepository<Asset, String> {
-//    Page<Asset> findByCategoryIsInAndStateIsInAndNameContainingIgnoreCase
-//            (List<Category> categories, List<AssetState> states, String name, Pageable pageable);
 
     @Query(value = "SELECT a FROM Asset a join a.category" +
             " WHERE a.category IN :categories" +
@@ -29,6 +27,5 @@ public interface AssetRepository extends JpaRepository<Asset, String> {
             @Param("id") String id,
             @Param("locationId") int locationId,
             Pageable pageable
-
     );
 }

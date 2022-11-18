@@ -1,17 +1,27 @@
 package com.nashtech.rookies.java05.AssetManagement.controler;
 
 
+import com.nashtech.rookies.java05.AssetManagement.dtos.response.APIResponse;
+import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssetViewResponseDto;
+import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssetState;
 import com.nashtech.rookies.java05.AssetManagement.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+@CrossOrigin(origins = "*")
 @RestController
-@RequestMapping(path = "/categories")
+@RequestMapping(path = "/api/categories")
 public class CategoryController {
     @Autowired
     CategoryService categoryService;
+
+    @GetMapping("")
+    public List<String> getAllCategoriesName(){
+        List<String> result = categoryService.getAllCategoriesName();
+        return result;
+    }
 
 
 }
