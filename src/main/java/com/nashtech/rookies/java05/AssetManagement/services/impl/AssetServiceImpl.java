@@ -1,7 +1,6 @@
 package com.nashtech.rookies.java05.AssetManagement.services.impl;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.APIResponse;
-import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssetResponseDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssetViewResponseDto;
 import com.nashtech.rookies.java05.AssetManagement.entities.Asset;
 import com.nashtech.rookies.java05.AssetManagement.entities.Category;
@@ -69,5 +68,16 @@ public class AssetServiceImpl implements AssetService {
                 .collect(Collectors.toList());
         return result;
     }
+
+//    public Asset getAssetById(String id){
+//        Optional<Asset> assetFound = assetRepository.findById(id);
+//        if(assetFound.isEmpty()){
+//            //return null dto response
+//        }
+//
+//
+//
+//    }
+
 
 }

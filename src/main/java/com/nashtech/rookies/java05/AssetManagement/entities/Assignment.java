@@ -6,7 +6,6 @@ import lombok.*;
 
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.sql.Timestamp;
 
 @Getter
@@ -45,4 +44,7 @@ public class Assignment {
     @ManyToOne
     @JoinColumn(name = "asset_id",referencedColumnName = "id")
     private Asset asset;
+
+    @OneToOne(mappedBy = "assignment")
+    private Returning returning;
 }

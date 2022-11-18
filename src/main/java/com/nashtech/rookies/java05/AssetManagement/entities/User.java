@@ -9,7 +9,6 @@ import lombok.Setter;
 
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -57,6 +56,12 @@ public class User {
 
     @OneToMany(mappedBy = "assignedBy")
     private List<Assignment> listAssignmentsBy;
+
+    @OneToMany(mappedBy = "requestBy")
+    private List<Returning> listReturningRequestedBy;
+
+    @OneToMany(mappedBy = "acceptBy")
+    private List<Returning> listReturningAcceptedBy;
 
     @ManyToOne
     @JoinColumn(name = "location_id",referencedColumnName = "id")

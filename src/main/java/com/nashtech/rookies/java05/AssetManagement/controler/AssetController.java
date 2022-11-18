@@ -29,5 +29,7 @@ public class AssetController {
         return assetService.getAllAssetStates();
     }
 
+//    @GetMapping("/{id}")
+//    public
 
 }

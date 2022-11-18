@@ -30,4 +30,5 @@ public class AssetResponseDto {
         private Integer cityName;
     }
 
+
 }
