@@ -15,7 +15,7 @@ public class UserUtils {
     UserRepository userRepository;
 
     static List<User> listUser=null;
-    static Integer maxCode=1;
+    static Integer maxCode=0;
     HashMap<String,Integer> userMap=new HashMap<String,Integer>();
     void init(){
         listUser=userRepository.findAll();

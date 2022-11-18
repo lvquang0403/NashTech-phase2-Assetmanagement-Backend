@@ -19,7 +19,9 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -37,6 +39,18 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     UserUtils userUtils;
+
+    @Override
+    public List<UserResponseDto> getAllUsers() {
+        return userRepository.findAll().stream().map((user -> UserMapper.mapFromEntityToUserResponseDto(user))).collect(Collectors.toList());
+    }
+
+    @Override
+    public UserResponseDto getUserById(String id) {
+        Optional<User> option=userRepository.findById(id);
+        if (option.isEmpty())   return null;
+        return UserMapper.mapFromEntityToUserResponseDto(option.get());
+    }
 
     @Override
     public UserResponseDto createUser(UserRequestDto userRequestDto) throws ParseException {
@@ -75,13 +89,12 @@ public class UserServiceImpl implements UserService {
         Date joinedDate=format.parse(userRequestDto.getJoinedDate());
 
         Role role = roleRepository.findById(userRequestDto.getRoleId()).get();
-        Location location=locationRepository.findById(userRequestDto.getLocationId()).get();
+//        Location location=locationRepository.findById(userRequestDto.getLocationId()).get();
 
         user.setGender(userRequestDto.getGender());
         user.setBirth(birth);
         user.setJoinedDate(joinedDate);
         user.setRole(role);
-        user.setLocation(location);
         userRepository.save(user);
 
         return UserMapper.mapFromEntityToUserResponseDto(user);
