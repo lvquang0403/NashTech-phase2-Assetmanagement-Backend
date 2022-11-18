@@ -13,6 +13,7 @@ import com.nashtech.rookies.java05.AssetManagement.repository.AssetRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.CategoryRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.ReturningRepository;
 import com.nashtech.rookies.java05.AssetManagement.services.AssetService;
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
+@Builder
 @Service
 public class AssetServiceImpl implements AssetService {
     private static final int pageSize = 15;
@@ -37,18 +39,8 @@ public class AssetServiceImpl implements AssetService {
     private AssetRepository assetRepository;
     @Autowired
     private AssetMapper assetMapper;
-
     @Autowired
     private ReturningRepository returningRepository;
-
-//    @Override
-//    public List<AssetViewResponseDto> getListAssets() {
-//        Optional<List<Asset>> resultList = Optional.of(assetRepository.findAll(Sort.by(Sort.Direction.DESC, "updatedWhen")));
-//        if (resultList.isEmpty()) {
-//            return new ArrayList<>();
-//        }
-//        return assetMapper.mapAssetListToAssetViewResponseDto(resultList.get());
-//    }
 
     @Override
     public APIResponse<List<AssetViewResponseDto>> getAssetsByPredicates
