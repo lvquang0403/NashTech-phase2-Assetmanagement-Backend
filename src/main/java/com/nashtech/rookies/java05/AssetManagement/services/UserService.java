@@ -11,4 +11,6 @@ import java.util.List;
 public interface UserService {
 
     APIResponse<List<UserViewResponseDto>> getUsersByPredicates(List<String> types, String keyword, int locationId, int page);
+
+    UserResponseDto getUserById(String id);
 }

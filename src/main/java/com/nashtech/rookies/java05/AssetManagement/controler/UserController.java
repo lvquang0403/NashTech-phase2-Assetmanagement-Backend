@@ -1,6 +1,7 @@
 package com.nashtech.rookies.java05.AssetManagement.controler;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.APIResponse;
+import com.nashtech.rookies.java05.AssetManagement.dtos.response.UserResponseDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.UserViewResponseDto;
 import com.nashtech.rookies.java05.AssetManagement.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,5 +24,10 @@ public class UserController {
         return userService.getUsersByPredicates(types, keyword, locationId, page);
     }
 
+    @GetMapping("/{id}")
+    public UserResponseDto getUserById(@PathVariable String id){
+
+        return userService.getUserById(id);
+    }
 
 }

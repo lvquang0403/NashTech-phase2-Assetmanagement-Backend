@@ -20,6 +20,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Builder
 @Slf4j
@@ -46,5 +47,14 @@ public class UserServiceImpl implements UserService {
 
         result = userRepository.findUsersWithFilter(roleList, keyword.toLowerCase(), locationId, pageable);
         return new APIResponse<>(result.getTotalPages(), userMapper.mapUserEntityListToUserViewResponseDtoList(result.toList()));
+    }
+
+    @Override
+    public UserResponseDto getUserById(String id) {
+        Optional<User> userFound = userRepository.findById(id);
+        if(userFound.isEmpty()){
+            return UserResponseDto.builder().build();
+        }
+        return userMapper.mapUserEntityToUserResponseDto(userFound.get());
     }
 }

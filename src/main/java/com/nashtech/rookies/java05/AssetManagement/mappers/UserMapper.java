@@ -1,5 +1,6 @@
 package com.nashtech.rookies.java05.AssetManagement.mappers;
 
+import com.nashtech.rookies.java05.AssetManagement.dtos.response.UserResponseDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.UserViewResponseDto;
 import com.nashtech.rookies.java05.AssetManagement.entities.User;
 import org.springframework.stereotype.Component;
@@ -25,5 +26,18 @@ public class UserMapper {
         return userViewResponseDtoList;
     }
 
+    public UserResponseDto mapUserEntityToUserResponseDto(User user){
+        UserResponseDto result = UserResponseDto.builder()
+                .gender(user.getGender())
+                .id(user.getId())
+                .role(user.getRole().getName())
+                .location(user.getLocation().getCityName())
+                .username(user.getUsername())
+                .birth(user.getBirth())
+                .createdWhen(user.getCreatedWhen())
+                .fullName(user.getFirstName() + " " + user.getLastName())
+                .build();
+        return  result;
+    }
 
 }
