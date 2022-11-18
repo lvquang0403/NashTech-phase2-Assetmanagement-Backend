@@ -1,6 +1,5 @@
 package com.nashtech.rookies.java05.AssetManagement.controler;
 
-import com.nashtech.rookies.java05.AssetManagement.entities.Role;
 import com.nashtech.rookies.java05.AssetManagement.services.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
