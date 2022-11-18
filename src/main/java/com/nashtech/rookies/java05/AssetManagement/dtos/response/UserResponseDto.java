@@ -1,15 +1,11 @@
 package com.nashtech.rookies.java05.AssetManagement.dtos.response;
 
-import com.nashtech.rookies.java05.AssetManagement.entities.Assignment;
-import com.nashtech.rookies.java05.AssetManagement.entities.Location;
-import com.nashtech.rookies.java05.AssetManagement.entities.Role;
+
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.Gender;
 import lombok.Builder;
 import lombok.Data;
 
-import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.List;
 
 @Data
 @Builder
