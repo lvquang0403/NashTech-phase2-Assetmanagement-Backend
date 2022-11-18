@@ -5,7 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.util.List;
 
+@Builder
 @Data
 public class AssetResponseDto {
 
@@ -15,20 +17,7 @@ public class AssetResponseDto {
     private AssetState state;
     private Timestamp createdWhen;
     private Timestamp updatedWhen;
-    private CategoryDto category;
-    private LocationDto location;
-
-    @Data
-    static class CategoryDto {
-        private Integer id;
-        private Integer name;
-    }
-
-    @Data
-    static class LocationDto {
-        private Integer id;
-        private Integer cityName;
-    }
-
-
+    private String categoryName;
+    private String location;
+    private List<ReturningDto> returningDtoList;
 }

@@ -29,7 +29,9 @@ public class AssetController {
         return assetService.getAllAssetStates();
     }
 
-//    @GetMapping("/{id}")
-//    public
+    @GetMapping("/{id}")
+    public AssetResponseDto getAssetById(@PathVariable String id){
+        return assetService.getAssetById(id);
+    }
 
 }

@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class AssetMapper {
@@ -18,6 +17,22 @@ public class AssetMapper {
     private ModelMapper modelMapper;
     @Autowired
     private AssetRepository assetRepository;
+    @Autowired
+    private ReturningMapper returningMapper;
+    public AssetResponseDto mapAssetEntityToAssetResponseDto(Asset asset){
+        AssetResponseDto assetResponseDto = AssetResponseDto.builder()
+                .id(asset.getId())
+                .name(asset.getName())
+                .categoryName(asset.getCategory().getName())
+                .location(asset.getLocation().getCityName())
+                .specification(asset.getSpecification())
+                .createdWhen(asset.getCreatedWhen())
+                .updatedWhen(asset.getUpdatedWhen())
+                .state(asset.getState())
+                .returningDtoList(returningMapper.mapReturningEntityToReturningDto(asset.getReturningList()))
+                .build();
+        return assetResponseDto;
+    }
 
     public List<AssetViewResponseDto> mapAssetListToAssetViewResponseDto(List<Asset> assetList) {
         List<AssetViewResponseDto> result = new ArrayList<>();

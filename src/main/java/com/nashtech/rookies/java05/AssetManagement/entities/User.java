@@ -57,11 +57,11 @@ public class User {
     @OneToMany(mappedBy = "assignedBy")
     private List<Assignment> listAssignmentsBy;
 
-    @OneToMany(mappedBy = "requestBy")
-    private List<Returning> listReturningRequestedBy;
+    @OneToMany(mappedBy = "assignedTo")
+    private List<Returning> listReturningAssignTo;
 
-    @OneToMany(mappedBy = "acceptBy")
-    private List<Returning> listReturningAcceptedBy;
+    @OneToMany(mappedBy = "assignedBy")
+    private List<Returning> listReturningAssignBy;
 
     @ManyToOne
     @JoinColumn(name = "location_id",referencedColumnName = "id")

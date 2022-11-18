@@ -27,14 +27,20 @@ public class Returning {
     private AssignmentReturnState state;
 
     @ManyToOne
-    @JoinColumn(name = "requestedBy_id",referencedColumnName = "id")
-    private User requestBy;
+    @JoinColumn(name = "assignedTo_id",referencedColumnName = "id")
+    private User assignedTo;
 
     @ManyToOne
-    @JoinColumn(name = "acceptedBy_id",referencedColumnName = "id")
-    private User acceptBy;
+    @JoinColumn(name = "assignedBy_id",referencedColumnName = "id")
+    private User assignedBy;
 
     @OneToOne
     @JoinColumn(name = "assignment_id", referencedColumnName = "id")
     private Assignment assignment;
+
+    @ManyToOne
+    @JoinColumn(name = "asset_id", referencedColumnName = "id")
+    private Asset asset;
+
+
 }

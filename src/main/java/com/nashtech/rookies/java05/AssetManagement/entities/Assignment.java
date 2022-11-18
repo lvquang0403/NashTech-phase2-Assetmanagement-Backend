@@ -31,6 +31,7 @@ public class Assignment {
     private String note;
 
     @Column(name = "state")
+    @Enumerated(EnumType.STRING)
     private AssignmentState state;
 
     @ManyToOne

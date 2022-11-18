@@ -1,15 +1,20 @@
 package com.nashtech.rookies.java05.AssetManagement.services.impl;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.APIResponse;
+import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssetResponseDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssetViewResponseDto;
 import com.nashtech.rookies.java05.AssetManagement.entities.Asset;
 import com.nashtech.rookies.java05.AssetManagement.entities.Category;
+import com.nashtech.rookies.java05.AssetManagement.entities.Returning;
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssetState;
+import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssignmentReturnState;
 import com.nashtech.rookies.java05.AssetManagement.mappers.AssetMapper;
 import com.nashtech.rookies.java05.AssetManagement.repository.AssetRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.CategoryRepository;
+import com.nashtech.rookies.java05.AssetManagement.repository.ReturningRepository;
 import com.nashtech.rookies.java05.AssetManagement.services.AssetService;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,13 +29,17 @@ import java.util.stream.Collectors;
 @Service
 public class AssetServiceImpl implements AssetService {
     private static final int pageSize = 15;
-
+    @Autowired
+    ModelMapper modelMapper;
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
     private AssetRepository assetRepository;
     @Autowired
     private AssetMapper assetMapper;
+
+    @Autowired
+    private ReturningRepository returningRepository;
 
 //    @Override
 //    public List<AssetViewResponseDto> getListAssets() {
@@ -69,15 +78,17 @@ public class AssetServiceImpl implements AssetService {
         return result;
     }
 
-//    public Asset getAssetById(String id){
-//        Optional<Asset> assetFound = assetRepository.findById(id);
-//        if(assetFound.isEmpty()){
-//            //return null dto response
-//        }
-//
-//
-//
-//    }
+    @Override
+    public AssetResponseDto getAssetById(String id) {
+        Optional<Asset> assetFound = assetRepository.findById(id);
+        if(assetFound.isEmpty()){
+            return AssetResponseDto.builder().build();
+        }
+
+        List<Returning> returningHistoryList = returningRepository.findByAssetIdAndState(id, AssignmentReturnState.WAITING_FOR_RETURNING);
+        assetFound.get().setReturningList(returningHistoryList);
+        return assetMapper.mapAssetEntityToAssetResponseDto(assetFound.get());
+    }
 
 
 }
