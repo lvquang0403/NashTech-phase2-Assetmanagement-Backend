@@ -1,10 +1,7 @@
 package com.nashtech.rookies.java05.AssetManagement.controler;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.APIResponse;
-import com.nashtech.rookies.java05.AssetManagement.dtos.response.UserResponseDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.UserViewResponseDto;
-import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssetState;
-import com.nashtech.rookies.java05.AssetManagement.repository.UserRepository;
 import com.nashtech.rookies.java05.AssetManagement.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

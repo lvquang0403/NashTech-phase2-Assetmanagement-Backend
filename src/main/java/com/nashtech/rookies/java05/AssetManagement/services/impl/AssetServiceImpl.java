@@ -77,7 +77,7 @@ public class AssetServiceImpl implements AssetService {
             return AssetResponseDto.builder().build();
         }
 
-        List<Returning> returningHistoryList = returningRepository.findByAssetIdAndState(id, AssignmentReturnState.WAITING_FOR_RETURNING);
+        List<Returning> returningHistoryList = returningRepository.findByAssetIdAndState(id, AssignmentReturnState.COMPLETED);
         assetFound.get().setReturningList(returningHistoryList);
         return assetMapper.mapAssetEntityToAssetResponseDto(assetFound.get());
     }
