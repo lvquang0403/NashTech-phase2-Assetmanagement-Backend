@@ -12,9 +12,10 @@ import java.util.Map;
 @Component
 public interface AssetService {
 
-    List<AssetViewResponseDto> getListAssets();
-
+//    List<AssetViewResponseDto> getListAssets();
 
     APIResponse<List<AssetViewResponseDto>> getAssetsByPredicates
             (List<AssetState> states, List<String> categoryNames, String keyword, int locationId, int page);
+
+    List<String> getAllAssetStates();
 }

@@ -24,6 +24,10 @@ public class AssetController {
         return assetService.getAssetsByPredicates(states, categories, keyword, locationId, page);
     }
 
+    @GetMapping("/states")
+    public List<String> getAllAssetStates(){
+        return assetService.getAllAssetStates();
+    }
 
 
 }

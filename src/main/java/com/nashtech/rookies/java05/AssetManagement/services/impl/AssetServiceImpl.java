@@ -18,10 +18,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -35,14 +33,14 @@ public class AssetServiceImpl implements AssetService {
     @Autowired
     private AssetMapper assetMapper;
 
-    @Override
-    public List<AssetViewResponseDto> getListAssets() {
-        Optional<List<Asset>> resultList = Optional.of(assetRepository.findAll(Sort.by(Sort.Direction.DESC, "updatedWhen")));
-        if (resultList.isEmpty()) {
-            return new ArrayList<>();
-        }
-        return assetMapper.mapAssetListToAssetViewResponseDto(resultList.get());
-    }
+//    @Override
+//    public List<AssetViewResponseDto> getListAssets() {
+//        Optional<List<Asset>> resultList = Optional.of(assetRepository.findAll(Sort.by(Sort.Direction.DESC, "updatedWhen")));
+//        if (resultList.isEmpty()) {
+//            return new ArrayList<>();
+//        }
+//        return assetMapper.mapAssetListToAssetViewResponseDto(resultList.get());
+//    }
 
     @Override
     public APIResponse<List<AssetViewResponseDto>> getAssetsByPredicates
@@ -61,6 +59,15 @@ public class AssetServiceImpl implements AssetService {
                 (categories, states, keyword.toLowerCase(), keyword.toLowerCase(), locationId, pageable);
 
         return new APIResponse<>(result.getTotalPages(), assetMapper.mapAssetListToAssetViewResponseDto(result.toList()));
+    }
+
+    @Override
+    public List<String> getAllAssetStates() {
+        List<String> result = EnumSet.allOf(AssetState.class)
+                .stream()
+                .map(assetState -> assetState.name())
+                .collect(Collectors.toList());
+        return result;
     }
 
 }
