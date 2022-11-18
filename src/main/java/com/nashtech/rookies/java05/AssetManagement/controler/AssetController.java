@@ -21,9 +21,9 @@ public class AssetController {
 
     @GetMapping("")
     public APIResponse<List<AssetViewResponseDto>> getAllAssets
-            (@RequestParam (required = false) List<AssetState> states, @RequestParam (required = false) List<String> categoryNames
+            (@RequestParam (required = false) List<AssetState> states, @RequestParam (required = false) List<String> categories
                     , @RequestParam(required = false, defaultValue = "") String keyword, @RequestParam int locationId, @RequestParam (value = "page", required = false, defaultValue = "0") int page) {
-        return assetService.getAssetsByPredicates(states, categoryNames, keyword, locationId, page);
+        return assetService.getAssetsByPredicates(states, categories, keyword, locationId, page);
     }
 
 
