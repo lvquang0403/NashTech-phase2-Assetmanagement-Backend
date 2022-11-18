@@ -19,13 +19,16 @@ public interface AssetRepository extends JpaRepository<Asset, String> {
 
     @Query(value = "SELECT a FROM Asset a join a.category" +
             " WHERE a.category IN :categories" +
-            " AND a.state IN :states" +
-            " AND (LOWER(a.name) LIKE %:name% OR LOWER(a.id) LIKE %:id%)")
+            " AND (a.state IN :states OR :states is null)" +
+            " AND (LOWER(a.name) LIKE %:name% OR LOWER(a.id) LIKE %:id%)" +
+            " AND a.location.id = :locationId")
     Page<Asset> findByKeywordWithFilter(
             @Param("categories") List<Category> categories,
             @Param("states") List<AssetState> states,
             @Param("name") String name,
             @Param("id") String id,
+            @Param("locationId") int locationId,
             Pageable pageable
+
     );
 }

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping(path = "/api/assets")
@@ -22,9 +21,9 @@ public class AssetController {
 
     @GetMapping("")
     public APIResponse<List<AssetViewResponseDto>> getAllAssets
-            (@RequestParam List<AssetState> states, @RequestParam (required = false) List<String> categoryNames
-                    , @RequestParam(required = false, defaultValue = "") String keyword, @RequestParam (value = "page", required = false, defaultValue = "0") int page) {
-        return assetService.getAssetsByPredicates(states, categoryNames, keyword, page);
+            (@RequestParam (required = false) List<AssetState> states, @RequestParam (required = false) List<String> categoryNames
+                    , @RequestParam(required = false, defaultValue = "") String keyword, @RequestParam int locationId, @RequestParam (value = "page", required = false, defaultValue = "0") int page) {
+        return assetService.getAssetsByPredicates(states, categoryNames, keyword, locationId, page);
     }
 
 

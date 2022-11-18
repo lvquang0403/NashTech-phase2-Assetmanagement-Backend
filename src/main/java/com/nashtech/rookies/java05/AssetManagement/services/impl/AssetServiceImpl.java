@@ -46,7 +46,7 @@ public class AssetServiceImpl implements AssetService {
 
     @Override
     public APIResponse<List<AssetViewResponseDto>> getAssetsByPredicates
-            (List<AssetState> states, List<String> categoryNames, String keyword, int page) {
+            (List<AssetState> states, List<String> categoryNames, String keyword, int locationId, int page) {
         Pageable pageable = PageRequest.of(page, pageSize, Sort.Direction.DESC, "updatedWhen");
 
         //By default, filter by all categories, else filter by categories that user choose.
@@ -56,10 +56,9 @@ public class AssetServiceImpl implements AssetService {
         } else {
             categories = categoryRepository.findCategoriesByNameIsIn(categoryNames);
         }
-
         Page<Asset> result;
         result = assetRepository.findByKeywordWithFilter
-                (categories, states, keyword.toLowerCase(), keyword.toLowerCase(), pageable);
+                (categories, states, keyword.toLowerCase(), keyword.toLowerCase(), locationId, pageable);
 
         return new APIResponse<>(result.getTotalPages(), assetMapper.mapAssetListToAssetViewResponseDto(result.toList()));
     }
