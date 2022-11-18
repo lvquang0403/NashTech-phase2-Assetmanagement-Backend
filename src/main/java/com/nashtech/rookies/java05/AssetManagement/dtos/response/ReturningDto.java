@@ -18,4 +18,5 @@ public class ReturningDto {
     private AssignmentReturnState state;
     private String AssignTo;
     private String AssignBy;
+    private AssignmentResponseDto assignmentResponseDto;
 }
