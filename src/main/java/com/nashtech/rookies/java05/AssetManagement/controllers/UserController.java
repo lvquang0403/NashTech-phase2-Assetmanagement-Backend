@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
