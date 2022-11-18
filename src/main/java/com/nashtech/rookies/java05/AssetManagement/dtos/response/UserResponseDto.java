@@ -18,9 +18,9 @@ public class UserResponseDto {
     private String firstName;
     private String lastName;
     private String username;
-    private Date birth;
+    private String birth;
     private Gender gender;
-    private Date joinedDate;
+    private String joinedDate;
     private Timestamp createdWhen;
     private Timestamp updatedWhen;
     private RoleDto role;

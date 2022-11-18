@@ -37,14 +37,15 @@ public class UserMapper {
 
     public static UserResponseDto mapFromEntityToUserResponseDto(User user){
         UserResponseDto userResponseDto=new UserResponseDto();
+        SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd");
 
         userResponseDto.setFirstName(user.getFirstName());
         userResponseDto.setLastName(user.getLastName());
         userResponseDto.setGender(user.getGender());
-        userResponseDto.setBirth(user.getBirth());
+        userResponseDto.setBirth(format.format(user.getBirth()));
         userResponseDto.setCreatedWhen(user.getCreatedWhen());
         userResponseDto.setUpdatedWhen(user.getUpdatedWhen());
-        userResponseDto.setJoinedDate(user.getJoinedDate());
+        userResponseDto.setJoinedDate(format.format(user.getJoinedDate()));
         userResponseDto.setUsername(user.getUsername());
         userResponseDto.setId(user.getId());
         userResponseDto.setRole(user.getRole());
