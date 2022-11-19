@@ -51,4 +51,7 @@ public class Asset {
     @ManyToOne
     @JoinColumn(name = "location_id",referencedColumnName = "id")
     private Location location;
+
+    @OneToMany(mappedBy = "asset")
+    private List<Returning> returningList;
 }

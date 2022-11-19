@@ -1,12 +1,11 @@
 package com.nashtech.rookies.java05.AssetManagement.entities;
 
-
-import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssignmentState;
+import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssignmentReturnState;
 import lombok.*;
-
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+
 
 @Getter
 @Setter
@@ -14,25 +13,18 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name="assignment")
-public class Assignment {
-
+@Table(name = "returnings")
+public class Returning {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "created_when")
-    private Timestamp createdWhen;
-
-    @Column(name = "updated_when")
-    private Timestamp updatedWhen;
-
-    @Column(name = "note")
-    private String note;
+    @Column(name = "returned_date")
+    private Timestamp returnedDate;
 
     @Column(name = "state")
     @Enumerated(EnumType.STRING)
-    private AssignmentState state;
+    private AssignmentReturnState state;
 
     @ManyToOne
     @JoinColumn(name = "assignedTo_id",referencedColumnName = "id")
@@ -42,10 +34,13 @@ public class Assignment {
     @JoinColumn(name = "assignedBy_id",referencedColumnName = "id")
     private User assignedBy;
 
+    @OneToOne
+    @JoinColumn(name = "assignment_id", referencedColumnName = "id")
+    private Assignment assignment;
+
     @ManyToOne
-    @JoinColumn(name = "asset_id",referencedColumnName = "id")
+    @JoinColumn(name = "asset_id", referencedColumnName = "id")
     private Asset asset;
 
-    @OneToOne(mappedBy = "assignment")
-    private Returning returning;
+
 }

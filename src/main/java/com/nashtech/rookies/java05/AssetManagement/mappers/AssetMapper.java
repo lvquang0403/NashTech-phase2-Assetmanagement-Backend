@@ -1,12 +1,15 @@
 package com.nashtech.rookies.java05.AssetManagement.mappers;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssetRequestDto;
+import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssetResponseDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssetResponseInsertDto;
+import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssetViewResponseDto;
 import com.nashtech.rookies.java05.AssetManagement.entities.Asset;
 import com.nashtech.rookies.java05.AssetManagement.entities.Category;
 import com.nashtech.rookies.java05.AssetManagement.entities.Location;
 import com.nashtech.rookies.java05.AssetManagement.entities.PresentId;
 import com.nashtech.rookies.java05.AssetManagement.exceptions.ResourceNotFoundException;
+import com.nashtech.rookies.java05.AssetManagement.repository.AssetRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.CategoryRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.LocationRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.PresentIdRepository;
@@ -14,7 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -25,7 +30,10 @@ public class AssetMapper {
     private LocationRepository locationRepository;
     @Autowired
     private PresentIdRepository presentIdRepository;
-
+    @Autowired
+    private ReturningMapper returningMapper;
+    @Autowired
+    private AssetRepository assetRepository;
 
 
     public Asset mapAssetRequestDtoToEntityInsert(AssetRequestDto dto) {
@@ -93,7 +101,36 @@ public class AssetMapper {
                 .build();
         result.setCategoryDto(asset.getCategory());
         result.setLocationDto(asset.getLocation());
+        return result;
+    }
+    public AssetResponseDto mapAssetEntityToAssetResponseDto(Asset asset){
+        AssetResponseDto assetResponseDto = AssetResponseDto.builder()
+                .id(asset.getId())
+                .name(asset.getName())
+                .categoryName(asset.getCategory().getName())
+                .location(asset.getLocation().getCityName())
+                .specification(asset.getSpecification())
+                .createdWhen(asset.getCreatedWhen())
+                .updatedWhen(asset.getUpdatedWhen())
+                .state(asset.getState())
+                .returningDtoList(returningMapper.mapReturningEntityToReturningDto(asset.getReturningList()))
+                .build();
+        return assetResponseDto;
+    }
 
+    public List<AssetViewResponseDto> mapAssetListToAssetViewResponseDto(List<Asset> assetList) {
+        List<AssetViewResponseDto> result = new ArrayList<>();
+        assetList.forEach(asset -> {
+
+            AssetViewResponseDto assetViewResponseDto = AssetViewResponseDto.builder()
+                    .id(asset.getId())
+                    .name(asset.getName())
+                    .state(asset.getState())
+                    .category(asset.getCategory().getName())
+                    .build();
+
+            result.add(assetViewResponseDto);
+        } );
         return result;
     }
 

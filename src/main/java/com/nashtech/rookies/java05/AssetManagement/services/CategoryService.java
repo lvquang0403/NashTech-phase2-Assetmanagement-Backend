@@ -10,4 +10,5 @@ import java.util.List;
 public interface CategoryService {
     public CategoryResponseInsertDto insert(CategoryRequestDto dto);
     public List<CategoryResponseInsertDto> getToInsert();
+    List<String> getAllCategoriesName();
 }

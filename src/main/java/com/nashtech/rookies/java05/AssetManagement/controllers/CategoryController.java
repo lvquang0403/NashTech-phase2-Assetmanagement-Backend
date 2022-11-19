@@ -1,4 +1,4 @@
-package com.nashtech.rookies.java05.AssetManagement.controler;
+package com.nashtech.rookies.java05.AssetManagement.controllers;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.CategoryRequestDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.CategoryResponseInsertDto;
@@ -6,26 +6,31 @@ import com.nashtech.rookies.java05.AssetManagement.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @CrossOrigin
-@RequestMapping(value = "categories")
+@RequestMapping(value = "api/categories")
 public class CategoryController {
 
     @Autowired
-    private CategoryService service;
+    private CategoryService categoryService;
 
     @PostMapping(value = "")
     @ResponseBody
     public CategoryResponseInsertDto insert(@RequestBody CategoryRequestDto dto){
-        return service.insert(dto);
+        return categoryService.insert(dto);
     }
 
     @GetMapping(value = "/to-insert")
     @ResponseBody
     public List<CategoryResponseInsertDto> getToInsert(){
-        return service.getToInsert();
+        return categoryService.getToInsert();
+    }
+
+    @GetMapping("")
+    public List<String> getAllCategoriesName(){
+        List<String> result = categoryService.getAllCategoriesName();
+        return result;
     }
 }
