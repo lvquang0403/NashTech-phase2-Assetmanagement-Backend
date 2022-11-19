@@ -2,11 +2,9 @@ package com.nashtech.rookies.java05.AssetManagement.entities;
 
 
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssetState;
-import com.nashtech.rookies.java05.AssetManagement.entities.enums.Recycle;
 import lombok.*;
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -37,10 +35,6 @@ public class Asset {
 
     @Column(name = "updated_when")
     private Timestamp updatedWhen;
-
-    @Column(name = "recycling")
-    @Enumerated(EnumType.STRING)
-    private Recycle recycle;
 
     @ManyToOne
     @JoinColumn(name = "category_id",referencedColumnName = "id")
