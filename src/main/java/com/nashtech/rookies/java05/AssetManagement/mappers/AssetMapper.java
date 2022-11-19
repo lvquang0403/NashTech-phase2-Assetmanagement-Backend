@@ -1,34 +1,101 @@
 package com.nashtech.rookies.java05.AssetManagement.mappers;
 
-import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssetResponseDto;
-import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssetViewResponseDto;
+import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssetRequestDto;
+import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssetResponseInsertDto;
 import com.nashtech.rookies.java05.AssetManagement.entities.Asset;
-import org.modelmapper.ModelMapper;
+import com.nashtech.rookies.java05.AssetManagement.entities.Category;
+import com.nashtech.rookies.java05.AssetManagement.entities.Location;
+import com.nashtech.rookies.java05.AssetManagement.entities.PresentId;
+import com.nashtech.rookies.java05.AssetManagement.exceptions.ResourceNotFoundException;
+import com.nashtech.rookies.java05.AssetManagement.repository.CategoryRepository;
+import com.nashtech.rookies.java05.AssetManagement.repository.LocationRepository;
+import com.nashtech.rookies.java05.AssetManagement.repository.PresentIdRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.Optional;
 
 @Component
 public class AssetMapper {
     @Autowired
-    private ModelMapper modelMapper;
+    private CategoryRepository categoryRepository;
+    @Autowired
+    private LocationRepository locationRepository;
+    @Autowired
+    private PresentIdRepository presentIdRepository;
 
 
-    public List<AssetViewResponseDto> mapAssetListToAssetViewResponseDto(List<Asset> assetList) {
-        List<AssetViewResponseDto> result = new ArrayList<>();
-        assetList.forEach(asset -> {
 
-            AssetViewResponseDto assetViewResponseDto = AssetViewResponseDto.builder()
-                    .id(asset.getId())
-                    .name(asset.getName())
-                    .state(asset.getState())
-                    .category(asset.getCategory().getName())
-                    .build();
+    public Asset mapAssetRequestDtoToEntityInsert(AssetRequestDto dto) {
+        Date dateNow = new Date();
+        Timestamp now = new Timestamp(dateNow.getTime());
+        PresentId presentId;
+        Optional<Category> optionalCategory = categoryRepository.findById(dto.getCategoryId());
+        Optional<Location> optionalLocation = locationRepository.findById(dto.getLocationId());
+        Optional<PresentId> optionalPresentId = presentIdRepository.findById("count");
+        if (optionalCategory.isEmpty()) {
+            throw new ResourceNotFoundException("Category not exist");
+        }
+        if (optionalLocation.isEmpty()) {
+            throw new ResourceNotFoundException("Location not exist");
+        }
+        if (optionalPresentId.isEmpty()) {
+            presentId = new PresentId("count",1,1);
+        }else{
+            presentId = optionalPresentId.get();
+        }
 
-            result.add(assetViewResponseDto);
-        } );
+        Integer count = presentId.getAssetId();
+//        create id
+        String id= "";
+        if(presentId.getAssetId()<10){
+            id = optionalCategory.get().getId()+"00000"+presentId.getAssetId();
+        }else if(count < 100){
+            id = optionalCategory.get().getId()+"0000"+count;
+        }else if(count < 1000){
+            id = optionalCategory.get().getId()+"000"+count;
+        }else if(count < 10000){
+            id = optionalCategory.get().getId()+"00"+count;
+        }else if(count < 100000){
+            id = optionalCategory.get().getId()+"0"+count;
+        }else if(count < 1000000){
+            id = optionalCategory.get().getId()+count;
+        }else{
+            throw new IllegalArgumentException("Asset warehouse is full");
+        }
+        presentId.setAssetId(presentId.getAssetId()+1);
+        presentIdRepository.save(presentId);
+        return Asset.builder()
+                .id(id)
+                .name(dto.getName())
+                .specification(dto.getSpecification())
+                .createdWhen(now)
+                .updatedWhen(now)
+                .installedDate(dto.getInstalledDate())
+                .category(optionalCategory.get())
+                .state(dto.getState())
+                .location(optionalLocation.get())
+                .build();
+    }
+
+    public AssetResponseInsertDto mapEntityInsertToAssetResponseInsertDto(Asset asset) {
+
+        AssetResponseInsertDto result = AssetResponseInsertDto.builder()
+                .id(asset.getId())
+                .name(asset.getName())
+                .specification(asset.getSpecification())
+                .state(asset.getState())
+                .createdWhen(asset.getCreatedWhen())
+                .updatedWhen(asset.getUpdatedWhen())
+                .installedDate(asset.getInstalledDate())
+                .build();
+        result.setCategoryDto(asset.getCategory());
+        result.setLocationDto(asset.getLocation());
+
         return result;
     }
+
+
 }

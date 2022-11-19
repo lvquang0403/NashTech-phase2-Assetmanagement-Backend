@@ -1,31 +1,31 @@
 package com.nashtech.rookies.java05.AssetManagement.controler;
 
-
-import com.nashtech.rookies.java05.AssetManagement.dtos.response.APIResponse;
-import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssetViewResponseDto;
-import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssetState;
+import com.nashtech.rookies.java05.AssetManagement.dtos.request.CategoryRequestDto;
+import com.nashtech.rookies.java05.AssetManagement.dtos.response.CategoryResponseInsertDto;
 import com.nashtech.rookies.java05.AssetManagement.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
-@CrossOrigin(origins = "*")
 @RestController
-@RequestMapping(path = "/api/categories")
+@CrossOrigin
+@RequestMapping(value = "categories")
 public class CategoryController {
+
     @Autowired
-    CategoryService categoryService;
+    private CategoryService service;
 
-    @GetMapping("")
-    public List<String> getAllCategoriesName(){
-        List<String> result = categoryService.getAllCategoriesName();
-        return result;
+    @PostMapping(value = "")
+    @ResponseBody
+    public CategoryResponseInsertDto insert(@RequestBody CategoryRequestDto dto){
+        return service.insert(dto);
     }
 
-    @GetMapping("/hello")
-    public String hello(){
-        return "This is for testing";
+    @GetMapping(value = "/to-insert")
+    @ResponseBody
+    public List<CategoryResponseInsertDto> getToInsert(){
+        return service.getToInsert();
     }
-
 }
