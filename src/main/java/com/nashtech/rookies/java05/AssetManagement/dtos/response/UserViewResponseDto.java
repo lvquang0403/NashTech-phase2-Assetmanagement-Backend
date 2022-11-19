@@ -12,4 +12,5 @@ public class UserViewResponseDto {
     private String userName;
     private Timestamp createdWhen;
     private String role;
+
 }

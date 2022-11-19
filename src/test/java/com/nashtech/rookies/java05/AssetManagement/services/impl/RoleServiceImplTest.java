@@ -39,4 +39,12 @@ class RoleServiceImplTest {
         List<String> result = roleService.getAllRoleNames();
         assertThat(result, is(stringList));
     }
+
+    @Test
+    void getAllRoleNames_WhenRoleIsEmpty() {
+        List<Role> roleList = new ArrayList<>();
+        when(roleRepository.findAll()).thenReturn(roleList);
+        List<String> result = roleService.getAllRoleNames();
+        assertThat(result, is(new ArrayList<>()));
+    }
 }
