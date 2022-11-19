@@ -23,5 +23,9 @@ public class CategoryController {
         return result;
     }
 
+    @GetMapping("/hello")
+    public String hello(){
+        return "This is for testing";
+    }
 
 }
