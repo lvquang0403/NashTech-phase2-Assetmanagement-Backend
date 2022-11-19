@@ -21,7 +21,7 @@ public class UserMapper {
             UserViewResponseDto result = UserViewResponseDto
                     .builder()
                     .id(user.getId())
-                    .createdWhen(user.getCreatedWhen())
+                    .joinedDate(user.getJoinedDate())
                     .fullName(user.getFirstName() + " " + user.getLastName())
                     .userName(user.getUsername())
                     .role(user.getRole().getName())
