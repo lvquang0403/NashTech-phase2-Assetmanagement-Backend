@@ -18,6 +18,7 @@ import com.nashtech.rookies.java05.AssetManagement.services.AssetService;
 import com.nashtech.rookies.java05.AssetManagement.repository.ReturningRepository;
 
 
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -31,6 +32,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@Builder
 public class AssetServiceImpl implements AssetService {
     private static final int pageSize = 15;
 

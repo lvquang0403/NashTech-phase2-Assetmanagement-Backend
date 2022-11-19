@@ -4,14 +4,21 @@ import com.nashtech.rookies.java05.AssetManagement.dtos.request.CategoryRequestD
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.CategoryResponseInsertDto;
 import com.nashtech.rookies.java05.AssetManagement.entities.Category;
 import com.nashtech.rookies.java05.AssetManagement.exceptions.RepeatDataException;
+import com.nashtech.rookies.java05.AssetManagement.mappers.AssetMapper;
+import com.nashtech.rookies.java05.AssetManagement.repository.AssetRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.CategoryRepository;
+import com.nashtech.rookies.java05.AssetManagement.repository.ReturningRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+
+import static org.mockito.Mockito.*;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +36,11 @@ public class CategoryServiceImplTest {
     Category    initiaCategory;
     Category    expectedCategory;
     List<Category> categoryList;
+    ModelMapper modelMapper;
+    private CategoryRepository categoryRepository;
+    private AssetRepository assetRepository;
+    private AssetMapper assetMapper;
+    private ReturningRepository returningRepository;
 
     @BeforeEach
     void beforeEach(){
@@ -39,6 +51,11 @@ public class CategoryServiceImplTest {
         initiaCategory.setName("computer");
         categoryList = new ArrayList<>();
         categoryList.add(initiaCategory);
+        modelMapper = mock(ModelMapper.class);
+        categoryRepository = mock(CategoryRepository.class);
+        assetRepository = mock(AssetRepository.class);
+        assetMapper = mock(AssetMapper.class);
+        returningRepository = mock(ReturningRepository.class);
     }
 //    test insert
 
