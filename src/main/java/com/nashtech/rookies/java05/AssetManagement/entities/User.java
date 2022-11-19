@@ -10,6 +10,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -40,6 +41,9 @@ public class User {
     @Column(name="gender")
     @Enumerated(EnumType.STRING)
     private Gender gender;
+
+    @Column(name = "joined_date")
+    private Date joinedDate;
 
     @Column(name = "created_when")
     private Timestamp createdWhen;

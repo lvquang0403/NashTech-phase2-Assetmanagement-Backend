@@ -5,11 +5,16 @@ import com.nashtech.rookies.java05.AssetManagement.dtos.response.UserViewRespons
 import com.nashtech.rookies.java05.AssetManagement.entities.User;
 import org.springframework.stereotype.Component;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class UserMapper {
+    Format formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+
     public List<UserViewResponseDto> mapUserEntityListToUserViewResponseDtoList(List<User> userList) {
         List<UserViewResponseDto> userViewResponseDtoList = new ArrayList<>();
         userList.forEach(user -> {
@@ -35,7 +40,9 @@ public class UserMapper {
                 .username(user.getUsername())
                 .birth(user.getBirth())
                 .createdWhen(user.getCreatedWhen())
-                .fullName(user.getFirstName() + " " + user.getLastName())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .joinedDate(formatter.format(user.getJoinedDate()))
                 .build();
         return  result;
     }

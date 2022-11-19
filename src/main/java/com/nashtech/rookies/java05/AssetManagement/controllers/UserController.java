@@ -1,4 +1,4 @@
-package com.nashtech.rookies.java05.AssetManagement.controler;
+package com.nashtech.rookies.java05.AssetManagement.controllers;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.APIResponse;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.UserResponseDto;
@@ -26,7 +26,6 @@ public class UserController {
 
     @GetMapping("/{id}")
     public UserResponseDto getUserById(@PathVariable String id){
-
         return userService.getUserById(id);
     }
 

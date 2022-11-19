@@ -1,4 +1,4 @@
-package com.nashtech.rookies.java05.AssetManagement.controler;
+package com.nashtech.rookies.java05.AssetManagement.controllers;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.APIResponse;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssetResponseDto;
