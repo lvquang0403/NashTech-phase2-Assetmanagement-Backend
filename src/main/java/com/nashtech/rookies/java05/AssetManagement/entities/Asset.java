@@ -6,6 +6,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -29,6 +30,9 @@ public class Asset {
     @Column(name = "state")
     @Enumerated(EnumType.STRING)
     private AssetState state;
+
+    @Column(name = "installed_date")
+    private Date installedDate;
 
     @Column(name = "created_when")
     private Timestamp createdWhen;
