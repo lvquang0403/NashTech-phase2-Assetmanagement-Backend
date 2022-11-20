@@ -1,4 +1,4 @@
-package com.nashtech.rookies.java05.AssetManagement.services.Impl;
+package com.nashtech.rookies.java05.AssetManagement.services.impl;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.LocationResponseDto;
 import com.nashtech.rookies.java05.AssetManagement.repository.LocationRepository;

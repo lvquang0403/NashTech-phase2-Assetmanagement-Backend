@@ -9,6 +9,7 @@ import com.nashtech.rookies.java05.AssetManagement.entities.User;
 import com.nashtech.rookies.java05.AssetManagement.repository.LocationRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@Component
 public class UserMapper {
 
     public List<UserViewResponseDto> mapUserEntityListToUserViewResponseDtoList(List<User> userList) {

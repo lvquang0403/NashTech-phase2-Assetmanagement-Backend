@@ -33,7 +33,7 @@ public class CategoryServiceImplTest {
     @MockBean
     CategoryRepository repository;
     CategoryRequestDto categoryRequestDto;
-    Category    initiaCategory;
+    Category    initialCategory;
     Category    expectedCategory;
     List<Category> categoryList;
     ModelMapper modelMapper;
@@ -45,12 +45,12 @@ public class CategoryServiceImplTest {
     @BeforeEach
     void beforeEach(){
         categoryRequestDto = new CategoryRequestDto();
-        initiaCategory = new Category();
+        initialCategory = new Category();
         expectedCategory = new Category();
-        initiaCategory.setId("ww");
-        initiaCategory.setName("computer");
+        initialCategory.setId("ww");
+        initialCategory.setName("computer");
         categoryList = new ArrayList<>();
-        categoryList.add(initiaCategory);
+        categoryList.add(initialCategory);
         modelMapper = mock(ModelMapper.class);
         categoryRepository = mock(CategoryRepository.class);
         assetRepository = mock(AssetRepository.class);

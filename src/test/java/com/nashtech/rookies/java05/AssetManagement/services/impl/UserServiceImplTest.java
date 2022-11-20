@@ -98,22 +98,4 @@ class UserServiceImplTest {
         assertThat(expected, is(returnList));
     }
 
-
-    @Test
-    void getUserById_WhenUserIsNotNull() {
-        UserResponseDto userResponseDto = mock(UserResponseDto.class);
-        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
-        when(userMapper.mapUserEntityToUserResponseDto(user)).thenReturn(userResponseDto);
-        UserResponseDto result =  userService.getUserById(user.getId());
-        assertThat(userResponseDto, is(result));
-    }
-
-    @Test
-    void getUserById_WhenUserIsNull() {
-        UserResponseDto userResponseDto = UserResponseDto.builder().build();
-        when(userRepository.findById(user.getId())).thenReturn(Optional.empty());
-        UserResponseDto result =  userService.getUserById(user.getId());
-        assertThat(userResponseDto, is(result));
-    }
-
 }

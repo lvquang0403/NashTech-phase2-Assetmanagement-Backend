@@ -51,9 +51,6 @@ public class User {
     @Column(name = "updated_when")
     private Timestamp updatedWhen;
 
-    @Column(name = "joined_date")
-    private Date joinedDate;
-
     @ManyToOne
     @JoinColumn(name = "role_id",referencedColumnName = "id")
     private Role role;

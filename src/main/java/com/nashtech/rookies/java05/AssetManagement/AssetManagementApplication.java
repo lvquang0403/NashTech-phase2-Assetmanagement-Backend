@@ -11,11 +11,6 @@ import org.springframework.context.annotation.Bean;
 public class AssetManagementApplication {
 
 	@Bean
-	public ModelMapper modelMapper(){
-		return new ModelMapper();
-	}
-
-	@Bean
 	UserUtils userUtils(){
 		return new UserUtils();
 	}

@@ -23,5 +23,4 @@ public class PresentId {
     @Column(name = "asset_id")
     private Integer assetId;
 
-
 }
