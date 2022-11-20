@@ -12,10 +12,4 @@ public class HelloController {
     public String hello() {
         return "Hello spring boot testing edit";
     }
-
-     @GetMapping("/hello1")
-    public String hello() {
-        return "Hello spring boot testing edit 1111111";
-    }
-    
 }
