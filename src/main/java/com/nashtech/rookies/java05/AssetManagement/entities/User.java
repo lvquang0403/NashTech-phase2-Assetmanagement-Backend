@@ -9,8 +9,8 @@ import lombok.Setter;
 
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -36,11 +36,14 @@ public class User {
     private String password;
 
     @Column(name = "birth")
-    private Timestamp birth;
+    private Date birth;
 
     @Column(name="gender")
     @Enumerated(EnumType.STRING)
     private Gender gender;
+
+    @Column(name = "joined_date")
+    private Date joinedDate;
 
     @Column(name = "created_when")
     private Timestamp createdWhen;
@@ -57,6 +60,12 @@ public class User {
 
     @OneToMany(mappedBy = "assignedBy")
     private List<Assignment> listAssignmentsBy;
+
+    @OneToMany(mappedBy = "assignedTo")
+    private List<Returning> listReturningAssignTo;
+
+    @OneToMany(mappedBy = "assignedBy")
+    private List<Returning> listReturningAssignBy;
 
     @ManyToOne
     @JoinColumn(name = "location_id",referencedColumnName = "id")

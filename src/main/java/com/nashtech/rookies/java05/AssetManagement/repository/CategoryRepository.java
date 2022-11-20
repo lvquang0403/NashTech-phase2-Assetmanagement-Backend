@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface CategoryRepository  extends JpaRepository<Category, String> {
-
+public interface CategoryRepository extends JpaRepository<Category, String> {
+    List<Category> findCategoriesByNameIsIn(List<String> categoryNames);
 }

@@ -17,31 +17,31 @@ import java.util.Optional;
 public class CategoryServiceImpl implements CategoryService {
 
     @Autowired
-    private CategoryRepository repository;
+    private CategoryRepository categoryRepository;
     @Autowired
     private CategoryMapper mapper;
 
     public CategoryResponseInsertDto insert(CategoryRequestDto dto) {
-        Optional<List<Category>> optional = Optional.of(repository.findAll());
+        Optional<List<Category>> optional = Optional.of(categoryRepository.findAll());
         dto.validateInsert(optional);
         Category category = mapper.mapCategoryRequestDtoToEntityInsert(dto);
-        Category newcategory = repository.save(category);
+        Category newcategory = categoryRepository.save(category);
 
         return mapper.mapEntityToResponseInsertDto(newcategory);
     }
 
-    public List<CategoryResponseInsertDto> getToInsert() {
-        List<CategoryResponseInsertDto> result = new ArrayList<>();
-        Optional<List<Category>> optional = Optional.of(repository.findAll());
-        if (optional.isEmpty()) {
+    @Override
+    public List<String> getAllCategoriesName() {
+        List<Category> categories = categoryRepository.findAll();
+        List<String> result = new ArrayList<>();
+        if(categories == null){
             return new ArrayList<>();
+        }else{
+            categories.forEach(category -> {
+                result.add(category.getName());
+            });
         }
-        optional.get().forEach(p -> {
-            CategoryResponseInsertDto map = mapper.mapEntityToResponseInsertDto(p);
-            result.add(map);
-        });
         return result;
     }
-
 
 }
