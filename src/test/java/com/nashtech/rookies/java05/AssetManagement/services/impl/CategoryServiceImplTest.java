@@ -144,18 +144,18 @@ public class CategoryServiceImplTest {
     }
 
 
-    @Test
-    void getToInsert_ShouldListCategoryResponseInsertDto_WhenDatabaseHasData(){
-        expectedCategory.setId("qc");
-        expectedCategory.setName("mahua");
-        categoryList.add(expectedCategory);
-        categoryList.add(expectedCategory);
+    // @Test
+    // void getToInsert_ShouldListCategoryResponseInsertDto_WhenDatabaseHasData(){
+    //     expectedCategory.setId("qc");
+    //     expectedCategory.setName("mahua");
+    //     categoryList.add(expectedCategory);
+    //     categoryList.add(expectedCategory);
 
-        Mockito.when(repository.findAll()).thenReturn(categoryList);
+    //     Mockito.when(repository.findAll()).thenReturn(categoryList);
 
-        List<CategoryResponseInsertDto> actual = service.getToInsert();
-        Assertions.assertEquals(3, actual.size());
-    }
+    //     List<CategoryResponseInsertDto> actual = service.getToInsert();
+    //     Assertions.assertEquals(3, actual.size());
+    // }
 
     @Test
     void insert_ShouldThrowIllegalArgumentException_WhenNameHasSpecialCharacters(){
