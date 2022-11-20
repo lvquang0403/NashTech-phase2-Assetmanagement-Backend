@@ -25,4 +25,8 @@ public class Location {
 
     @OneToMany(mappedBy = "location")
     private List<Asset> listAssets;
+
+    public Location(String cityName) {
+        this.cityName=cityName;
+    }
 }

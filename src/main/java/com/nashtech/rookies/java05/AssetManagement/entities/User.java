@@ -36,7 +36,7 @@ public class User {
     private String password;
 
     @Column(name = "birth")
-    private Timestamp birth;
+    private Date birth;
 
     @Column(name="gender")
     @Enumerated(EnumType.STRING)
@@ -50,6 +50,9 @@ public class User {
 
     @Column(name = "updated_when")
     private Timestamp updatedWhen;
+
+    @Column(name = "joined_date")
+    private Date joinedDate;
 
     @ManyToOne
     @JoinColumn(name = "role_id",referencedColumnName = "id")

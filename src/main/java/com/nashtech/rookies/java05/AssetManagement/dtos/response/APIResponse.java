@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class APIResponse<T> {
     private int totalPage;
-    T listAsset;
+    T listResponse;
 }

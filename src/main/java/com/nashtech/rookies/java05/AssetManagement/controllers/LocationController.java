@@ -1,7 +1,7 @@
 package com.nashtech.rookies.java05.AssetManagement.controllers;
 
-import com.nashtech.rookies.java05.AssetManagement.repository.RoleRepository;
-import com.nashtech.rookies.java05.AssetManagement.services.RoleService;
+import com.nashtech.rookies.java05.AssetManagement.dtos.response.LocationResponseDto;
+import com.nashtech.rookies.java05.AssetManagement.services.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -13,19 +13,14 @@ import java.util.List;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/api/roles")
-public class RoleController {
+@RequestMapping("/api/locations")
+public class LocationController {
 
     @Autowired
-    RoleService roleService;
-
-    @GetMapping("/name")
-    public List<String> getAllRoleNames(){
-        return roleService.getAllRoleNames();
-    }
+    LocationService locationService;
 
     @GetMapping
-    public ResponseEntity getAllRoles(){
-        return ResponseEntity.ok(roleService.getAllRoles());
+    public ResponseEntity getAllLocations(){
+        return ResponseEntity.ok(locationService.getAllLocations());
     }
 }
