@@ -30,19 +30,6 @@ public class CategoryServiceImpl implements CategoryService {
         return mapper.mapEntityToResponseInsertDto(newcategory);
     }
 
-    public List<CategoryResponseInsertDto> getToInsert() {
-        List<CategoryResponseInsertDto> result = new ArrayList<>();
-        Optional<List<Category>> optional = Optional.of(categoryRepository.findAll());
-        if (optional.isEmpty()) {
-            return new ArrayList<>();
-        }
-        optional.get().forEach(p -> {
-            CategoryResponseInsertDto map = mapper.mapEntityToResponseInsertDto(p);
-            result.add(map);
-        });
-        return result;
-    }
-
     @Override
     public List<String> getAllCategoriesName() {
         List<Category> categories = categoryRepository.findAll();
