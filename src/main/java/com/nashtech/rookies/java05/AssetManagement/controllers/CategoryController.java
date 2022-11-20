@@ -22,12 +22,6 @@ public class CategoryController {
         return categoryService.insert(dto);
     }
 
-    @GetMapping(value = "/to-insert")
-    @ResponseBody
-    public List<CategoryResponseInsertDto> getToInsert(){
-        return categoryService.getToInsert();
-    }
-
     @GetMapping("")
     public List<String> getAllCategoriesName(){
         List<String> result = categoryService.getAllCategoriesName();
