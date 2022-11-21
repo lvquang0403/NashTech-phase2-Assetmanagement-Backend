@@ -35,10 +35,6 @@ public class UserUtils {
             }
         }
         maxCode++;
-        for (String key:userMap.keySet()){
-            int value=userMap.get(key);
-            userMap.replace(key,value+1);
-        }
 
     }
     int seperatedStringAndNumber(String str){

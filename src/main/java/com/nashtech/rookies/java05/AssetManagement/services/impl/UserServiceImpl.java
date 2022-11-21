@@ -22,7 +22,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -104,7 +103,6 @@ public class UserServiceImpl implements UserService {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date birth = format.parse(userRequestDto.getBirth());
         Date joinedDate = format.parse(userRequestDto.getJoinedDate());
-        Date date=new Date();
 
         Role role = roleRepository.findById(userRequestDto.getRoleId()).get();
 //        Location location=locationRepository.findById(userRequestDto.getLocationId()).get();
@@ -113,7 +111,6 @@ public class UserServiceImpl implements UserService {
         user.setBirth(birth);
         user.setJoinedDate(joinedDate);
         user.setRole(role);
-        user.setUpdatedWhen(new Timestamp(date.getTime()));
         userRepository.save(user);
 
         return UserMapper.mapFromEntityToUserResponseDto(user);
