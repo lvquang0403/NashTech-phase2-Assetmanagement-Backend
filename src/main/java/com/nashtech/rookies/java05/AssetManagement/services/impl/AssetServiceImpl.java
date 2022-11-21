@@ -55,8 +55,18 @@ public class AssetServiceImpl implements AssetService {
 
     @Override
     public APIResponse<List<AssetViewResponseDto>> getAssetsByPredicates
-            (List<AssetState> states, List<String> categoryNames, String keyword, int locationId, int page) {
-        Pageable pageable = PageRequest.of(page, pageSize, Sort.Direction.DESC, "updatedWhen");
+            (List<AssetState> states, List<String> categoryNames, String keyword, int locationId, int page, String orderBy) {
+
+        String[] parts = orderBy.split("_");
+        String columnName = parts[0];
+        String order = parts[1];
+
+        Pageable pageable;
+        if("DESC".equals(order)){
+            pageable = PageRequest.of(page, pageSize, Sort.Direction.DESC , columnName);
+        }else{
+            pageable = PageRequest.of(page, pageSize, Sort.Direction.ASC , columnName);
+        }
 
         //By default, filter by all categories, else filter by categories that user choose.
         List<Category> categories;

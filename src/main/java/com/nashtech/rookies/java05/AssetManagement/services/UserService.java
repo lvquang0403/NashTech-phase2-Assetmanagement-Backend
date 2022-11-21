@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface UserService {
 
-    APIResponse<List<UserViewResponseDto>> getUsersByPredicates(List<String> types, String keyword, int locationId, int page);
+    APIResponse<List<UserViewResponseDto>> getUsersByPredicates(List<String> types, String keyword, int locationId, int page, String orderBy);
 
     public UserResponseDto createUser(UserRequestDto userDto) throws ParseException;
 

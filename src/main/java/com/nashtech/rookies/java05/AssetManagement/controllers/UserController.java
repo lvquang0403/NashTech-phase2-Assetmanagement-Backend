@@ -25,14 +25,16 @@ public class UserController {
     public APIResponse<List<UserViewResponseDto>> getAllUsers(@RequestParam(required = false) List<String> types,
                                                               @RequestParam(required = false, defaultValue = "") String keyword,
                                                               @RequestParam int locationId,
-                                                              @RequestParam(required = false, defaultValue = "0") int page){
-        return userService.getUsersByPredicates(types, keyword, locationId, page);
+                                                              @RequestParam(required = false, defaultValue = "0") int page,
+                                                              @RequestParam(defaultValue = "updatedWhen_DESC") String orderBy) {
+        return userService.getUsersByPredicates(types, keyword, locationId, page, orderBy);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity getUserById(@PathVariable String id){
-        UserResponseDto userResponseDto=userService.getUserById(id);
-        if (userResponseDto==null)  return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("That user is not exist.");
+    public ResponseEntity getUserById(@PathVariable String id) {
+        UserResponseDto userResponseDto = userService.getUserById(id);
+        if (userResponseDto == null)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("That user is not exist.");
         return ResponseEntity.ok(userResponseDto);
     }
 
@@ -42,8 +44,8 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity updateUser(@PathVariable("id") String id,@RequestBody UserRequestDto userRequestDto) throws ParseException {
-        return ResponseEntity.ok(userService.updateUser(id,userRequestDto));
+    public ResponseEntity updateUser(@PathVariable("id") String id, @RequestBody UserRequestDto userRequestDto) throws ParseException {
+        return ResponseEntity.ok(userService.updateUser(id, userRequestDto));
     }
 }
 

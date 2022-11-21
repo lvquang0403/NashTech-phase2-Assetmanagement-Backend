@@ -181,6 +181,7 @@ public class AssetServiceImplTest {
         int locationId = 0;
         int page = 0;
         int pageSize = 15;
+        String orderBy = "";
         Pageable pageable = PageRequest.of(page, pageSize, Sort.Direction.DESC, "updatedWhen");
         when(categoryRepository.findCategoriesByNameIsIn(categoryNames)).thenReturn(categories);
         when(assetRepository.findByKeywordWithFilter
@@ -189,7 +190,7 @@ public class AssetServiceImplTest {
         when(assetMapper.mapAssetListToAssetViewResponseDto(result.toList())).thenReturn(assetViewResponseDtos);
         APIResponse<List<AssetViewResponseDto>> expected = new APIResponse<>(page, assetViewResponseDtos);
 
-        APIResponse<List<AssetViewResponseDto>> listResult = assetServiceImpl.getAssetsByPredicates(states, categoryNames, keyword, locationId, page);
+        APIResponse<List<AssetViewResponseDto>> listResult = assetServiceImpl.getAssetsByPredicates(states, categoryNames, keyword, locationId, page, orderBy);
         assertThat(expected, is(listResult));
     }
 
@@ -200,6 +201,7 @@ public class AssetServiceImplTest {
         int locationId = 0;
         int page = 0;
         int pageSize = 15;
+        String orderBy = "";
         Pageable pageable = PageRequest.of(page, pageSize, Sort.Direction.DESC, "updatedWhen");
         when(categoryRepository.findAll()).thenReturn(categories);
 
@@ -209,7 +211,7 @@ public class AssetServiceImplTest {
         when(assetMapper.mapAssetListToAssetViewResponseDto(result.toList())).thenReturn(assetViewResponseDtos);
         APIResponse<List<AssetViewResponseDto>> expected = new APIResponse<>(page, assetViewResponseDtos);
 
-        APIResponse<List<AssetViewResponseDto>> listResult = assetServiceImpl.getAssetsByPredicates(states, null, keyword, locationId, page);
+        APIResponse<List<AssetViewResponseDto>> listResult = assetServiceImpl.getAssetsByPredicates(states, null, keyword, locationId, page, orderBy);
         assertThat(expected, is(listResult));
     }
 

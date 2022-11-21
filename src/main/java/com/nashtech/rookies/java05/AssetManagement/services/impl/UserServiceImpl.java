@@ -55,8 +55,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public APIResponse<List<UserViewResponseDto>> getUsersByPredicates(List<String> types, String keyword, int locationId, int page) {
-        Pageable pageable = PageRequest.of(page, pageSize, Sort.Direction.DESC, "updatedWhen");
+    public APIResponse<List<UserViewResponseDto>> getUsersByPredicates(List<String> types, String keyword, int locationId, int page, String orderBy) {
+
+        String[] parts = orderBy.split("_");
+        String columnName = parts[0];
+        String order = parts[1];
+
+        Pageable pageable;
+        if("DESC".equals(order)){
+            pageable = PageRequest.of(page, pageSize, Sort.Direction.DESC , columnName);
+        }else{
+            pageable = PageRequest.of(page, pageSize, Sort.Direction.ASC , columnName);
+        }
+
         List<Role> roleList;
         if (types == null) {
             roleList = roleRepository.findAll();
