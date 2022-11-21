@@ -10,6 +10,6 @@ public class HelloController {
 
     @GetMapping("/hello")
     public String hello() {
-        return "Hello spring boot testing edit";
+        return "test deployment";
     }
 }
