@@ -21,9 +21,13 @@ public class AssetController {
 
     @GetMapping("")
     public APIResponse<List<AssetViewResponseDto>> getAllAssets
-            (@RequestParam (required = false) List<AssetState> states, @RequestParam (required = false) List<String> categories
-                    , @RequestParam(required = false, defaultValue = "") String keyword, @RequestParam int locationId, @RequestParam (value = "page", required = false, defaultValue = "0") int page) {
-        return assetService.getAssetsByPredicates(states, categories, keyword, locationId, page);
+            (@RequestParam(required = false) List<AssetState> states,
+             @RequestParam(required = false) List<String> categories,
+             @RequestParam(required = false, defaultValue = "") String keyword,
+             @RequestParam int locationId,
+             @RequestParam(value = "page", required = false, defaultValue = "0") int page,
+             @RequestParam(defaultValue = "updatedWhen_DESC") String orderBy) {
+        return assetService.getAssetsByPredicates(states, categories, keyword, locationId, page, orderBy);
     }
 
     @PostMapping("")
@@ -32,12 +36,12 @@ public class AssetController {
     }
 
     @GetMapping("/{id}")
-    public AssetResponseDto getAssetById(@PathVariable String id){
+    public AssetResponseDto getAssetById(@PathVariable String id) {
         return assetService.getAssetById(id);
     }
 
     @GetMapping("/states")
-    public List<String> getAllAssetStates(){
+    public List<String> getAllAssetStates() {
         return assetService.getAllAssetStates();
     }
 

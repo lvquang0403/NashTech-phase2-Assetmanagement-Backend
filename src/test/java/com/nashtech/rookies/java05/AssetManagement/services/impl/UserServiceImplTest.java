@@ -61,6 +61,7 @@ class UserServiceImplTest {
         String keyword = "";
         int locationId = 0;
         int page = 0;
+        String orderBy = "";
         roleList.add(role);
         Page<User> result = mock(Page.class);
         APIResponse<List<UserViewResponseDto>> expected = new APIResponse<>(page, userViewResponseDtoList);
@@ -71,7 +72,7 @@ class UserServiceImplTest {
         when(userRepository.findUsersWithFilter(roleList, keyword.toLowerCase(), locationId, pageable)).thenReturn(result);
         when(userMapper.mapUserEntityListToUserViewResponseDtoList(result.toList())).thenReturn(userViewResponseDtoList);
         APIResponse<List<UserViewResponseDto>> returnList = userService.getUsersByPredicates
-                (types, keyword,locationId,page);
+                (types, keyword,locationId,page,orderBy);
 
         assertThat(expected, is(returnList));
     }
@@ -83,6 +84,8 @@ class UserServiceImplTest {
         String keyword = "";
         int locationId = 0;
         int page = 0;
+        String orderBy = "";
+
         roleList.add(role);
         Page<User> result = mock(Page.class);
         APIResponse<List<UserViewResponseDto>> expected = new APIResponse<>(page, userViewResponseDtoList);
@@ -93,7 +96,7 @@ class UserServiceImplTest {
         when(userRepository.findUsersWithFilter(roleList, keyword.toLowerCase(), locationId, pageable)).thenReturn(result);
         when(userMapper.mapUserEntityListToUserViewResponseDtoList(result.toList())).thenReturn(userViewResponseDtoList);
         APIResponse<List<UserViewResponseDto>> returnList = userService.getUsersByPredicates
-                (null, keyword,locationId,page);
+                (null, keyword,locationId,page,orderBy);
 
         assertThat(expected, is(returnList));
     }
