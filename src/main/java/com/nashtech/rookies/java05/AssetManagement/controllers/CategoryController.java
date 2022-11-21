@@ -22,7 +22,7 @@ public class CategoryController {
         return categoryService.insert(dto);
     }
 
-    @GetMapping("")
+    @GetMapping("/name")
     public List<String> getAllCategoriesName(){
         List<String> result = categoryService.getAllCategoriesName();
         return result;
