@@ -61,7 +61,7 @@ class UserServiceImplTest {
         String keyword = "";
         int locationId = 0;
         int page = 0;
-        String orderBy = "";
+        String orderBy = "updatedWhen_DESC";
         roleList.add(role);
         Page<User> result = mock(Page.class);
         APIResponse<List<UserViewResponseDto>> expected = new APIResponse<>(page, userViewResponseDtoList);
@@ -84,7 +84,7 @@ class UserServiceImplTest {
         String keyword = "";
         int locationId = 0;
         int page = 0;
-        String orderBy = "";
+        String orderBy = "updatedWhen_DESC";
 
         roleList.add(role);
         Page<User> result = mock(Page.class);

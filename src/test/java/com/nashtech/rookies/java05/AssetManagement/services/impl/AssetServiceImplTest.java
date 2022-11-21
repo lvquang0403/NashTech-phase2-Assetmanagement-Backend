@@ -181,7 +181,7 @@ public class AssetServiceImplTest {
         int locationId = 0;
         int page = 0;
         int pageSize = 15;
-        String orderBy = "";
+        String orderBy = "updatedWhen_DESC";
         Pageable pageable = PageRequest.of(page, pageSize, Sort.Direction.DESC, "updatedWhen");
         when(categoryRepository.findCategoriesByNameIsIn(categoryNames)).thenReturn(categories);
         when(assetRepository.findByKeywordWithFilter
@@ -201,7 +201,7 @@ public class AssetServiceImplTest {
         int locationId = 0;
         int page = 0;
         int pageSize = 15;
-        String orderBy = "";
+        String orderBy = "updatedWhen_DESC";
         Pageable pageable = PageRequest.of(page, pageSize, Sort.Direction.DESC, "updatedWhen");
         when(categoryRepository.findAll()).thenReturn(categories);
 
