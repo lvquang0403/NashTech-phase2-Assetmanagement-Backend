@@ -1,7 +1,7 @@
 package com.nashtech.rookies.java05.AssetManagement.services.impl;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.CategoryRequestDto;
-import com.nashtech.rookies.java05.AssetManagement.dtos.response.CategoryResponseInsertDto;
+import com.nashtech.rookies.java05.AssetManagement.dtos.response.CategoryResponseDto;
 import com.nashtech.rookies.java05.AssetManagement.entities.Category;
 import com.nashtech.rookies.java05.AssetManagement.mappers.CategoryMapper;
 import com.nashtech.rookies.java05.AssetManagement.repository.CategoryRepository;
@@ -21,7 +21,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private CategoryMapper mapper;
 
-    public CategoryResponseInsertDto insert(CategoryRequestDto dto) {
+    public CategoryResponseDto insert(CategoryRequestDto dto) {
         Optional<List<Category>> optional = Optional.of(categoryRepository.findAll());
         dto.validateInsert(optional);
         Category category = mapper.mapCategoryRequestDtoToEntityInsert(dto);
@@ -41,6 +41,19 @@ public class CategoryServiceImpl implements CategoryService {
                 result.add(category.getName());
             });
         }
+        return result;
+    }
+
+    @Override
+    public List<CategoryResponseDto> getAll() {
+        Optional<List<Category>> optional = Optional.ofNullable(categoryRepository.findAll());
+        List<CategoryResponseDto> result = new ArrayList<>();
+        if(optional.isEmpty()){
+            return new ArrayList<>();
+        }
+        optional.get().forEach(category -> {
+            result.add(mapper.mapEntityToResponseInsertDto(category));
+        });
         return result;
     }
 
