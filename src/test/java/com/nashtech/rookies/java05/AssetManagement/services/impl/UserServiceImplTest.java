@@ -1,5 +1,6 @@
 package com.nashtech.rookies.java05.AssetManagement.services.impl;
 
+import com.nashtech.rookies.java05.AssetManagement.dtos.request.UserRequestDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.APIResponse;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.UserResponseDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.UserViewResponseDto;
@@ -8,14 +9,18 @@ import com.nashtech.rookies.java05.AssetManagement.entities.User;
 import com.nashtech.rookies.java05.AssetManagement.mappers.UserMapper;
 import com.nashtech.rookies.java05.AssetManagement.repository.RoleRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.UserRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -96,6 +101,18 @@ class UserServiceImplTest {
                 (null, keyword,locationId,page);
 
         assertThat(expected, is(returnList));
+    }
+    @Test
+    void createUserSuccess() throws ParseException {
+        User user= mock(User.class);
+        UserRequestDto userRequestDto= mock(UserRequestDto.class);
+        //        UserResponseDto userResponseDto=Mockito.mock(UserResponseDto.class);
+        MockedStatic<UserMapper> utilities= Mockito.mockStatic(UserMapper.class);
+        utilities.when(()-> UserMapper.mapFromUserRequestDtoToEntity(userRequestDto)).thenReturn(user);
+        //        Mockito.when(UserMapper.mapFromUserRequestDtoToEntity(userRequestDto)).thenReturn(user);
+        //        Mockito.when(UserMapper.mapFromEntityToUserResponseDto(user)).thenReturn(userResponseDto);
+        UserResponseDto userResponseDto=userService.createUser(userRequestDto);
+        Assertions.assertNull(userResponseDto);
     }
 
 }
