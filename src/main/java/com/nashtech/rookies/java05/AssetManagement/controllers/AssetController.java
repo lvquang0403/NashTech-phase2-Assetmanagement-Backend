@@ -21,12 +21,15 @@ public class AssetController {
 
     @GetMapping("")
     public APIResponse<List<AssetViewResponseDto>> getAllAssets
-            (@RequestParam(required = false) List<String> states,
+            (@RequestParam(required = false, defaultValue = "") List<String> states,
              @RequestParam(required = false) List<String> categories,
              @RequestParam(required = false, defaultValue = "") String keyword,
              @RequestParam int locationId,
              @RequestParam(value = "page", required = false, defaultValue = "0") int page,
              @RequestParam(defaultValue = "updatedWhen_DESC") String orderBy) {
+        if(states.isEmpty()){
+            states = assetService.getAllAssetStates();
+        }
         return assetService.getAssetsByPredicates(states, categories, keyword, locationId, page, orderBy);
     }
 
