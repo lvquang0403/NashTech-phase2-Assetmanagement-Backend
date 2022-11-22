@@ -19,7 +19,7 @@ public class UserResponseDto {
     private String lastName;
     private String username;
     private String birth;
-    private Gender gender;
+    private String gender;
     private String joinedDate;
     private Timestamp createdWhen;
     private Timestamp updatedWhen;
