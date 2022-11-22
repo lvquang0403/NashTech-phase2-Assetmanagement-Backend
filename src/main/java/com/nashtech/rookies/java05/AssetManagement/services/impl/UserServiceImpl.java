@@ -22,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -54,8 +55,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public APIResponse<List<UserViewResponseDto>> getUsersByPredicates(List<String> types, String keyword, int locationId, int page) {
-        Pageable pageable = PageRequest.of(page, pageSize, Sort.Direction.DESC, "updatedWhen");
+    public APIResponse<List<UserViewResponseDto>> getUsersByPredicates(List<String> types, String keyword, int locationId, int page, String orderBy) {
+
+        String[] parts = orderBy.split("_");
+        String columnName = parts[0];
+        String order = parts[1];
+
+        Pageable pageable;
+        if("DESC".equals(order)){
+            pageable = PageRequest.of(page, pageSize, Sort.Direction.DESC , columnName);
+        }else{
+            pageable = PageRequest.of(page, pageSize, Sort.Direction.ASC , columnName);
+        }
+
         List<Role> roleList;
         if (types == null) {
             roleList = roleRepository.findAll();
@@ -103,6 +115,7 @@ public class UserServiceImpl implements UserService {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date birth = format.parse(userRequestDto.getBirth());
         Date joinedDate = format.parse(userRequestDto.getJoinedDate());
+        Date date=new Date();
 
         Role role = roleRepository.findById(userRequestDto.getRoleId()).get();
 //        Location location=locationRepository.findById(userRequestDto.getLocationId()).get();
@@ -111,6 +124,7 @@ public class UserServiceImpl implements UserService {
         user.setBirth(birth);
         user.setJoinedDate(joinedDate);
         user.setRole(role);
+        user.setUpdatedWhen(new Timestamp(date.getTime()));
         userRepository.save(user);
 
         return UserMapper.mapFromEntityToUserResponseDto(user);

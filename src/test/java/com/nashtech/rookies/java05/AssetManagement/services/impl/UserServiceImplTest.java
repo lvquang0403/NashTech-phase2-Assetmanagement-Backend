@@ -1,5 +1,6 @@
 package com.nashtech.rookies.java05.AssetManagement.services.impl;
 
+import com.nashtech.rookies.java05.AssetManagement.dtos.request.UserRequestDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.APIResponse;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.UserResponseDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.UserViewResponseDto;
@@ -8,14 +9,18 @@ import com.nashtech.rookies.java05.AssetManagement.entities.User;
 import com.nashtech.rookies.java05.AssetManagement.mappers.UserMapper;
 import com.nashtech.rookies.java05.AssetManagement.repository.RoleRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.UserRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -61,6 +66,7 @@ class UserServiceImplTest {
         String keyword = "";
         int locationId = 0;
         int page = 0;
+        String orderBy = "updatedWhen_DESC";
         roleList.add(role);
         Page<User> result = mock(Page.class);
         APIResponse<List<UserViewResponseDto>> expected = new APIResponse<>(page, userViewResponseDtoList);
@@ -71,7 +77,7 @@ class UserServiceImplTest {
         when(userRepository.findUsersWithFilter(roleList, keyword.toLowerCase(), locationId, pageable)).thenReturn(result);
         when(userMapper.mapUserEntityListToUserViewResponseDtoList(result.toList())).thenReturn(userViewResponseDtoList);
         APIResponse<List<UserViewResponseDto>> returnList = userService.getUsersByPredicates
-                (types, keyword,locationId,page);
+                (types, keyword,locationId,page,orderBy);
 
         assertThat(expected, is(returnList));
     }
@@ -83,6 +89,8 @@ class UserServiceImplTest {
         String keyword = "";
         int locationId = 0;
         int page = 0;
+        String orderBy = "updatedWhen_DESC";
+
         roleList.add(role);
         Page<User> result = mock(Page.class);
         APIResponse<List<UserViewResponseDto>> expected = new APIResponse<>(page, userViewResponseDtoList);
@@ -93,7 +101,7 @@ class UserServiceImplTest {
         when(userRepository.findUsersWithFilter(roleList, keyword.toLowerCase(), locationId, pageable)).thenReturn(result);
         when(userMapper.mapUserEntityListToUserViewResponseDtoList(result.toList())).thenReturn(userViewResponseDtoList);
         APIResponse<List<UserViewResponseDto>> returnList = userService.getUsersByPredicates
-                (null, keyword,locationId,page);
+                (null, keyword,locationId,page,orderBy);
 
         assertThat(expected, is(returnList));
     }
