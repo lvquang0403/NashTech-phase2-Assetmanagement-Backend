@@ -98,7 +98,7 @@ public class CategoryServiceImplTest {
     @Test
     void insert_ShouldThrowIllegalArgumentException_WhenPrefixTooLong(){
         categoryRequestDto.setId("qws");
-        categoryRequestDto.setName("computer");
+        categoryRequestDto.setName("computer1111");
 
         Mockito.when(repository.findAll()).thenReturn(categoryList);
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,

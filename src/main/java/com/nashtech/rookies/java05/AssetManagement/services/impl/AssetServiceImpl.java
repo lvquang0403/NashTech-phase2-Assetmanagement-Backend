@@ -58,7 +58,7 @@ public class AssetServiceImpl implements AssetService {
 
     @Override
     public APIResponse<List<AssetViewResponseDto>> getAssetsByPredicates
-            (List<AssetState> states, List<String> categoryNames, String keyword, int locationId, int page, String orderBy) {
+            (List<String> stateFilterList, List<String> categoryNames, String keyword, int locationId, int page, String orderBy) {
 
         String[] parts = orderBy.split("_");
         String columnName = parts[0];
@@ -70,6 +70,15 @@ public class AssetServiceImpl implements AssetService {
         }else{
             pageable = PageRequest.of(page, pageSize, Sort.Direction.ASC , columnName);
         }
+        List<AssetState> stateList = new ArrayList<>();
+
+        //State name list to state list
+        AssetState[] assetStates = AssetState.values();
+        for (AssetState assetState : assetStates) {
+            if(stateFilterList.contains(assetState.getName())){
+                stateList.add(assetState);
+            }
+        }
 
         //By default, filter by all categories, else filter by categories that user choose.
         List<Category> categories;
@@ -80,7 +89,7 @@ public class AssetServiceImpl implements AssetService {
         }
         Page<Asset> result;
         result = assetRepository.findByKeywordWithFilter
-                (categories, states, keyword.toLowerCase(), keyword.toLowerCase(), locationId, pageable);
+                (categories, stateList, keyword.toLowerCase(), keyword.toLowerCase(), locationId, pageable);
 
         return new APIResponse<>(result.getTotalPages(), assetMapper.mapAssetListToAssetViewResponseDto(result.toList()));
     }
