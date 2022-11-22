@@ -21,7 +21,7 @@ public class AssetController {
 
     @GetMapping("")
     public APIResponse<List<AssetViewResponseDto>> getAllAssets
-            (@RequestParam(required = false) List<AssetState> states,
+            (@RequestParam(required = false) List<String> states,
              @RequestParam(required = false) List<String> categories,
              @RequestParam(required = false, defaultValue = "") String keyword,
              @RequestParam int locationId,

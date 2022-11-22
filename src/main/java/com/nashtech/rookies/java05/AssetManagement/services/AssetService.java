@@ -17,7 +17,7 @@ public interface AssetService {
 
 
     APIResponse<List<AssetViewResponseDto>> getAssetsByPredicates
-            (List<AssetState> states, List<String> categoryNames, String keyword, int locationId, int page, String orderBy);
+            (List<String> stateFilterList, List<String> categoryNames, String keyword, int locationId, int page, String orderBy);
 
     List<String> getAllAssetStates();
     AssetResponseDto getAssetById(String id);
