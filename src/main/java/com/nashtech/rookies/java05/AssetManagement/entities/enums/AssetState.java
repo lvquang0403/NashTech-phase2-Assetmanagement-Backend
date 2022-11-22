@@ -1,9 +1,19 @@
 package com.nashtech.rookies.java05.AssetManagement.entities.enums;
 
 public enum AssetState {
-    AVAILABLE,
-    NOT_AVAILABLE,
-    ASSIGNED,
-    RECYCLED,
-    RECYCLING
+    AVAILABLE ("Available"),
+    NOT_AVAILABLE ("Not available"),
+    ASSIGNED ("Assigned"),
+    RECYCLED ("Recycled"),
+    RECYCLING ("Recycling");
+
+    private String name;
+
+    AssetState(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
 }

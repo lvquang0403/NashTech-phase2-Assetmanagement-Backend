@@ -86,7 +86,7 @@ public class AssetServiceImpl implements AssetService {
     public List<String> getAllAssetStates() {
         List<String> result = EnumSet.allOf(AssetState.class)
                 .stream()
-                .map(assetState -> assetState.name())
+                .map(assetState -> assetState.getName())
                 .collect(Collectors.toList());
         return result;
     }

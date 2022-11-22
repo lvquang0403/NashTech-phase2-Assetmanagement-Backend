@@ -62,7 +62,7 @@ public class UserMapper {
 
         userResponseDto.setFirstName(user.getFirstName());
         userResponseDto.setLastName(user.getLastName());
-        userResponseDto.setGender(user.getGender());
+        userResponseDto.setGender(user.getGender().getName());
         userResponseDto.setBirth(format.format(user.getBirth()));
         userResponseDto.setCreatedWhen(user.getCreatedWhen());
         userResponseDto.setUpdatedWhen(user.getUpdatedWhen());

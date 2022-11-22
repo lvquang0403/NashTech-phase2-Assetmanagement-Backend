@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.sql.Date;
 import java.util.List;
 
 @Builder
@@ -14,7 +15,8 @@ public class AssetResponseDto {
     private String id;
     private String name;
     private String specification;
-    private AssetState state;
+    private String state;
+    private Date installedDate;
     private Timestamp createdWhen;
     private Timestamp updatedWhen;
     private String categoryName;

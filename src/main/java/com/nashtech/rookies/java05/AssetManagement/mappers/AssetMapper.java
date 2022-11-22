@@ -112,7 +112,8 @@ public class AssetMapper {
                 .specification(asset.getSpecification())
                 .createdWhen(asset.getCreatedWhen())
                 .updatedWhen(asset.getUpdatedWhen())
-                .state(asset.getState())
+                .installedDate(asset.getInstalledDate())
+                .state(asset.getState().getName())
                 .returningDtoList(returningMapper.mapReturningEntityToReturningDto(asset.getReturningList()))
                 .build();
         return assetResponseDto;
@@ -125,7 +126,7 @@ public class AssetMapper {
             AssetViewResponseDto assetViewResponseDto = AssetViewResponseDto.builder()
                     .id(asset.getId())
                     .name(asset.getName())
-                    .state(asset.getState())
+                    .state(asset.getState().getName())
                     .category(asset.getCategory().getName())
                     .build();
 
