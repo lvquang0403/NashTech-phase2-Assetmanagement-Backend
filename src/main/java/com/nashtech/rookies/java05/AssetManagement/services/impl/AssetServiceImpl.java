@@ -18,6 +18,7 @@ import com.nashtech.rookies.java05.AssetManagement.services.AssetService;
 import com.nashtech.rookies.java05.AssetManagement.repository.ReturningRepository;
 
 
+import com.nashtech.rookies.java05.AssetManagement.utils.EntityCheckUtils;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,10 +45,12 @@ public class AssetServiceImpl implements AssetService {
     private AssetMapper assetMapper;
     @Autowired
     private ReturningRepository returningRepository;
+    @Autowired
+    private EntityCheckUtils entityCheckUtils;
 
     @Override
     public AssetResponseInsertDto insert(AssetRequestDto dto){
-        dto.validateInsert();
+        entityCheckUtils.assetCheckInsert(dto);
         Asset asset = assetMapper.mapAssetRequestDtoToEntityInsert(dto);
         Asset newAsset = assetRepository.save(asset);
         return assetMapper.mapEntityInsertToAssetResponseInsertDto(newAsset);

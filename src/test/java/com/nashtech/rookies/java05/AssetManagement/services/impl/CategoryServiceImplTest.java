@@ -143,20 +143,6 @@ public class CategoryServiceImplTest {
         Assertions.assertEquals(categoryRequestDto.getId(), actual.getId());
     }
 
-
-    // @Test
-    // void getToInsert_ShouldListCategoryResponseInsertDto_WhenDatabaseHasData(){
-    //     expectedCategory.setId("qc");
-    //     expectedCategory.setName("mahua");
-    //     categoryList.add(expectedCategory);
-    //     categoryList.add(expectedCategory);
-
-    //     Mockito.when(repository.findAll()).thenReturn(categoryList);
-
-    //     List<CategoryResponseDto> actual = service.getToInsert();
-    //     Assertions.assertEquals(3, actual.size());
-    // }
-
     @Test
     void insert_ShouldThrowIllegalArgumentException_WhenNameHasSpecialCharacters(){
         categoryRequestDto.setId("Sw");
