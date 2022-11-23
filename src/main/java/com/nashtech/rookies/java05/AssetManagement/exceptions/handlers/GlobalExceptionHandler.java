@@ -1,6 +1,7 @@
 package com.nashtech.rookies.java05.AssetManagement.exceptions.handlers;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.ErrorResponse;
+import com.nashtech.rookies.java05.AssetManagement.exceptions.BadRequestException;
 import com.nashtech.rookies.java05.AssetManagement.exceptions.RepeatDataException;
 import com.nashtech.rookies.java05.AssetManagement.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({NullPointerException.class})
     protected ResponseEntity handleNullPointerException(RuntimeException exception) {
+        ErrorResponse error = new ErrorResponse( HttpStatus.BAD_REQUEST.toString(), exception.getMessage());
+        return new ResponseEntity<ErrorResponse>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({BadRequestException.class})
+    protected ResponseEntity handelBadRequestException(RuntimeException exception) {
         ErrorResponse error = new ErrorResponse( HttpStatus.BAD_REQUEST.toString(), exception.getMessage());
         return new ResponseEntity<ErrorResponse>(error, HttpStatus.BAD_REQUEST);
     }
