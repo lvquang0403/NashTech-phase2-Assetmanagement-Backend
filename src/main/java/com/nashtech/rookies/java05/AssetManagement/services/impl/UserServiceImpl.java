@@ -25,6 +25,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -35,6 +36,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 
 @Builder
 @Service
@@ -52,6 +54,8 @@ public class UserServiceImpl implements UserService {
     LocationRepository locationRepository;
     @Autowired
     UserUtils userUtils;
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
 
     @Override
@@ -106,14 +110,14 @@ public class UserServiceImpl implements UserService {
 
         user.setId(id);
         user.setUsername(username);
-        user.setPassword(password);
+        user.setPassword(passwordEncoder.encode(password));
         user.setRole(role);
         user.setLocation(location);
         if (user.getListAssignmentsBy()==null)  user.setListAssignmentsBy(new ArrayList<Assignment>());
         if (user.getListAssignmentsTo()==null)  user.setListAssignmentsTo(new ArrayList<Assignment>());
 
         userRepository.save(user);
-
+        System.out.printf("Password: " + password);
         return UserMapper.mapFromEntityToUserResponseDto(user);
     }
 
