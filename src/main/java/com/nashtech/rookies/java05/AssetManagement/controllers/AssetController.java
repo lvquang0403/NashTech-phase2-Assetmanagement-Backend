@@ -38,6 +38,11 @@ public class AssetController {
         return assetService.insert(dto);
     }
 
+    @PutMapping("/{id}")
+    public AssetResponseInsertDto update(@RequestBody AssetRequestDto dto, @PathVariable String id) {
+        return assetService.update(dto, id);
+    }
+
     @GetMapping("/{id}")
     public AssetResponseDto getAssetById(@PathVariable String id) {
         return assetService.getAssetById(id);

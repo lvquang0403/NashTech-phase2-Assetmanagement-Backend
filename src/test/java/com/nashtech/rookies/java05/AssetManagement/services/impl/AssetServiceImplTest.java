@@ -175,6 +175,46 @@ public class AssetServiceImplTest {
     }
 
 
+    @Test
+    void update_ShouldThrowNullPointerException_WhenParamsIsNull() {
+        assetRequestDto.setName(null);
+
+        NullPointerException exception = Assertions.assertThrows(NullPointerException.class,
+                () -> assetServiceImpl.update(assetRequestDto, "PD000001"));
+
+        Assertions.assertEquals("null name", exception.getMessage());
+    }
+
+    @Test
+    void update_ShouldThrowIllegalArgumentException_WhenParamsIsEmptyString() {
+        assetRequestDto.setName("");
+
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
+                () -> assetServiceImpl.update(assetRequestDto, "PD000001"));
+
+        Assertions.assertEquals("empty name", exception.getMessage());
+    }
+
+    @Test
+    void update_ShouldThrowIllegalArgumentException_WhenInstalledDateNotPastDate() {
+        assetRequestDto.setInstalledDate(new Date(now.getTime() + oneDay));
+
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
+                () -> assetServiceImpl.update(assetRequestDto, "PD000001"));
+
+        Assertions.assertEquals("installed date must be a date in the past", exception.getMessage());
+    }
+
+    @Test
+    void update_ShouldThrowIllegalArgumentException_WhenNameHasSpecialCharacters() {
+        assetRequestDto.setName("hahah2~");
+
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
+                () -> assetServiceImpl.update(assetRequestDto, "PD000001"));
+
+        Assertions.assertEquals("Name cannot contain special characters:! @ # $ % & * ( )  _ + = |  < > ? { } [ ] ~", exception.getMessage());
+    }
+
     @ExtendWith(MockitoExtension.class)
     @Test
     void getAssetsByPredicates_WhenCategoryNamesParamsIsNotNull() {

@@ -11,6 +11,7 @@ import com.nashtech.rookies.java05.AssetManagement.entities.Returning;
 
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssetState;
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssignmentReturnState;
+import com.nashtech.rookies.java05.AssetManagement.exceptions.ResourceNotFoundException;
 import com.nashtech.rookies.java05.AssetManagement.mappers.AssetMapper;
 import com.nashtech.rookies.java05.AssetManagement.repository.AssetRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.CategoryRepository;
@@ -54,6 +55,18 @@ public class AssetServiceImpl implements AssetService {
         Asset asset = assetMapper.mapAssetRequestDtoToEntityInsert(dto);
         Asset newAsset = assetRepository.save(asset);
         return assetMapper.mapEntityInsertToAssetResponseInsertDto(newAsset);
+    }
+
+    @Override
+    public AssetResponseInsertDto update(AssetRequestDto dto, String id) {
+        entityCheckUtils.assetCheckUpdate(dto);
+        Optional<Asset> optional = assetRepository.findById(id);
+        if(optional.isEmpty()){
+            throw new ResourceNotFoundException("this asset not exist");
+        }
+        Asset modifiedAsset = assetMapper.mapAssetRequestDtoToEntityUpdate(dto, optional.get());
+        assetRepository.save(modifiedAsset);
+        return assetMapper.mapEntityInsertToAssetResponseInsertDto(modifiedAsset);
     }
 
     @Override
