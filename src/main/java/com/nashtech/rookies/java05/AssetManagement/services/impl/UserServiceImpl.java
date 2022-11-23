@@ -2,11 +2,16 @@ package com.nashtech.rookies.java05.AssetManagement.services.impl;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.UserRequestDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.APIResponse;
+import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssignmentResponseDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.UserResponseDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.UserViewResponseDto;
+import com.nashtech.rookies.java05.AssetManagement.entities.Assignment;
 import com.nashtech.rookies.java05.AssetManagement.entities.Location;
 import com.nashtech.rookies.java05.AssetManagement.entities.Role;
 import com.nashtech.rookies.java05.AssetManagement.entities.User;
+import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssignmentReturnState;
+import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssignmentState;
+import com.nashtech.rookies.java05.AssetManagement.mappers.AssignmentMapper;
 import com.nashtech.rookies.java05.AssetManagement.mappers.UserMapper;
 import com.nashtech.rookies.java05.AssetManagement.repository.LocationRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.RoleRepository;
@@ -25,9 +30,11 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Builder
 @Service
@@ -102,6 +109,8 @@ public class UserServiceImpl implements UserService {
         user.setPassword(password);
         user.setRole(role);
         user.setLocation(location);
+        if (user.getListAssignmentsBy()==null)  user.setListAssignmentsBy(new ArrayList<Assignment>());
+        if (user.getListAssignmentsTo()==null)  user.setListAssignmentsTo(new ArrayList<Assignment>());
 
         userRepository.save(user);
 
@@ -128,5 +137,50 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
 
         return UserMapper.mapFromEntityToUserResponseDto(user);
+    }
+
+    @Override
+    public boolean disableUserById(String id) {
+        Optional<User> optionalUser=userRepository.findById(id);
+        if (optionalUser.isEmpty()) return false;
+        User user=optionalUser.get();
+        List<Assignment> listAssignments=user.getListAssignmentsTo();
+        for (Assignment assignment : listAssignments){
+            if (assignment.getState()== AssignmentState.ACCEPTED){
+                if (assignment.getReturning().getState() != AssignmentReturnState.COMPLETED){
+                    return false;
+                }
+            } else if (assignment.getState()!= AssignmentState.WAITING) {
+                return false;
+            }
+        }
+        user.setDisabled(true);
+        userRepository.save(user);
+        return true;
+    }
+
+    @Override
+    public boolean checkUserValidToDisableById(String id) {
+        Optional<User> optionalUser=userRepository.findById(id);
+        if (optionalUser.isEmpty()) return false;
+        User user=optionalUser.get();
+        List<Assignment> listAssignments=user.getListAssignmentsTo();
+        for (Assignment assignment : listAssignments){
+            if (assignment.getState()== AssignmentState.ACCEPTED){
+                if (assignment.getReturning().getState() != AssignmentReturnState.COMPLETED){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public List<AssignmentResponseDto> getListAssignmentsToOfUser(String id) {
+        Optional<User> optionalUser=userRepository.findById(id);
+        if (optionalUser.isEmpty()) return null;
+        User user=optionalUser.get();
+        AssignmentMapper mapper=new AssignmentMapper();
+        return user.getListAssignmentsTo().stream().map((assignment)-> mapper.mapAssignmentEntityToResponseDto(assignment)).collect(Collectors.toList());
     }
 }

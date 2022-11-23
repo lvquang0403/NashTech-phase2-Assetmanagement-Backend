@@ -1,15 +1,20 @@
 package com.nashtech.rookies.java05.AssetManagement.controllers;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.UserRequestDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.APIResponse;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.UserResponseDto;
+import com.nashtech.rookies.java05.AssetManagement.dtos.response.UserValidToDisableDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.UserViewResponseDto;
+import com.nashtech.rookies.java05.AssetManagement.entities.Assignment;
 import com.nashtech.rookies.java05.AssetManagement.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.sql.DataSourceDefinition;
 import java.text.ParseException;
 import java.util.List;
 
@@ -17,6 +22,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
+
+    @Autowired
+    Gson gson;
 
     @Autowired
     UserService userService;
@@ -38,6 +46,28 @@ public class UserController {
         return ResponseEntity.ok(userResponseDto);
     }
 
+    @GetMapping("/{id}/disable")
+    public ResponseEntity checkValidUserToDisable(@PathVariable String id){
+        boolean checked=userService.checkUserValidToDisableById(id);
+        UserValidToDisableDto userValidToDisableDto=new UserValidToDisableDto();
+        if (checked){
+            userValidToDisableDto.setTitle("User valid to disable");
+            userValidToDisableDto.setMessage("success");
+            return ResponseEntity.ok(userValidToDisableDto);
+        }
+        else {
+            userValidToDisableDto.setTitle("Can not disable user");
+            userValidToDisableDto.setMessage("There are valid assignments belonging to this user.\n" +
+                    "Please close all assignments before disabling user");
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(userValidToDisableDto);
+    }
+
+    @GetMapping("/{id}/assignments")
+    public ResponseEntity getListAssignmentsToOfUser(@PathVariable String id){
+        return ResponseEntity.ok(userService.getListAssignmentsToOfUser(id));
+    }
+
     @PostMapping
     public ResponseEntity createUser(@RequestBody UserRequestDto userRequestDto) throws ParseException {
         return ResponseEntity.ok(userService.createUser(userRequestDto));
@@ -46,6 +76,13 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity updateUser(@PathVariable("id") String id, @RequestBody UserRequestDto userRequestDto) throws ParseException {
         return ResponseEntity.ok(userService.updateUser(id, userRequestDto));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity disableUserById(@PathVariable String id){
+        boolean isDisabled= userService.disableUserById(id);
+        if (isDisabled)    return ResponseEntity.ok("success");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("failed to disable that user");
     }
 }
 
