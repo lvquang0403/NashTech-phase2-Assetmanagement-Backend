@@ -103,6 +103,19 @@ public class AssetMapper {
         result.setLocationDto(asset.getLocation());
         return result;
     }
+
+    public Asset mapAssetRequestDtoToEntityUpdate(AssetRequestDto dto, Asset oldAsset) {
+        Date dateNow = new Date();
+        Timestamp now = new Timestamp(dateNow.getTime());
+        oldAsset.setState(dto.getState());
+        oldAsset.setName(dto.getName());
+        oldAsset.setSpecification(dto.getSpecification());
+        oldAsset.setInstalledDate(dto.getInstalledDate());
+        oldAsset.setUpdatedWhen(now);
+
+        return oldAsset;
+    }
+
     public AssetResponseDto mapAssetEntityToAssetResponseDto(Asset asset){
         AssetResponseDto assetResponseDto = AssetResponseDto.builder()
                 .id(asset.getId())

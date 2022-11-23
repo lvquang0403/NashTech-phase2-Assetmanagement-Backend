@@ -99,4 +99,50 @@ public class EntityCheckUtils {
             throw new IllegalArgumentException("installed date must be a date in the past");
         }
     }
+
+    public void assetCheckUpdate(AssetRequestDto dto){
+        java.util.Date now = new java.util.Date();
+        if (dto.getName() == null) {
+            throw new NullPointerException("null name");
+        }
+        if (dto.getState() == null) {
+            throw new NullPointerException("null state");
+        }
+        if (dto.getSpecification() == null) {
+            throw new NullPointerException("null specification");
+        }
+        if (dto.getInstalledDate() == null) {
+            throw new NullPointerException("null installedDate");
+        }
+
+        if (dto.getName().trim().equals("")) {
+            throw new IllegalArgumentException("empty name");
+        }
+        if (dto.getSpecification().trim().equals("")) {
+            throw new IllegalArgumentException("empty specification");
+        }
+
+
+        if (dto.getName().length() > 50) {
+            throw new IllegalArgumentException("name is too long, name up to 50 characters long");
+        }
+        if (dto.getSpecification().length() >500 ) {
+            throw new IllegalArgumentException("specification is too long, specification up to 500 characters long");
+        }
+//        special characters
+        Pattern special = Pattern.compile ("[!@#$%&*()_+=|<>?{}\\[\\]~]");
+        Pattern accented = Pattern.compile ("[áàảạãăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵđ]");
+        Matcher checkSpecialName = special.matcher(dto.getName());
+        Matcher checkAccentedName = accented.matcher(dto.getName().toLowerCase());
+        if (checkSpecialName.find()) {
+            throw new IllegalArgumentException("Name cannot contain special characters:! @ # $ % & * ( )  _ + = |  < > ? { } [ ] ~");
+        }
+        if (checkAccentedName.find()) {
+            throw new IllegalArgumentException("Name Do not use Vietnamese with accents");
+        }
+
+        if(now.compareTo(dto.getInstalledDate()) < 0){
+            throw new IllegalArgumentException("installed date must be a date in the past");
+        }
+    }
 }

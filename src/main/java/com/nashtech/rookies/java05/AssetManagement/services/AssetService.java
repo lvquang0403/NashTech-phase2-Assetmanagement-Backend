@@ -15,6 +15,8 @@ public interface AssetService {
 
     public AssetResponseInsertDto insert(AssetRequestDto dto);
 
+    public AssetResponseInsertDto update(AssetRequestDto dto, String id);
+
 
     APIResponse<List<AssetViewResponseDto>> getAssetsByPredicates
             (List<String> stateFilterList, List<String> categoryNames, String keyword, int locationId, int page, String orderBy);
