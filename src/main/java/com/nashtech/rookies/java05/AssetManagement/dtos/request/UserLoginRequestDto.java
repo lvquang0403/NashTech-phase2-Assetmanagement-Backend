@@ -16,6 +16,5 @@ public class UserLoginRequestDto {
     @NotBlank(message = "Username is required!")
     private String username;
     @NotBlank(message = "Password is required")
-    @Size(min = 6, max = 24, message = "The password must contain at least 6 characters and be up to 24 characters!")
     private String password;
 }

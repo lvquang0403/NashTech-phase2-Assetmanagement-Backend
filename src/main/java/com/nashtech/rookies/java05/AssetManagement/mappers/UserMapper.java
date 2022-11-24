@@ -2,7 +2,6 @@ package com.nashtech.rookies.java05.AssetManagement.mappers;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.UserRequestDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.*;
-import com.nashtech.rookies.java05.AssetManagement.entities.Role;
 import com.nashtech.rookies.java05.AssetManagement.entities.User;
 import org.springframework.stereotype.Component;
 
@@ -33,7 +32,10 @@ public class UserMapper {
     }
 
     public UserLoginResponseDto mapUserEntityToUserLoginResponse(User user){
-
+        String state = "";
+        if(user.getState()!=null){
+            state = user.getState().getName();
+        }
         UserLoginResponseDto responseDto = UserLoginResponseDto
                 .builder()
                 .id(user.getId())
@@ -44,6 +46,7 @@ public class UserMapper {
                 .lastName(user.getLastName())
                 .gender(user.getGender().getName())
                 .location(LocationResponseDto.builder().cityName(user.getLocation().getCityName()).id(user.getLocation().getId()).build())
+                .State(state)
                 .build();
         return responseDto;
     }
