@@ -5,6 +5,7 @@ import com.nashtech.rookies.java05.AssetManagement.dtos.response.SuccessResponse
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.UserLoginResponseDto;
 import com.nashtech.rookies.java05.AssetManagement.entities.User;
 import com.nashtech.rookies.java05.AssetManagement.exceptions.ForbiddenException;
+import com.nashtech.rookies.java05.AssetManagement.exceptions.UnauthorizedException;
 import com.nashtech.rookies.java05.AssetManagement.mappers.UserMapper;
 import com.nashtech.rookies.java05.AssetManagement.repository.UserRepository;
 import com.nashtech.rookies.java05.AssetManagement.services.AuthService;
@@ -49,6 +50,6 @@ public class AuthServiceImpl implements AuthService {
                 }
             }
         }
-        throw new ForbiddenException("Username or password is incorrect!");
+        throw new UnauthorizedException("Username or password is incorrect!");
     }
 }
