@@ -36,7 +36,7 @@ public class SecurityConfig {
     //Authorize here
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        httpSecurity.cors().and().csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         httpSecurity.authorizeRequests()
                 .antMatchers("/api/login").permitAll()
                 .antMatchers("/api/assets/**").hasAnyAuthority(ADMIN)
