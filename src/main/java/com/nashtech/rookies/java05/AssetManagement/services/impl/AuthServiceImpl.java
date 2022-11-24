@@ -34,19 +34,19 @@ public class AuthServiceImpl implements AuthService {
         if (userFound.isPresent()) {
             User user = userFound.get();
             if (!user.isDisabled()) {
-                if (user.getState() == null) { //Login first time!
-                    if (user.getPassword().equals(userLoginRequestDto.getPassword())) {
-                        UserLoginResponseDto userLoginResponseDto = userMapper.mapUserEntityToUserLoginResponse(user);
-                        userLoginResponseDto.setAccessToken(jwtUtil.generateToken(user));
-                        return new SuccessResponse<>("Login successfully!", userLoginResponseDto);
-                    }
-                } else {
-                    if (passwordEncoder.matches(userLoginRequestDto.getPassword(), user.getPassword())) {
-                        UserLoginResponseDto userLoginResponseDto = userMapper.mapUserEntityToUserLoginResponse(user);
-                        userLoginResponseDto.setAccessToken(jwtUtil.generateToken(user));
-                        return new SuccessResponse<>("Login successfully!", userLoginResponseDto);
-                    }
+//                if (user.getState() == null) { //Login first time!
+//                    if (user.getPassword().equals(userLoginRequestDto.getPassword())) {
+//                        UserLoginResponseDto userLoginResponseDto = userMapper.mapUserEntityToUserLoginResponse(user);
+//                        userLoginResponseDto.setAccessToken(jwtUtil.generateToken(user));
+//                        return new SuccessResponse<>("Login successfully!", userLoginResponseDto);
+//                    }
+//                } else {
+                if (passwordEncoder.matches(userLoginRequestDto.getPassword(), user.getPassword())) {
+                    UserLoginResponseDto userLoginResponseDto = userMapper.mapUserEntityToUserLoginResponse(user);
+                    userLoginResponseDto.setAccessToken(jwtUtil.generateToken(user));
+                    return new SuccessResponse<>("Login successfully!", userLoginResponseDto);
                 }
+//                }
             }
         }
         throw new ForbiddenException("Username or password is incorrect!");

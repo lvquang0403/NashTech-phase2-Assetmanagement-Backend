@@ -192,6 +192,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ChangePasswordDto changePassword(Authentication authentication, ResetPasswordDto resetPasswordDto) {
+        System.out.println(passwordEncoder.encode("12345"));
         String username=authentication.getName();
         Optional<User> optionalUser =userRepository.findUsersByUsername(username);
         ChangePasswordDto changePasswordDto=new ChangePasswordDto();
@@ -202,7 +203,6 @@ public class UserServiceImpl implements UserService {
         }
         User user=optionalUser.get();
         String passwordEncrypted=user.getPassword();
-        if (passwordEncrypted.charAt(0)!='$')   passwordEncrypted=passwordEncoder.encode(passwordEncrypted);
         if (resetPasswordDto.getOldPassword()==null){
             String prefixUsername = userUtils.getPrefixUsername(user.getFirstName(), user.getLastName());
             SimpleDateFormat format = new SimpleDateFormat("ddMMyyyy");

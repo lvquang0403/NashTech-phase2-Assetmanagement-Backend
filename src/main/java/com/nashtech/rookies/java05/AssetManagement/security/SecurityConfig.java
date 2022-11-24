@@ -43,6 +43,7 @@ public class SecurityConfig {
                 .antMatchers("/api/assets/states/**").hasAnyAuthority(ADMIN)
                 .antMatchers("/api/categories/**").hasAnyAuthority(ADMIN)
                 .antMatchers("/api/categories/name/**").hasAnyAuthority(ADMIN)
+                .antMatchers("/api/users/reset-password").authenticated()
                 .antMatchers("/api/users/**").hasAnyAuthority(ADMIN)
                 .antMatchers("/api/**").authenticated();
         httpSecurity.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
