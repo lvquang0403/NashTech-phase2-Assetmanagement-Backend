@@ -64,7 +64,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                     Optional<User> userOptional = userRepository.findUsersByUsername(username);
                     if (userOptional.isEmpty()) {
-                        throw new RuntimeException("Invalid JWT");
+                        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                        Map<String, String> error = new HashMap<>();
+                        error.put("error_message", "Invalid JWT");
+                        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                        new ObjectMapper().writeValue(response.getOutputStream(), error);
                     }
                     setSecurityContext(userOptional.get());
                     filterChain.doFilter(request, response);
@@ -78,7 +82,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     new ObjectMapper().writeValue(response.getOutputStream(), error);
                 }
             } else {
-                response.setStatus(HttpStatus.FORBIDDEN.value());
+                response.setStatus(HttpStatus.UNAUTHORIZED.value());
                 Map<String, String> error = new HashMap<>();
                 error.put("error_message", "JWT Access Token does not start with 'Bearer ");
                 response.setContentType(MediaType.APPLICATION_JSON_VALUE);
