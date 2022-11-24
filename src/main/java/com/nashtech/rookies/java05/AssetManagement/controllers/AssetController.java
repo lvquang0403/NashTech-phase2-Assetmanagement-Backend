@@ -1,13 +1,12 @@
 package com.nashtech.rookies.java05.AssetManagement.controllers;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssetRequestDto;
-import com.nashtech.rookies.java05.AssetManagement.dtos.response.APIResponse;
-import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssetResponseDto;
-import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssetResponseInsertDto;
-import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssetViewResponseDto;
+import com.nashtech.rookies.java05.AssetManagement.dtos.response.*;
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssetState;
 import com.nashtech.rookies.java05.AssetManagement.services.AssetService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -51,6 +50,30 @@ public class AssetController {
     @GetMapping("/states")
     public List<String> getAllAssetStates() {
         return assetService.getAllAssetStates();
+    }
+
+    @GetMapping("/{id}/check-historical")
+    public ResponseEntity checkAssetValidToDelete(@PathVariable String id){
+        boolean isDeleted=assetService.checkAssetValidToDelete(id);
+        DeleteAssetDto deleteAssetDto=new DeleteAssetDto();
+        if (isDeleted){
+            deleteAssetDto.setTitle("Asset valid to delete");
+            deleteAssetDto.setMessage("That asset has no valid assignments");
+            return ResponseEntity.ok(deleteAssetDto);
+        }
+        else {
+            deleteAssetDto.setTitle("Cannot delete Asset");
+            deleteAssetDto.setMessage("Cannot delete the asset because it belongs to one or more historical assignments.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(deleteAssetDto);
+        }
+    }
+
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteAssetById(@PathVariable String id){
+        boolean isDeleted=assetService.deleteAssetById(id);
+        if (isDeleted)  return ResponseEntity.ok("That asset was deleted.");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to delete that asset.");
     }
 
 }

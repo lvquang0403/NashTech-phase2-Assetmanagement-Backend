@@ -1,16 +1,15 @@
 package com.nashtech.rookies.java05.AssetManagement.services.impl;
 
+import com.nashtech.rookies.java05.AssetManagement.dtos.request.ResetPasswordDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.UserRequestDto;
-import com.nashtech.rookies.java05.AssetManagement.dtos.response.APIResponse;
-import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssignmentResponseDto;
-import com.nashtech.rookies.java05.AssetManagement.dtos.response.UserResponseDto;
-import com.nashtech.rookies.java05.AssetManagement.dtos.response.UserViewResponseDto;
+import com.nashtech.rookies.java05.AssetManagement.dtos.response.*;
 import com.nashtech.rookies.java05.AssetManagement.entities.Assignment;
 import com.nashtech.rookies.java05.AssetManagement.entities.Location;
 import com.nashtech.rookies.java05.AssetManagement.entities.Role;
 import com.nashtech.rookies.java05.AssetManagement.entities.User;
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssignmentReturnState;
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssignmentState;
+import com.nashtech.rookies.java05.AssetManagement.entities.enums.UserState;
 import com.nashtech.rookies.java05.AssetManagement.mappers.AssignmentMapper;
 import com.nashtech.rookies.java05.AssetManagement.mappers.UserMapper;
 import com.nashtech.rookies.java05.AssetManagement.repository.LocationRepository;
@@ -19,12 +18,16 @@ import com.nashtech.rookies.java05.AssetManagement.repository.UserRepository;
 import com.nashtech.rookies.java05.AssetManagement.services.UserService;
 import com.nashtech.rookies.java05.AssetManagement.utils.UserUtils;
 import lombok.Builder;
+import org.mindrot.jbcrypt.BCrypt;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -35,6 +38,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 
 @Builder
 @Service
@@ -52,6 +56,8 @@ public class UserServiceImpl implements UserService {
     LocationRepository locationRepository;
     @Autowired
     UserUtils userUtils;
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
 
     @Override
@@ -106,7 +112,7 @@ public class UserServiceImpl implements UserService {
 
         user.setId(id);
         user.setUsername(username);
-        user.setPassword(password);
+        user.setPassword(passwordEncoder.encode(password));
         user.setRole(role);
         user.setLocation(location);
         if (user.getListAssignmentsBy()==null)  user.setListAssignmentsBy(new ArrayList<Assignment>());
@@ -150,7 +156,7 @@ public class UserServiceImpl implements UserService {
                 if (assignment.getReturning().getState() != AssignmentReturnState.COMPLETED){
                     return false;
                 }
-            } else if (assignment.getState()!= AssignmentState.WAITING) {
+            } else if (assignment.getState()== AssignmentState.WAITING) {
                 return false;
             }
         }
@@ -182,5 +188,44 @@ public class UserServiceImpl implements UserService {
         User user=optionalUser.get();
         AssignmentMapper mapper=new AssignmentMapper();
         return user.getListAssignmentsTo().stream().map((assignment)-> mapper.mapAssignmentEntityToResponseDto(assignment)).collect(Collectors.toList());
+    }
+
+    @Override
+    public ChangePasswordDto changePassword(Authentication authentication, ResetPasswordDto resetPasswordDto) {
+        String username=authentication.getName();
+        Optional<User> optionalUser =userRepository.findUsersByUsername(username);
+        ChangePasswordDto changePasswordDto=new ChangePasswordDto();
+        if (optionalUser.isEmpty()){
+            changePasswordDto.setStatus(HttpStatus.BAD_REQUEST);
+            changePasswordDto.setMessage("Cannot find that user.");
+            return changePasswordDto;
+        }
+        User user=optionalUser.get();
+        String passwordEncrypted=user.getPassword();
+        if (passwordEncrypted.charAt(0)!='$')   passwordEncrypted=passwordEncoder.encode(passwordEncrypted);
+        if (resetPasswordDto.getOldPassword()==null){
+            String prefixUsername = userUtils.getPrefixUsername(user.getFirstName(), user.getLastName());
+            SimpleDateFormat format = new SimpleDateFormat("ddMMyyyy");
+            resetPasswordDto.setOldPassword(prefixUsername + "@" + format.format(user.getBirth()));
+        }
+        if (resetPasswordDto.getNewPassword().equals(resetPasswordDto.getOldPassword())){
+            changePasswordDto.setStatus(HttpStatus.BAD_REQUEST);
+            changePasswordDto.setTitle("Failed to change password");
+            changePasswordDto.setMessage("You need to change a password that is different from your old password");
+            return changePasswordDto;
+        }
+        if (passwordEncoder.matches(resetPasswordDto.getOldPassword(),passwordEncrypted)){
+            user.setPassword(passwordEncoder.encode(resetPasswordDto.getNewPassword()));
+            if (user.getState()!=UserState.ACTIVE)   user.setState(UserState.ACTIVE);
+            userRepository.save(user);
+            changePasswordDto.setStatus(HttpStatus.OK);
+            changePasswordDto.setTitle("Change password");
+            changePasswordDto.setMessage("Your password has been changed successfully!");
+            return changePasswordDto;
+        }
+        changePasswordDto.setStatus(HttpStatus.BAD_REQUEST);
+        changePasswordDto.setTitle("Change password");
+        changePasswordDto.setMessage("Password is incorrect");
+        return changePasswordDto;
     }
 }

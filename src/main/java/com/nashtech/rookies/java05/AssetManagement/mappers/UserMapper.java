@@ -1,14 +1,9 @@
 package com.nashtech.rookies.java05.AssetManagement.mappers;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.UserRequestDto;
-import com.nashtech.rookies.java05.AssetManagement.dtos.response.UserResponseDto;
-import com.nashtech.rookies.java05.AssetManagement.dtos.response.UserViewResponseDto;
-import com.nashtech.rookies.java05.AssetManagement.entities.Location;
+import com.nashtech.rookies.java05.AssetManagement.dtos.response.*;
 import com.nashtech.rookies.java05.AssetManagement.entities.Role;
 import com.nashtech.rookies.java05.AssetManagement.entities.User;
-import com.nashtech.rookies.java05.AssetManagement.repository.LocationRepository;
-import com.nashtech.rookies.java05.AssetManagement.repository.RoleRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
@@ -35,6 +30,22 @@ public class UserMapper {
             userViewResponseDtoList.add(result);
         });
         return userViewResponseDtoList;
+    }
+
+    public UserLoginResponseDto mapUserEntityToUserLoginResponse(User user){
+
+        UserLoginResponseDto responseDto = UserLoginResponseDto
+                .builder()
+                .id(user.getId())
+                .joinedDate(user.getJoinedDate())
+                .role(RoleResponseDto.builder().id(user.getRole().getId()).name(user.getRole().getName()).build())
+                .birth(user.getBirth())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .gender(user.getGender().getName())
+                .location(LocationResponseDto.builder().cityName(user.getLocation().getCityName()).id(user.getLocation().getId()).build())
+                .build();
+        return responseDto;
     }
 
     public static User mapFromUserRequestDtoToEntity(UserRequestDto userRequestDto) throws ParseException {

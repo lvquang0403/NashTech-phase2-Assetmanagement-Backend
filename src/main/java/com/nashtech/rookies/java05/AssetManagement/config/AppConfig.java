@@ -17,4 +17,5 @@ public class AppConfig {
 
     @Bean
     public Gson gson(){ return new Gson(); }
+
 }

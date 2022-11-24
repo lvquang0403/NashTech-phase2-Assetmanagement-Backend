@@ -23,4 +23,8 @@ public interface AssetService {
 
     List<String> getAllAssetStates();
     AssetResponseDto getAssetById(String id);
+
+    boolean deleteAssetById(String id);
+
+    boolean checkAssetValidToDelete(String id);
 }
