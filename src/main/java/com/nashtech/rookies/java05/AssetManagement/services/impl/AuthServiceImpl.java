@@ -39,13 +39,13 @@ public class AuthServiceImpl implements AuthService {
                     if (user.getPassword().equals(userLoginRequestDto.getPassword())) {
                         UserLoginResponseDto userLoginResponseDto = userMapper.mapUserEntityToUserLoginResponse(user);
                         userLoginResponseDto.setAccessToken(jwtUtil.generateToken(user));
-                        return new SuccessResponse<>("Login successfully!", userLoginResponseDto);
+                        return new SuccessResponse<>(userLoginResponseDto);
                     }
                 } else {
                     if (passwordEncoder.matches(userLoginRequestDto.getPassword(), user.getPassword())) {
                         UserLoginResponseDto userLoginResponseDto = userMapper.mapUserEntityToUserLoginResponse(user);
                         userLoginResponseDto.setAccessToken(jwtUtil.generateToken(user));
-                        return new SuccessResponse<>("Login successfully!", userLoginResponseDto);
+                        return new SuccessResponse<>(userLoginResponseDto);
                     }
                 }
             }
