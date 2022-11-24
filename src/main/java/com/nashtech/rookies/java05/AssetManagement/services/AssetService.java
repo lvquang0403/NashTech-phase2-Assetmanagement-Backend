@@ -15,10 +15,16 @@ public interface AssetService {
 
     public AssetResponseInsertDto insert(AssetRequestDto dto);
 
+    public AssetResponseInsertDto update(AssetRequestDto dto, String id);
+
 
     APIResponse<List<AssetViewResponseDto>> getAssetsByPredicates
-            (List<AssetState> states, List<String> categoryNames, String keyword, int locationId, int page);
+            (List<String> stateFilterList, List<String> categoryNames, String keyword, int locationId, int page, String orderBy);
 
     List<String> getAllAssetStates();
     AssetResponseDto getAssetById(String id);
+
+    boolean deleteAssetById(String id);
+
+    boolean checkAssetValidToDelete(String id);
 }

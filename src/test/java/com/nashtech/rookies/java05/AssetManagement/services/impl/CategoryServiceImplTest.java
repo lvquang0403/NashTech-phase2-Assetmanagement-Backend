@@ -1,7 +1,7 @@
 package com.nashtech.rookies.java05.AssetManagement.services.impl;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.CategoryRequestDto;
-import com.nashtech.rookies.java05.AssetManagement.dtos.response.CategoryResponseInsertDto;
+import com.nashtech.rookies.java05.AssetManagement.dtos.response.CategoryResponseDto;
 import com.nashtech.rookies.java05.AssetManagement.entities.Category;
 import com.nashtech.rookies.java05.AssetManagement.exceptions.RepeatDataException;
 import com.nashtech.rookies.java05.AssetManagement.mappers.AssetMapper;
@@ -98,7 +98,7 @@ public class CategoryServiceImplTest {
     @Test
     void insert_ShouldThrowIllegalArgumentException_WhenPrefixTooLong(){
         categoryRequestDto.setId("qws");
-        categoryRequestDto.setName("computer");
+        categoryRequestDto.setName("computer1111");
 
         Mockito.when(repository.findAll()).thenReturn(categoryList);
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
@@ -139,23 +139,9 @@ public class CategoryServiceImplTest {
         Mockito.when(repository.findAll()).thenReturn(categoryList);
         Mockito.when(repository.save(any(Category.class))).thenReturn(expectedCategory);
 
-        CategoryResponseInsertDto actual = service.insert(categoryRequestDto);
+        CategoryResponseDto actual = service.insert(categoryRequestDto);
         Assertions.assertEquals(categoryRequestDto.getId(), actual.getId());
     }
-
-
-    // @Test
-    // void getToInsert_ShouldListCategoryResponseInsertDto_WhenDatabaseHasData(){
-    //     expectedCategory.setId("qc");
-    //     expectedCategory.setName("mahua");
-    //     categoryList.add(expectedCategory);
-    //     categoryList.add(expectedCategory);
-
-    //     Mockito.when(repository.findAll()).thenReturn(categoryList);
-
-    //     List<CategoryResponseInsertDto> actual = service.getToInsert();
-    //     Assertions.assertEquals(3, actual.size());
-    // }
 
     @Test
     void insert_ShouldThrowIllegalArgumentException_WhenNameHasSpecialCharacters(){

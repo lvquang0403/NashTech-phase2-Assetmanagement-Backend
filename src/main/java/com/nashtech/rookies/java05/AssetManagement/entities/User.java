@@ -2,6 +2,7 @@ package com.nashtech.rookies.java05.AssetManagement.entities;
 
 
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.Gender;
+import com.nashtech.rookies.java05.AssetManagement.entities.enums.UserState;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -50,6 +51,13 @@ public class User {
 
     @Column(name = "updated_when")
     private Timestamp updatedWhen;
+
+    @Column(name = "state")
+    @Enumerated(EnumType.STRING)
+    private UserState state;
+
+    @Column(name="disabled")
+    private boolean isDisabled=false;
 
     @ManyToOne
     @JoinColumn(name = "role_id",referencedColumnName = "id")

@@ -10,12 +10,16 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, String> {
 
     @Query(value = "SELECT u FROM User u join u.role" +
             " WHERE (u.role IN :roles OR :roles is null)" +
-            " AND (LOWER(u.lastName) LIKE %:keyword% OR LOWER(u.firstName) LIKE %:keyword% OR LOWER(u.id) LIKE %:keyword%)" +
+            " AND (LOWER(u.lastName) LIKE %:keyword% " +
+            "OR LOWER(u.firstName) LIKE %:keyword% " +
+            "OR CONCAT(LOWER(u.firstName), ' ', LOWER(u.lastName))  LIKE %:keyword% " +
+            "OR LOWER(u.id) LIKE %:keyword%)" +
             " AND u.location.id = :locationId")
     Page<User> findUsersWithFilter(
             @Param("roles") List<Role> roles,
@@ -23,5 +27,7 @@ public interface UserRepository extends JpaRepository<User, String> {
             @Param("locationId") int locationId,
             Pageable pageable
     );
+
+    Optional<User> findUsersByUsername(String username);
 
 }

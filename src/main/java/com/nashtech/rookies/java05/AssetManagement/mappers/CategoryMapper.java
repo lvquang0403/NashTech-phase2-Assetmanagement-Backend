@@ -2,7 +2,7 @@ package com.nashtech.rookies.java05.AssetManagement.mappers;
 
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.CategoryRequestDto;
-import com.nashtech.rookies.java05.AssetManagement.dtos.response.CategoryResponseInsertDto;
+import com.nashtech.rookies.java05.AssetManagement.dtos.response.CategoryResponseDto;
 import com.nashtech.rookies.java05.AssetManagement.entities.Category;
 import org.springframework.stereotype.Component;
 
@@ -16,8 +16,8 @@ public class CategoryMapper {
                 .build();
     }
 
-    public CategoryResponseInsertDto mapEntityToResponseInsertDto(Category category){
-        return  CategoryResponseInsertDto.builder()
+    public CategoryResponseDto mapEntityToResponseInsertDto(Category category){
+        return  CategoryResponseDto.builder()
                 .name(category.getName())
                 .id(category.getId())
                 .build();

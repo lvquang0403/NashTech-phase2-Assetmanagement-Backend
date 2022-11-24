@@ -11,6 +11,7 @@ import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssetState;
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssignmentReturnState;
 import com.nashtech.rookies.java05.AssetManagement.mappers.AssetMapper;
 import com.nashtech.rookies.java05.AssetManagement.repository.*;
+import com.nashtech.rookies.java05.AssetManagement.utils.EntityCheckUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,8 +40,7 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class AssetServiceImplTest {
-    @Autowired
-    AssetServiceImpl service;
+
     @MockBean
     AssetRepository repository;
     @MockBean
@@ -49,7 +49,7 @@ public class AssetServiceImplTest {
     LocationRepository locationRepository;
     @MockBean
     PresentIdRepository presentIdRepository;
-
+    EntityCheckUtils entityCheckUtils;
     ModelMapper modelMapper;
     private AssetRepository assetRepository;
     private AssetMapper assetMapper;
@@ -85,6 +85,7 @@ public class AssetServiceImplTest {
         assetRequestDto.setLocationId(1);
         assetRequestDto.setInstalledDate(new Date(now.getTime() - oneDay));
 
+        entityCheckUtils =new EntityCheckUtils();
         asset = mock(Asset.class);
         modelMapper = mock(ModelMapper.class);
         returning = mock(Returning.class);
@@ -96,6 +97,7 @@ public class AssetServiceImplTest {
         returningRepository = mock(ReturningRepository.class);
         assetServiceImpl = AssetServiceImpl
                 .builder()
+                .entityCheckUtils(entityCheckUtils)
                 .categoryRepository(categoryRepository)
                 .assetMapper(assetMapper)
                 .assetRepository(assetRepository)
@@ -111,7 +113,7 @@ public class AssetServiceImplTest {
         assetRequestDto.setName(null);
 
         NullPointerException exception = Assertions.assertThrows(NullPointerException.class,
-                () -> service.insert(assetRequestDto));
+                () -> assetServiceImpl.insert(assetRequestDto));
 
         Assertions.assertEquals("null name", exception.getMessage());
     }
@@ -121,7 +123,7 @@ public class AssetServiceImplTest {
         assetRequestDto.setName("");
 
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
-                () -> service.insert(assetRequestDto));
+                () -> assetServiceImpl.insert(assetRequestDto));
 
         Assertions.assertEquals("empty name", exception.getMessage());
     }
@@ -131,7 +133,7 @@ public class AssetServiceImplTest {
         assetRequestDto.setName("aaaaaaaaaaaKaaaaaaaaaaaKaaaaaaaaaaaKaaaaaaaaaaaKaaaaaaaaaaa");
 
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
-                () -> service.insert(assetRequestDto));
+                () -> assetServiceImpl.insert(assetRequestDto));
 
 
         Assertions.assertEquals("name is too long, name up to 50 characters long", exception.getMessage());
@@ -146,7 +148,7 @@ public class AssetServiceImplTest {
         assetRequestDto.setSpecification(str);
 
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
-                () -> service.insert(assetRequestDto));
+                () -> assetServiceImpl.insert(assetRequestDto));
 
 
         Assertions.assertEquals("specification is too long, specification up to 500 characters long", exception.getMessage());
@@ -157,7 +159,7 @@ public class AssetServiceImplTest {
         assetRequestDto.setInstalledDate(new Date(now.getTime() + oneDay));
 
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
-                () -> service.insert(assetRequestDto));
+                () -> assetServiceImpl.insert(assetRequestDto));
 
         Assertions.assertEquals("installed date must be a date in the past", exception.getMessage());
     }
@@ -167,11 +169,51 @@ public class AssetServiceImplTest {
         assetRequestDto.setName("hahah2~");
 
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
-                () -> service.insert(assetRequestDto));
+                () -> assetServiceImpl.insert(assetRequestDto));
 
         Assertions.assertEquals("Name cannot contain special characters:! @ # $ % & * ( )  _ + = |  < > ? { } [ ] ~", exception.getMessage());
     }
 
+
+    @Test
+    void update_ShouldThrowNullPointerException_WhenParamsIsNull() {
+        assetRequestDto.setName(null);
+
+        NullPointerException exception = Assertions.assertThrows(NullPointerException.class,
+                () -> assetServiceImpl.update(assetRequestDto, "PD000001"));
+
+        Assertions.assertEquals("null name", exception.getMessage());
+    }
+
+    @Test
+    void update_ShouldThrowIllegalArgumentException_WhenParamsIsEmptyString() {
+        assetRequestDto.setName("");
+
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
+                () -> assetServiceImpl.update(assetRequestDto, "PD000001"));
+
+        Assertions.assertEquals("empty name", exception.getMessage());
+    }
+
+    @Test
+    void update_ShouldThrowIllegalArgumentException_WhenInstalledDateNotPastDate() {
+        assetRequestDto.setInstalledDate(new Date(now.getTime() + oneDay));
+
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
+                () -> assetServiceImpl.update(assetRequestDto, "PD000001"));
+
+        Assertions.assertEquals("installed date must be a date in the past", exception.getMessage());
+    }
+
+    @Test
+    void update_ShouldThrowIllegalArgumentException_WhenNameHasSpecialCharacters() {
+        assetRequestDto.setName("hahah2~");
+
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
+                () -> assetServiceImpl.update(assetRequestDto, "PD000001"));
+
+        Assertions.assertEquals("Name cannot contain special characters:! @ # $ % & * ( )  _ + = |  < > ? { } [ ] ~", exception.getMessage());
+    }
 
     @ExtendWith(MockitoExtension.class)
     @Test
@@ -181,6 +223,9 @@ public class AssetServiceImplTest {
         int locationId = 0;
         int page = 0;
         int pageSize = 15;
+        states = new ArrayList<>();
+        List<String> statesString = new ArrayList<>();
+        String orderBy = "updatedWhen_DESC";
         Pageable pageable = PageRequest.of(page, pageSize, Sort.Direction.DESC, "updatedWhen");
         when(categoryRepository.findCategoriesByNameIsIn(categoryNames)).thenReturn(categories);
         when(assetRepository.findByKeywordWithFilter
@@ -189,7 +234,7 @@ public class AssetServiceImplTest {
         when(assetMapper.mapAssetListToAssetViewResponseDto(result.toList())).thenReturn(assetViewResponseDtos);
         APIResponse<List<AssetViewResponseDto>> expected = new APIResponse<>(page, assetViewResponseDtos);
 
-        APIResponse<List<AssetViewResponseDto>> listResult = assetServiceImpl.getAssetsByPredicates(states, categoryNames, keyword, locationId, page);
+        APIResponse<List<AssetViewResponseDto>> listResult = assetServiceImpl.getAssetsByPredicates(statesString, categoryNames, keyword, locationId, page, orderBy);
         assertThat(expected, is(listResult));
     }
 
@@ -200,6 +245,9 @@ public class AssetServiceImplTest {
         int locationId = 0;
         int page = 0;
         int pageSize = 15;
+        states = new ArrayList<>();
+        List<String> statesString = new ArrayList<>();
+        String orderBy = "updatedWhen_DESC";
         Pageable pageable = PageRequest.of(page, pageSize, Sort.Direction.DESC, "updatedWhen");
         when(categoryRepository.findAll()).thenReturn(categories);
 
@@ -209,7 +257,7 @@ public class AssetServiceImplTest {
         when(assetMapper.mapAssetListToAssetViewResponseDto(result.toList())).thenReturn(assetViewResponseDtos);
         APIResponse<List<AssetViewResponseDto>> expected = new APIResponse<>(page, assetViewResponseDtos);
 
-        APIResponse<List<AssetViewResponseDto>> listResult = assetServiceImpl.getAssetsByPredicates(states, null, keyword, locationId, page);
+        APIResponse<List<AssetViewResponseDto>> listResult = assetServiceImpl.getAssetsByPredicates(statesString, null, keyword, locationId, page, orderBy);
         assertThat(expected, is(listResult));
     }
 

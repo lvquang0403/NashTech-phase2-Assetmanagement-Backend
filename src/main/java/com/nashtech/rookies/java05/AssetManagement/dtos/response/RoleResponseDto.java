@@ -2,12 +2,12 @@ package com.nashtech.rookies.java05.AssetManagement.dtos.response;
 
 import lombok.*;
 
-@Getter
 @Setter
+@Getter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class LocationResponseDto {
+@NoArgsConstructor
+public class RoleResponseDto {
     private Integer id;
-    private String cityName;
+    private String name;
 }

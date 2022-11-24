@@ -6,11 +6,13 @@ import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssetResponseDt
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssetResponseInsertDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssetViewResponseDto;
 import com.nashtech.rookies.java05.AssetManagement.entities.Asset;
+import com.nashtech.rookies.java05.AssetManagement.entities.Assignment;
 import com.nashtech.rookies.java05.AssetManagement.entities.Category;
 import com.nashtech.rookies.java05.AssetManagement.entities.Returning;
 
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssetState;
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssignmentReturnState;
+import com.nashtech.rookies.java05.AssetManagement.exceptions.ResourceNotFoundException;
 import com.nashtech.rookies.java05.AssetManagement.mappers.AssetMapper;
 import com.nashtech.rookies.java05.AssetManagement.repository.AssetRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.CategoryRepository;
@@ -18,6 +20,7 @@ import com.nashtech.rookies.java05.AssetManagement.services.AssetService;
 import com.nashtech.rookies.java05.AssetManagement.repository.ReturningRepository;
 
 
+import com.nashtech.rookies.java05.AssetManagement.utils.EntityCheckUtils;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,19 +47,52 @@ public class AssetServiceImpl implements AssetService {
     private AssetMapper assetMapper;
     @Autowired
     private ReturningRepository returningRepository;
+    @Autowired
+    private EntityCheckUtils entityCheckUtils;
 
     @Override
     public AssetResponseInsertDto insert(AssetRequestDto dto){
-        dto.validateInsert();
+        entityCheckUtils.assetCheckInsert(dto);
         Asset asset = assetMapper.mapAssetRequestDtoToEntityInsert(dto);
         Asset newAsset = assetRepository.save(asset);
         return assetMapper.mapEntityInsertToAssetResponseInsertDto(newAsset);
     }
 
     @Override
+    public AssetResponseInsertDto update(AssetRequestDto dto, String id) {
+        entityCheckUtils.assetCheckUpdate(dto);
+        Optional<Asset> optional = assetRepository.findById(id);
+        if(optional.isEmpty()){
+            throw new ResourceNotFoundException("this asset not exist");
+        }
+        Asset modifiedAsset = assetMapper.mapAssetRequestDtoToEntityUpdate(dto, optional.get());
+        assetRepository.save(modifiedAsset);
+        return assetMapper.mapEntityInsertToAssetResponseInsertDto(modifiedAsset);
+    }
+
+    @Override
     public APIResponse<List<AssetViewResponseDto>> getAssetsByPredicates
-            (List<AssetState> states, List<String> categoryNames, String keyword, int locationId, int page) {
-        Pageable pageable = PageRequest.of(page, pageSize, Sort.Direction.DESC, "updatedWhen");
+            (List<String> stateFilterList, List<String> categoryNames, String keyword, int locationId, int page, String orderBy) {
+
+        String[] parts = orderBy.split("_");
+        String columnName = parts[0];
+        String order = parts[1];
+
+        Pageable pageable;
+        if("DESC".equals(order)){
+            pageable = PageRequest.of(page, pageSize, Sort.Direction.DESC , columnName);
+        }else{
+            pageable = PageRequest.of(page, pageSize, Sort.Direction.ASC , columnName);
+        }
+        List<AssetState> stateList = new ArrayList<>();
+
+        //State name list to state list
+        AssetState[] assetStates = AssetState.values();
+        for (AssetState assetState : assetStates) {
+            if(stateFilterList.contains(assetState.getName())){
+                stateList.add(assetState);
+            }
+        }
 
         //By default, filter by all categories, else filter by categories that user choose.
         List<Category> categories;
@@ -67,7 +103,7 @@ public class AssetServiceImpl implements AssetService {
         }
         Page<Asset> result;
         result = assetRepository.findByKeywordWithFilter
-                (categories, states, keyword.toLowerCase(), keyword.toLowerCase(), locationId, pageable);
+                (categories, stateList, keyword.toLowerCase(), keyword.toLowerCase(), locationId, pageable);
 
         return new APIResponse<>(result.getTotalPages(), assetMapper.mapAssetListToAssetViewResponseDto(result.toList()));
     }
@@ -76,7 +112,7 @@ public class AssetServiceImpl implements AssetService {
     public List<String> getAllAssetStates() {
         List<String> result = EnumSet.allOf(AssetState.class)
                 .stream()
-                .map(assetState -> assetState.name())
+                .map(assetState -> assetState.getName())
                 .collect(Collectors.toList());
         return result;
     }
@@ -91,6 +127,31 @@ public class AssetServiceImpl implements AssetService {
         List<Returning> returningHistoryList = returningRepository.findByAssetIdAndState(id, AssignmentReturnState.COMPLETED);
         assetFound.get().setReturningList(returningHistoryList);
         return assetMapper.mapAssetEntityToAssetResponseDto(assetFound.get());
+    }
+
+    @Override
+    public boolean deleteAssetById(String id) {
+        Optional<Asset> optionalAsset=assetRepository.findById(id);
+        if (optionalAsset.isEmpty())    return false;
+        Asset asset=optionalAsset.get();
+        List<Assignment> listAssignments= asset.getListAssignments();
+        if (listAssignments==null || listAssignments.isEmpty()) {
+            assetRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean checkAssetValidToDelete(String id) {
+        Optional<Asset> optionalAsset=assetRepository.findById(id);
+        if (optionalAsset.isEmpty())    return false;
+        Asset asset=optionalAsset.get();
+        List<Assignment> listAssignments= asset.getListAssignments();
+        if (listAssignments==null || listAssignments.isEmpty()) {
+            return true;
+        }
+        return false;
     }
 
 }

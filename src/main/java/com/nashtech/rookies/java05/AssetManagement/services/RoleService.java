@@ -1,6 +1,6 @@
 package com.nashtech.rookies.java05.AssetManagement.services;
 
-import com.nashtech.rookies.java05.AssetManagement.dtos.response.RoleResponeDto;
+import com.nashtech.rookies.java05.AssetManagement.dtos.response.RoleResponseDto;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -9,5 +9,6 @@ import java.util.List;
 @Component
 public interface RoleService {
     List<String> getAllRoleNames();
-    public List<RoleResponeDto> getAllRoles();
+
+    public List<RoleResponseDto> getAllRoles();
 }

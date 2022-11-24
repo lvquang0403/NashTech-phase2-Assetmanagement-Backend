@@ -1,9 +1,11 @@
 package com.nashtech.rookies.java05.AssetManagement.entities.enums;
-public enum Gender {
-    MALE ("Male"), FEMALE ("Female");
+
+public enum UserState {
+    ACTIVE ("Active"),
+    INACTIVE ("Inactive");
 
     private String name;
-    Gender(String name) {
+    UserState(String name) {
         this.name = name;
     }
     public String getName() {
