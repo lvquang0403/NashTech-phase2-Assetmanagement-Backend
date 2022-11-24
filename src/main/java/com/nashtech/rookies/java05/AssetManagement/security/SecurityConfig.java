@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.context.SecurityContext;
@@ -44,6 +45,19 @@ public class SecurityConfig {
                 .antMatchers("/api/categories/**").hasAnyAuthority(ADMIN)
                 .antMatchers("/api/categories/name/**").hasAnyAuthority(ADMIN)
                 .antMatchers("/api/users/**").hasAnyAuthority(ADMIN)
+//categories
+                .antMatchers(HttpMethod.POST, "/api/categories").hasAnyAuthority(ADMIN)
+//assets
+                .antMatchers(HttpMethod.POST, "/api/assets").hasAnyAuthority(ADMIN)
+                .antMatchers(HttpMethod.PUT, "/api/assets/**").hasAnyAuthority(ADMIN)
+//locations
+                .antMatchers(HttpMethod.GET, "/api/locations").hasAnyAuthority(ADMIN)
+//roles
+                .antMatchers(HttpMethod.GET, "/api/roles").hasAnyAuthority(ADMIN)
+//users
+                .antMatchers(HttpMethod.POST, "/api/users").hasAnyAuthority(ADMIN)
+                .antMatchers(HttpMethod.PUT, "/api/users/**").hasAnyAuthority(ADMIN)
+
                 .antMatchers("/api/**").authenticated();
         httpSecurity.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
