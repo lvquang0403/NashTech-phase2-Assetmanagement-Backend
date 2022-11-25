@@ -9,6 +9,7 @@ import com.nashtech.rookies.java05.AssetManagement.mappers.UserMapper;
 import com.nashtech.rookies.java05.AssetManagement.repository.UserRepository;
 import com.nashtech.rookies.java05.AssetManagement.services.AuthService;
 import com.nashtech.rookies.java05.AssetManagement.utils.JwtUtil;
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Slf4j
+@Builder
 @Service
 public class AuthServiceImpl implements AuthService {
     @Autowired
