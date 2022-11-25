@@ -3,6 +3,7 @@ package com.nashtech.rookies.java05.AssetManagement.dtos.response;
 import com.nashtech.rookies.java05.AssetManagement.entities.Location;
 import com.nashtech.rookies.java05.AssetManagement.entities.Role;
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.Gender;
+import com.nashtech.rookies.java05.AssetManagement.entities.enums.UserState;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,4 +23,5 @@ public class UserLoginResponseDto {
     private RoleResponseDto role;
     private LocationResponseDto location;
     private String accessToken;
+    private String State;
 }

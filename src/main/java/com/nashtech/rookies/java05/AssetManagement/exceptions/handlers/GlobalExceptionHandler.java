@@ -1,13 +1,10 @@
 package com.nashtech.rookies.java05.AssetManagement.exceptions.handlers;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.ErrorResponse;
-import com.nashtech.rookies.java05.AssetManagement.exceptions.BadRequestException;
-import com.nashtech.rookies.java05.AssetManagement.exceptions.ForbiddenException;
-import com.nashtech.rookies.java05.AssetManagement.exceptions.RepeatDataException;
-import com.nashtech.rookies.java05.AssetManagement.exceptions.ResourceNotFoundException;
+import com.nashtech.rookies.java05.AssetManagement.exceptions.*;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,22 +16,22 @@ import java.util.Map;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler({ResourceNotFoundException.class})
+    @ExceptionHandler({ ResourceNotFoundException.class })
     protected ResponseEntity<ErrorResponse> handleResourceNotFoundException(RuntimeException exception,
                                                                             WebRequest request) {
-        ErrorResponse error = new ErrorResponse(HttpStatus.NOT_FOUND.toString(), exception.getMessage());
+        ErrorResponse error = new ErrorResponse( HttpStatus.NOT_FOUND.toString(), exception.getMessage());
         return new ResponseEntity<ErrorResponse>(error, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({RepeatDataException.class})
+    @ExceptionHandler({ RepeatDataException.class})
     protected ResponseEntity handleRepeatDataException(RuntimeException exception) {
-        ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST.toString(), exception.getMessage());
+        ErrorResponse error = new ErrorResponse( HttpStatus.BAD_REQUEST.toString(), exception.getMessage());
         return new ResponseEntity<ErrorResponse>(error, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({IllegalArgumentException.class})
     protected ResponseEntity handleIllegalArgumentException(RuntimeException exception) {
-        ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST.toString(), exception.getMessage());
+        ErrorResponse error = new ErrorResponse( HttpStatus.BAD_REQUEST.toString(), exception.getMessage());
         return new ResponseEntity<ErrorResponse>(error, HttpStatus.BAD_REQUEST);
     }
 
@@ -56,6 +53,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<ErrorResponse>(error, HttpStatus.FORBIDDEN);
     }
 
+    @ExceptionHandler({UnauthorizedException.class})
+    protected ResponseEntity handelUnauthorizedException(RuntimeException exception) {
+        ErrorResponse error = new ErrorResponse(HttpStatus.UNAUTHORIZED.toString(), exception.getMessage());
+        return new ResponseEntity<ErrorResponse>(error, HttpStatus.UNAUTHORIZED);
+    }
 
     //Handle exception for Validation (@Valid)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

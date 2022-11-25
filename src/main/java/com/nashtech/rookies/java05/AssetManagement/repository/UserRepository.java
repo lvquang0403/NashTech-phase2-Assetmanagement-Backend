@@ -20,7 +20,7 @@ public interface UserRepository extends JpaRepository<User, String> {
             "OR LOWER(u.firstName) LIKE %:keyword% " +
             "OR CONCAT(LOWER(u.firstName), ' ', LOWER(u.lastName))  LIKE %:keyword% " +
             "OR LOWER(u.id) LIKE %:keyword%)" +
-            " AND u.location.id = :locationId")
+            " AND u.location.id = :locationId AND u.isDisabled = false")
     Page<User> findUsersWithFilter(
             @Param("roles") List<Role> roles,
             @Param("keyword") String keyword,
