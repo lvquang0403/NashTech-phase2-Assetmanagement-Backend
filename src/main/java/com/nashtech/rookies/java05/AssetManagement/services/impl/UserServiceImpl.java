@@ -203,18 +203,18 @@ public class UserServiceImpl implements UserService {
         }
         User user=optionalUser.get();
         String passwordEncrypted=user.getPassword();
-        if (resetPasswordDto.getOldPassword()==null){
-            String prefixUsername = userUtils.getPrefixUsername(user.getFirstName(), user.getLastName());
-            SimpleDateFormat format = new SimpleDateFormat("ddMMyyyy");
-            resetPasswordDto.setOldPassword(prefixUsername + "@" + format.format(user.getBirth()));
-        }
+//        if (resetPasswordDto.getOldPassword()==null){
+//            String prefixUsername = userUtils.getPrefixUsername(user.getFirstName(), user.getLastName());
+//            SimpleDateFormat format = new SimpleDateFormat("ddMMyyyy");
+//            resetPasswordDto.setOldPassword(prefixUsername + "@" + format.format(user.getBirth()));
+//        }
         if (resetPasswordDto.getNewPassword().equals(resetPasswordDto.getOldPassword())){
             changePasswordDto.setStatus(HttpStatus.BAD_REQUEST);
             changePasswordDto.setTitle("Failed to change password");
-            changePasswordDto.setMessage("You need to change a password that is different from your old password");
+            changePasswordDto.setMessage("New password must different old password.");
             return changePasswordDto;
         }
-        if (passwordEncoder.matches(resetPasswordDto.getOldPassword(),passwordEncrypted)){
+        if (passwordEncoder.matches(resetPasswordDto.getOldPassword(),passwordEncrypted) || user.getState()!=UserState.ACTIVE){
             user.setPassword(passwordEncoder.encode(resetPasswordDto.getNewPassword()));
             if (user.getState()!=UserState.ACTIVE)   user.setState(UserState.ACTIVE);
             userRepository.save(user);
@@ -223,7 +223,7 @@ public class UserServiceImpl implements UserService {
             changePasswordDto.setMessage("Your password has been changed successfully!");
             return changePasswordDto;
         }
-        changePasswordDto.setStatus(HttpStatus.BAD_REQUEST);
+        changePasswordDto.setStatus(HttpStatus.PROXY_AUTHENTICATION_REQUIRED);
         changePasswordDto.setTitle("Change password");
         changePasswordDto.setMessage("Password is incorrect");
         return changePasswordDto;
