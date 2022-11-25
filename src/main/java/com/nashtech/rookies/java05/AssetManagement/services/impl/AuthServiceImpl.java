@@ -4,7 +4,7 @@ import com.nashtech.rookies.java05.AssetManagement.dtos.request.UserLoginRequest
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.SuccessResponse;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.UserLoginResponseDto;
 import com.nashtech.rookies.java05.AssetManagement.entities.User;
-import com.nashtech.rookies.java05.AssetManagement.exceptions.ForbiddenException;
+import com.nashtech.rookies.java05.AssetManagement.exceptions.UnauthorizedException;
 import com.nashtech.rookies.java05.AssetManagement.mappers.UserMapper;
 import com.nashtech.rookies.java05.AssetManagement.repository.UserRepository;
 import com.nashtech.rookies.java05.AssetManagement.services.AuthService;
@@ -34,21 +34,13 @@ public class AuthServiceImpl implements AuthService {
         if (userFound.isPresent()) {
             User user = userFound.get();
             if (!user.isDisabled()) {
-                if (user.getState() == null) { //Login first time!
-                    if (user.getPassword().equals(userLoginRequestDto.getPassword())) {
-                        UserLoginResponseDto userLoginResponseDto = userMapper.mapUserEntityToUserLoginResponse(user);
-                        userLoginResponseDto.setAccessToken(jwtUtil.generateToken(user));
-                        return new SuccessResponse<>("Login successfully!", userLoginResponseDto);
-                    }
-                } else {
                     if (passwordEncoder.matches(userLoginRequestDto.getPassword(), user.getPassword())) {
                         UserLoginResponseDto userLoginResponseDto = userMapper.mapUserEntityToUserLoginResponse(user);
                         userLoginResponseDto.setAccessToken(jwtUtil.generateToken(user));
-                        return new SuccessResponse<>("Login successfully!", userLoginResponseDto);
+                        return new SuccessResponse<>(userLoginResponseDto);
                     }
-                }
             }
         }
-        throw new ForbiddenException("Username or password is incorrect!");
+        throw new UnauthorizedException("Username or password is incorrect!");
     }
 }
