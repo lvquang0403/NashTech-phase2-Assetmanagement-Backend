@@ -105,18 +105,6 @@ class UserServiceImplTest {
 
         assertThat(expected, is(returnList));
     }
-    @Test
-    void createUserSuccess() throws ParseException {
-        User user= mock(User.class);
-        UserRequestDto userRequestDto= mock(UserRequestDto.class);
-        //        UserResponseDto userResponseDto=Mockito.mock(UserResponseDto.class);
-        MockedStatic<UserMapper> utilities= Mockito.mockStatic(UserMapper.class);
-        utilities.when(()-> UserMapper.mapFromUserRequestDtoToEntity(userRequestDto)).thenReturn(user);
-        //        Mockito.when(UserMapper.mapFromUserRequestDtoToEntity(userRequestDto)).thenReturn(user);
-        //        Mockito.when(UserMapper.mapFromEntityToUserResponseDto(user)).thenReturn(userResponseDto);
-        UserResponseDto userResponseDto=userService.createUser(userRequestDto);
-        Assertions.assertNull(userResponseDto);
-    }
 
     @Test
     void disableUserSuccess(){
