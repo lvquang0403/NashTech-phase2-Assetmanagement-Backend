@@ -214,6 +214,7 @@ public class UserServiceImpl implements UserService {
             changePasswordDto.setMessage("New password must different old password.");
             return changePasswordDto;
         }
+        if (resetPasswordDto.getOldPassword()==null)    resetPasswordDto.setOldPassword("");
         if (passwordEncoder.matches(resetPasswordDto.getOldPassword(),passwordEncrypted) || user.getState()!=UserState.ACTIVE){
             user.setPassword(passwordEncoder.encode(resetPasswordDto.getNewPassword()));
             if (user.getState()!=UserState.ACTIVE)   user.setState(UserState.ACTIVE);
