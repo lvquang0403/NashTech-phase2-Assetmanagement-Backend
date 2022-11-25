@@ -14,14 +14,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/roles")
 public class RoleController {
-
     @Autowired
     RoleService roleService;
-
-    @GetMapping("/name")
-    public List<String> getAllRoleNames(){
-        return roleService.getAllRoleNames();
-    }
 
     @GetMapping
     public ResponseEntity getAllRoles(){

@@ -8,7 +8,5 @@ import java.util.List;
 
 @Component
 public interface RoleService {
-    List<String> getAllRoleNames();
-
     public List<RoleResponseDto> getAllRoles();
 }

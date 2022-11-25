@@ -19,23 +19,8 @@ public class RoleServiceImpl implements RoleService {
 
     @Autowired
     ModelMapper modelMapper;
-
     @Autowired
     RoleRepository roleRepository;
-
-    @Override
-    public List<String> getAllRoleNames() {
-        List<Role> roleList = roleRepository.findAll();
-        List<String> result = new ArrayList<>();
-        if (roleList.isEmpty()){
-            return new ArrayList<>();
-        }else{
-            roleList.forEach(role -> {
-                result.add(role.getName());
-            });
-        }
-        return result;
-    }
 
     @Override
     public List<RoleResponseDto> getAllRoles() {
