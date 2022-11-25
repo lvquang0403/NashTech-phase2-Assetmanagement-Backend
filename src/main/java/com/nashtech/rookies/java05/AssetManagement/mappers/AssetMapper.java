@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 public class AssetMapper {
@@ -133,19 +134,17 @@ public class AssetMapper {
     }
 
     public List<AssetViewResponseDto> mapAssetListToAssetViewResponseDto(List<Asset> assetList) {
-        List<AssetViewResponseDto> result = new ArrayList<>();
-        assetList.forEach(asset -> {
-
+        List<AssetViewResponseDto> assetViewResponseDtoList = assetList.stream().map(asset -> {
             AssetViewResponseDto assetViewResponseDto = AssetViewResponseDto.builder()
                     .id(asset.getId())
                     .name(asset.getName())
                     .state(asset.getState().getName())
                     .category(asset.getCategory().getName())
                     .build();
-
-            result.add(assetViewResponseDto);
-        } );
-        return result;
+            return assetViewResponseDto;
+        }).collect(Collectors.toList());
+        System.out.println(assetViewResponseDtoList);
+        return assetViewResponseDtoList;
     }
 
 

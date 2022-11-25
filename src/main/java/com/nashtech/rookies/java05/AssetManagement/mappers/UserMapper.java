@@ -11,13 +11,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class UserMapper {
 
     public List<UserViewResponseDto> mapUserEntityListToUserViewResponseDtoList(List<User> userList) {
-        List<UserViewResponseDto> userViewResponseDtoList = new ArrayList<>();
-        userList.forEach(user -> {
+
+        List<UserViewResponseDto> responseDtoList = userList.stream().map(user -> {
             UserViewResponseDto result = UserViewResponseDto
                     .builder()
                     .id(user.getId())
@@ -26,9 +27,9 @@ public class UserMapper {
                     .userName(user.getUsername())
                     .role(user.getRole().getName())
                     .build();
-            userViewResponseDtoList.add(result);
-        });
-        return userViewResponseDtoList;
+            return result;
+        }).collect(Collectors.toList());
+        return responseDtoList;
     }
 
     public UserLoginResponseDto mapUserEntityToUserLoginResponse(User user){

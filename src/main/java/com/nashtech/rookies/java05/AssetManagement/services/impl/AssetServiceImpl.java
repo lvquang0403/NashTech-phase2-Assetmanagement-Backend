@@ -109,11 +109,11 @@ public class AssetServiceImpl implements AssetService {
     }
 
     @Override
-    public List<String> getAllAssetStates() {
-        List<String> result = EnumSet.allOf(AssetState.class)
+    public Set<String> getAllAssetStates() {
+        Set<String> result = EnumSet.allOf(AssetState.class)
                 .stream()
                 .map(assetState -> assetState.getName())
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
         return result;
     }
 

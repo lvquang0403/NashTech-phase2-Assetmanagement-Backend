@@ -2,7 +2,6 @@ package com.nashtech.rookies.java05.AssetManagement.controllers;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssetRequestDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.*;
-import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssetState;
 import com.nashtech.rookies.java05.AssetManagement.services.AssetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @CrossOrigin
@@ -27,7 +27,7 @@ public class AssetController {
              @RequestParam(value = "page", required = false, defaultValue = "0") int page,
              @RequestParam(defaultValue = "updatedWhen_DESC") String orderBy) {
         if(states.isEmpty()){
-            states = assetService.getAllAssetStates();
+            states.addAll(assetService.getAllAssetStates());
         }
         return assetService.getAssetsByPredicates(states, categories, keyword, locationId, page, orderBy);
     }
@@ -48,7 +48,7 @@ public class AssetController {
     }
 
     @GetMapping("/states")
-    public List<String> getAllAssetStates() {
+    public Set<String> getAllAssetStates() {
         return assetService.getAllAssetStates();
     }
 
