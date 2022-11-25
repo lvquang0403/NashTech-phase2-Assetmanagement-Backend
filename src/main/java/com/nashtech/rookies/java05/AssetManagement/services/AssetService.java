@@ -9,6 +9,7 @@ import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssetState;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Set;
 
 @Component
 public interface AssetService {
@@ -21,7 +22,7 @@ public interface AssetService {
     APIResponse<List<AssetViewResponseDto>> getAssetsByPredicates
             (List<String> stateFilterList, List<String> categoryNames, String keyword, int locationId, int page, String orderBy);
 
-    List<String> getAllAssetStates();
+    Set<String> getAllAssetStates();
     AssetResponseDto getAssetById(String id);
 
     boolean deleteAssetById(String id);
