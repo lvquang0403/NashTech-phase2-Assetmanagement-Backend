@@ -6,6 +6,7 @@ import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssetResponseDt
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssetResponseInsertDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssetViewResponseDto;
 import com.nashtech.rookies.java05.AssetManagement.entities.Asset;
+import com.nashtech.rookies.java05.AssetManagement.entities.Assignment;
 import com.nashtech.rookies.java05.AssetManagement.entities.Category;
 import com.nashtech.rookies.java05.AssetManagement.entities.Returning;
 
@@ -126,6 +127,31 @@ public class AssetServiceImpl implements AssetService {
         List<Returning> returningHistoryList = returningRepository.findByAssetIdAndState(id, AssignmentReturnState.COMPLETED);
         assetFound.get().setReturningList(returningHistoryList);
         return assetMapper.mapAssetEntityToAssetResponseDto(assetFound.get());
+    }
+
+    @Override
+    public boolean deleteAssetById(String id) {
+        Optional<Asset> optionalAsset=assetRepository.findById(id);
+        if (optionalAsset.isEmpty())    return false;
+        Asset asset=optionalAsset.get();
+        List<Assignment> listAssignments= asset.getListAssignments();
+        if (listAssignments==null || listAssignments.isEmpty()) {
+            assetRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean checkAssetValidToDelete(String id) {
+        Optional<Asset> optionalAsset=assetRepository.findById(id);
+        if (optionalAsset.isEmpty())    return false;
+        Asset asset=optionalAsset.get();
+        List<Assignment> listAssignments= asset.getListAssignments();
+        if (listAssignments==null || listAssignments.isEmpty()) {
+            return true;
+        }
+        return false;
     }
 
 }

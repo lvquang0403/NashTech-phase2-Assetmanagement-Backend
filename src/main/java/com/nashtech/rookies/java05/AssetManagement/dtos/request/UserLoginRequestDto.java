@@ -15,6 +15,7 @@ import javax.validation.constraints.Size;
 public class UserLoginRequestDto {
     @NotBlank(message = "Username is required!")
     private String username;
+
     @NotBlank(message = "Password is required")
     private String password;
 }
