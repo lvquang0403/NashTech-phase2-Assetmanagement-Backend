@@ -28,4 +28,12 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Integer>
             @Param("keyword") String keyword,
             Pageable pageable
     );
+
+    @Query(value = "SELECT a FROM Assignment a join a.asset" +
+            " WHERE a.assignedTo.id = :id"
+    )
+    Page<Assignment> findByUserId(
+            @Param("id") String id,
+            Pageable pageable
+    );
 }

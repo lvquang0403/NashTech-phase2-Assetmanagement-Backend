@@ -79,4 +79,24 @@ public class AssignmentServiceImpl implements AssignmentService {
 
         return assignmentMapper.mapAssignmentToAssignmentDetailDto(assetFound);
     }
+
+    @Override
+    public APIResponse<List<AssignmentListResponseDto>> getAssignmentsByUser(String id, int page, String orderBy) {
+        String[] parts = orderBy.split("_");
+        String columnName = parts[0];
+        String order = parts[1];
+        Pageable pageable;
+        if ("DESC".equals(order)) {
+            pageable = PageRequest.of(page, pageSize, Sort.Direction.DESC, columnName);
+        } else {
+            pageable = PageRequest.of(page, pageSize, Sort.Direction.ASC, columnName);
+        }
+
+        Page<Assignment> result;
+        result = assignmentRepository.findByUserId
+                (id, pageable);
+        //return null;
+        return new APIResponse<>(result.getTotalPages(),
+                assignmentMapper.mapAssignmentListToAssignmentListResponseDto(result.toList()));
+    }
 }

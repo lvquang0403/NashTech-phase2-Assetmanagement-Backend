@@ -12,4 +12,7 @@ public interface AssignmentService {
             (List<String> stateFilterList, String assignDate, String keyword, int page, String orderBy);
 
     AssignmentDetailDto getAssignment(int id);
+
+    APIResponse<List<AssignmentListResponseDto>> getAssignmentsByUser
+            (String id, int page, String orderBy);
 }

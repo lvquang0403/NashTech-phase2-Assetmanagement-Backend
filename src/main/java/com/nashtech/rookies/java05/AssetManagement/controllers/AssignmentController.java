@@ -32,4 +32,13 @@ public class AssignmentController {
     public AssignmentDetailDto getAssignment(@PathVariable int id) {
         return assignmentService.getAssignment(id);
     }
+
+    @GetMapping("/user/{id}")
+    public APIResponse<List<AssignmentListResponseDto>> getAssignmentByUser
+            (@PathVariable String id,
+             @RequestParam(value = "page", required = false, defaultValue = "0") int page,
+             @RequestParam(defaultValue = "updatedWhen_DESC") String orderBy)
+    {
+        return assignmentService.getAssignmentsByUser(id, page,orderBy);
+    }
 }
