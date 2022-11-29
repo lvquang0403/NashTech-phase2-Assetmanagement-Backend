@@ -1,11 +1,13 @@
 package com.nashtech.rookies.java05.AssetManagement.dtos.response;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Setter
 @Getter
-public class RoleResponeDto {
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class RoleResponseDto {
     private Integer id;
     private String name;
 }

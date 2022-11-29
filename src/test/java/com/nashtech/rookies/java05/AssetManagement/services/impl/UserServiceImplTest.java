@@ -106,4 +106,11 @@ class UserServiceImplTest {
         assertThat(expected, is(returnList));
     }
 
+    @Test
+    void disableUserSuccess(){
+        when(userRepository.findById("SD0001")).thenReturn(Optional.of(user));
+        boolean isDisabled= userService.disableUserById("SD0001");
+        Assertions.assertTrue(isDisabled);
+    }
+
 }

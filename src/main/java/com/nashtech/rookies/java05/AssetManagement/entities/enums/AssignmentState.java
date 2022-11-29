@@ -1,7 +1,7 @@
 package com.nashtech.rookies.java05.AssetManagement.entities.enums;
 
 public enum AssignmentState {
-    WAITING ("Waiting"),
+    WAITING ("Waiting for acceptance"),
     ACCEPTED ("Accepted"),
     DECLINED ("Declined");
 

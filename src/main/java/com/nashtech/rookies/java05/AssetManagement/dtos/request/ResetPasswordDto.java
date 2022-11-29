@@ -1,16 +1,15 @@
 package com.nashtech.rookies.java05.AssetManagement.dtos.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
-@Setter
 @Getter
+@Setter
 @NoArgsConstructor
-public class CategoryRequestDto{
-
-    private  String id;
-    private  String name;
-
+@AllArgsConstructor
+public class ResetPasswordDto {
+    private String oldPassword;
+    private String newPassword;
 }

@@ -4,7 +4,9 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import lombok.Builder;
 
+@Builder
 public class ErrorResponse {
     String code;
     String message;

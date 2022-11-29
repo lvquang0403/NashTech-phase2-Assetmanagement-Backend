@@ -9,16 +9,23 @@ import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssetState;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Set;
 
 @Component
 public interface AssetService {
 
     public AssetResponseInsertDto insert(AssetRequestDto dto);
 
+    public AssetResponseInsertDto update(AssetRequestDto dto, String id);
+
 
     APIResponse<List<AssetViewResponseDto>> getAssetsByPredicates
-            (List<AssetState> states, List<String> categoryNames, String keyword, int locationId, int page, String orderBy);
+            (List<String> stateFilterList, List<String> categoryNames, String keyword, int locationId, int page, String orderBy);
 
-    List<String> getAllAssetStates();
+    Set<String> getAllAssetStates();
     AssetResponseDto getAssetById(String id);
+
+    boolean deleteAssetById(String id);
+
+    boolean checkAssetValidToDelete(String id);
 }

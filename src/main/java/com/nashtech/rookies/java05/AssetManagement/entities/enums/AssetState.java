@@ -5,7 +5,7 @@ public enum AssetState {
     NOT_AVAILABLE ("Not available"),
     ASSIGNED ("Assigned"),
     RECYCLED ("Recycled"),
-    RECYCLING ("Recycling");
+    RECYCLING ("Waiting for recycling");
 
     private String name;
 

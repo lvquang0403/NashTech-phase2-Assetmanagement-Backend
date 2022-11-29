@@ -25,23 +25,4 @@ class RoleServiceImplTest {
         role = mock(Role.class);
         roleService = RoleServiceImpl.builder().roleRepository(roleRepository).build();
     }
-
-    @Test
-    void getAllRoleNames_WhenRoleIsNotEmpty() {
-        List<Role> roleList = new ArrayList<>();
-        roleList.add(role);
-        List<String> stringList = new ArrayList<>();
-        stringList.add(role.getName());
-        when(roleRepository.findAll()).thenReturn(roleList);
-        List<String> result = roleService.getAllRoleNames();
-        assertThat(result, is(stringList));
-    }
-
-    @Test
-    void getAllRoleNames_WhenRoleIsEmpty() {
-        List<Role> roleList = new ArrayList<>();
-        when(roleRepository.findAll()).thenReturn(roleList);
-        List<String> result = roleService.getAllRoleNames();
-        assertThat(result, is(new ArrayList<>()));
-    }
 }

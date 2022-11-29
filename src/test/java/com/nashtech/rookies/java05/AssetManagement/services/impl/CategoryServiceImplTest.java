@@ -98,7 +98,7 @@ public class CategoryServiceImplTest {
     @Test
     void insert_ShouldThrowIllegalArgumentException_WhenPrefixTooLong(){
         categoryRequestDto.setId("qws");
-        categoryRequestDto.setName("computer");
+        categoryRequestDto.setName("computer1111");
 
         Mockito.when(repository.findAll()).thenReturn(categoryList);
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
@@ -142,20 +142,6 @@ public class CategoryServiceImplTest {
         CategoryResponseDto actual = service.insert(categoryRequestDto);
         Assertions.assertEquals(categoryRequestDto.getId(), actual.getId());
     }
-
-
-    // @Test
-    // void getToInsert_ShouldListCategoryResponseInsertDto_WhenDatabaseHasData(){
-    //     expectedCategory.setId("qc");
-    //     expectedCategory.setName("mahua");
-    //     categoryList.add(expectedCategory);
-    //     categoryList.add(expectedCategory);
-
-    //     Mockito.when(repository.findAll()).thenReturn(categoryList);
-
-    //     List<CategoryResponseDto> actual = service.getToInsert();
-    //     Assertions.assertEquals(3, actual.size());
-    // }
 
     @Test
     void insert_ShouldThrowIllegalArgumentException_WhenNameHasSpecialCharacters(){
