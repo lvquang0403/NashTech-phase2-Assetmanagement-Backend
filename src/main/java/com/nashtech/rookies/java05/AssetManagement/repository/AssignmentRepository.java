@@ -12,15 +12,18 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Repository
 public interface AssignmentRepository extends JpaRepository<Assignment, Integer> {
-    @Query(value = "SELECT a FROM Assignment a join a.asset" +
-            " WHERE a.state IN :states OR :states is null" +
-            " AND (a.createdWhen = DATE(:assignDate) OR :assignDate is null) " +
-            " AND (LOWER(a.asset.name) LIKE %:keyword% OR LOWER(a.asset.id) LIKE %:keyword% " +
-            " OR LOWER(a.assignedTo.username) LIKE %:keyword% OR LOWER(a.assignedBy.username) LIKE %:keyword%)"
+    @Query(value = "SELECT a FROM Assignment a" +
+            " WHERE a.state IN :states" +
+            " AND to_char(a.assignedDate, 'yyyy-mm-dd')= :assignDate Or :assignDate is null " +
+            " AND (LOWER(a.asset.name) LIKE concat('%',:keyword,'%') OR LOWER(a.asset.id) LIKE concat('%',:keyword,'%') " +
+            " OR LOWER(a.assignedTo.username) LIKE concat('%',:keyword,'%') " +
+            " OR LOWER(a.assignedBy.username) LIKE concat('%',:keyword,'%'))"
     )
     Page<Assignment> findByPredicates(
             @Param("states") List<AssignmentState> states,

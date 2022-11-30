@@ -23,6 +23,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -52,9 +54,11 @@ public class AssignmentServiceImpl implements AssignmentService {
         List<AssignmentState> stateList = new ArrayList<>();
         AssignmentState[] assignmentStates = AssignmentState.values();
 
-        if (stateFilterList.isEmpty()) {
-            stateList.add(AssignmentState.ACCEPTED);
-            stateList.add(AssignmentState.WAITING);
+
+        if (stateFilterList.isEmpty()) { // if states filter = null, then find all
+            for (AssignmentState assignmentState : assignmentStates) {
+                    stateList.add(assignmentState);
+            }
         } else {
             for (AssignmentState assignmentState : assignmentStates) {
                 if (stateFilterList.contains(assignmentState.getName())) {
@@ -62,7 +66,6 @@ public class AssignmentServiceImpl implements AssignmentService {
                 }
             }
         }
-
 
         Page<Assignment> result;
         result = assignmentRepository.findByPredicates

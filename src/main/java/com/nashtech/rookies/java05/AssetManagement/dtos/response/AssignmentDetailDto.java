@@ -4,6 +4,7 @@ import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssignmentStat
 import lombok.Builder;
 import lombok.Data;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 
 @Data
@@ -14,7 +15,7 @@ public class AssignmentDetailDto {
     private String specification;
     private String assignTo;
     private String assignBy;
-    private Timestamp createdWhen;
+    private Date assignedDate;
     private AssignmentState state;
     private String note;
 }

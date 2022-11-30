@@ -33,7 +33,7 @@ public class AssignmentMapper {
                     .assetName(a.getAsset().getName())
                     .assignTo(a.getAssignedTo().getUsername())
                     .assignBy(a.getAssignedBy().getUsername())
-                    .createdWhen(a.getCreatedWhen())
+                    .assignedDate(a.getAssignedDate())
                     .state(a.getState())
                     .category(a.getAsset().getCategory().getName())
                     .build();
@@ -51,7 +51,7 @@ public class AssignmentMapper {
                 .specification(a.getAsset().getSpecification())
                 .assignTo(a.getAssignedTo().getUsername())
                 .assignBy(a.getAssignedBy().getUsername())
-                .createdWhen(a.getCreatedWhen())
+                .assignedDate(a.getAssignedDate())
                 .state(a.getState())
                 .note(a.getNote())
                 .build();
