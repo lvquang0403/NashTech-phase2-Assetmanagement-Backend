@@ -19,8 +19,8 @@ import java.util.List;
 @Repository
 public interface AssignmentRepository extends JpaRepository<Assignment, Integer> {
     @Query(value = "SELECT a FROM Assignment a" +
-            " WHERE a.state IN :states" +
-            " AND to_char(a.assignedDate, 'yyyy-mm-dd')= :assignDate Or :assignDate is null " +
+            " WHERE (a.state IN :states)" +
+            " AND (to_char(a.assignedDate, 'yyyy-mm-dd')= :assignDate Or :assignDate is null) " +
             " AND (LOWER(a.asset.name) LIKE concat('%',:keyword,'%') OR LOWER(a.asset.id) LIKE concat('%',:keyword,'%') " +
             " OR LOWER(a.assignedTo.username) LIKE concat('%',:keyword,'%') " +
             " OR LOWER(a.assignedBy.username) LIKE concat('%',:keyword,'%'))"
