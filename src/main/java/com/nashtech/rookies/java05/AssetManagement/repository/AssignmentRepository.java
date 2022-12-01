@@ -1,10 +1,8 @@
 package com.nashtech.rookies.java05.AssetManagement.repository;
 
-import com.nashtech.rookies.java05.AssetManagement.entities.Asset;
 import com.nashtech.rookies.java05.AssetManagement.entities.Assignment;
-import com.nashtech.rookies.java05.AssetManagement.entities.Category;
-import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssetState;
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssignmentReturnState;
+
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssignmentState;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,7 +12,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
-import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -35,24 +32,14 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Integer>
 
 
     @Query(value = "SELECT a FROM Assignment a join a.asset" +
-            " WHERE (a.returning.state IN :states)" +
-            " AND  (a.assignedTo.id = :id)" +
+            " WHERE a.state IS NOT 'DECLINED'" +
+            "  AND (a.assignedTo.id = :id)" +
             " AND  (a.assignedDate <= :curDate)"
     )
     Page<Assignment> findByUserId(
             @Param("id") String id,
-            @Param("states") List<AssignmentReturnState> states,
             @Param("curDate") Date curDate,
             Pageable pageable
     );
-
-
-//    Page<Assignment> findByAssignedTo_IdAndReturning_StateInAndLessThanEqual(
-//            String id,
-//            List<AssignmentReturnState> states,
-//            Date curDate,
-//            Pageable pageable
-//    );
-
 
 }
