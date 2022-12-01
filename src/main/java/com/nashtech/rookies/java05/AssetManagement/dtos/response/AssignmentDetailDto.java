@@ -18,4 +18,5 @@ public class AssignmentDetailDto {
     private Date assignedDate;
     private String state;
     private String note;
+
 }
