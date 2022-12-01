@@ -1,11 +1,19 @@
 package com.nashtech.rookies.java05.AssetManagement.controllers;
 
-
-import com.nashtech.rookies.java05.AssetManagement.dtos.response.*;
-import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssignmentState;
-import com.nashtech.rookies.java05.AssetManagement.services.AssetService;
+import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentRequestPostDto;
+import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentRequestPutDto;
+import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssignmentResponseInsertDto;
 import com.nashtech.rookies.java05.AssetManagement.services.AssignmentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.validation.Valid;
+
+import com.nashtech.rookies.java05.AssetManagement.dtos.response.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +25,11 @@ public class AssignmentController {
     @Autowired
     private AssignmentService assignmentService;
 
+
+    @PostMapping
+    public ResponseEntity<AssignmentResponseInsertDto> create(@RequestBody @Valid AssignmentRequestPostDto dto){
+        return ResponseEntity.ok(assignmentService.create(dto));
+    }
     @GetMapping("")
     public APIResponse<List<AssignmentListResponseDto>> getAllAssignment
             (@RequestParam(required = false, defaultValue = "") List<String> states,
@@ -40,5 +53,17 @@ public class AssignmentController {
              @RequestParam(defaultValue = "updatedWhen_DESC") String orderBy)
     {
         return assignmentService.getAssignmentsByUser(id, page,orderBy);
+    }
+    @PutMapping("{id}")
+    public ResponseEntity<?> update(
+            @PathVariable Integer id,
+            @RequestBody @Valid AssignmentRequestPutDto dto){
+        assignmentService.update(dto, id);
+        return ResponseEntity.ok().build();
+    }
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> delete(@PathVariable Integer id){
+        assignmentService.delete(id);
+        return ResponseEntity.ok().build();
     }
 }

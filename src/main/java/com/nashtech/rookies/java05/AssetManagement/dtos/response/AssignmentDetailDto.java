@@ -10,12 +10,17 @@ import java.sql.Timestamp;
 @Data
 @Builder
 public class AssignmentDetailDto {
+    private Integer id;
     private String assetId;
     private String assetName;
+    private String categoryName;
     private String specification;
-    private String assignTo;
-    private String assignBy;
+    private String assignToUsername;
+    private String assignByUsername;
     private Date assignedDate;
-    private AssignmentState state;
+    private String state;
     private String note;
+    private String assignToId;
+    private String assignToFirstName;
+    private String assignToLastName;
 }
