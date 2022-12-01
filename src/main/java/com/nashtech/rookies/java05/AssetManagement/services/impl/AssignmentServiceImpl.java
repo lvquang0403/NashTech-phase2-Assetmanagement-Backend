@@ -23,8 +23,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
+import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -51,13 +53,12 @@ public class AssignmentServiceImpl implements AssignmentService {
             pageable = PageRequest.of(page, pageSize, Sort.Direction.ASC, columnName);
         }
 
+
         List<AssignmentState> stateList = new ArrayList<>();
         AssignmentState[] assignmentStates = AssignmentState.values();
-
-
         if (stateFilterList.isEmpty()) { // if states filter = null, then find all
             for (AssignmentState assignmentState : assignmentStates) {
-                    stateList.add(assignmentState);
+                stateList.add(assignmentState);
             }
         } else {
             for (AssignmentState assignmentState : assignmentStates) {
@@ -95,9 +96,17 @@ public class AssignmentServiceImpl implements AssignmentService {
             pageable = PageRequest.of(page, pageSize, Sort.Direction.ASC, columnName);
         }
 
+        List<AssignmentReturnState> states = new ArrayList<>();
+        states.add(AssignmentReturnState.WAITING_FOR_RETURNING);
+
+        LocalDate localDate = LocalDate.now();
+        ZoneId defaultZoneId = ZoneId.systemDefault();
+        Date date = Date.from(localDate.atStartOfDay(defaultZoneId).toInstant());
+
+        System.out.println(date.toString());
         Page<Assignment> result;
         result = assignmentRepository.findByUserId
-                (id, pageable);
+                (id, states, date, pageable);
         //return null;
         return new APIResponse<>(result.getTotalPages(),
                 assignmentMapper.mapAssignmentListToAssignmentListResponseDto(result.toList()));
