@@ -61,4 +61,9 @@ public class AssignmentController {
         assignmentService.update(dto, id);
         return ResponseEntity.ok().build();
     }
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> delete(@PathVariable Integer id){
+        assignmentService.delete(id);
+        return ResponseEntity.ok().build();
+    }
 }

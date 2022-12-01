@@ -60,7 +60,6 @@ public class AssignmentServiceImpl implements AssignmentService {
         newAssignment.getAsset().setState(AssetState.ASSIGNED);
         return assignmentMapper.mapEntityToResponseInsertDto(assignmentRepository.save(newAssignment));
     }
-
     @Override
     public void update(AssignmentRequestPutDto dto, Integer id) {
         Assignment foundAssignment = assignmentRepository.findById(id).orElseThrow(
@@ -72,7 +71,16 @@ public class AssignmentServiceImpl implements AssignmentService {
         updateAssignment.setUpdatedWhen(now);
         assignmentRepository.save(updateAssignment);
     }
-
+    @Override
+    public void delete(Integer id) {
+        Assignment foundAssignment =  assignmentRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException(String.format("Assignment with id %s is not found", id))
+        );
+        if(foundAssignment.getState() != AssignmentState.WAITING){
+            throw new BadRequestException("Only can delete assignments that have state is WATING");
+        }
+        assignmentRepository.delete(foundAssignment);
+    }
     @Override
     public APIResponse<List<AssignmentListResponseDto>> getAssignmentByPredicates
             (List<String> stateFilterList, String assignDate, String keyword, int page, String orderBy) {
