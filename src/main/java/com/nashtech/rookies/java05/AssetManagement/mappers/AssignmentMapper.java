@@ -94,16 +94,19 @@ public class AssignmentMapper {
 
     public AssignmentDetailDto mapAssignmentToAssignmentDetailDto(Assignment a) {
         AssignmentDetailDto assignmentDetailDto = AssignmentDetailDto.builder()
-
+                .id(a.getId())
                 .assetId(a.getAsset().getId())
                 .assetName(a.getAsset().getName())
+                .categoryName(a.getAsset().getCategory().getName())
                 .specification(a.getAsset().getSpecification())
-                .assignTo(a.getAssignedTo().getUsername())
-                .assignBy(a.getAssignedBy().getUsername())
+                .assignToUsername(a.getAssignedTo().getUsername())
+                .assignByUsername(a.getAssignedBy().getUsername())
                 .assignedDate(a.getAssignedDate())
                 .state(a.getState().getName())
                 .note(a.getNote())
-
+                .assignToId(a.getAssignedTo().getId())
+                .assignToFirstName(a.getAssignedTo().getFirstName())
+                .assignToLastName(a.getAssignedTo().getLastName())
                 .build();
         return assignmentDetailDto;
     }
