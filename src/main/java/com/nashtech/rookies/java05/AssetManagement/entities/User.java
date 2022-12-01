@@ -3,10 +3,7 @@ package com.nashtech.rookies.java05.AssetManagement.entities;
 
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.Gender;
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.UserState;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 
 import javax.persistence.*;
@@ -18,6 +15,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "users")
 public class User {
