@@ -18,4 +18,5 @@ public class AssignmentListResponseDto {
     private String category;
     private Date assignedDate;
     private String state;
+    private boolean isRequestForReturn;
 }
