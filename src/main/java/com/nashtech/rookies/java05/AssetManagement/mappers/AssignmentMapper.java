@@ -1,6 +1,7 @@
 package com.nashtech.rookies.java05.AssetManagement.mappers;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentRequestPostDto;
+import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentRequestPutDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssignmentResponseDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssignmentResponseInsertDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssignmentDetailDto;
@@ -104,6 +105,17 @@ public class AssignmentMapper {
                 .build();
         return assignmentDetailDto;
     }
-
-
+    public Assignment mapRequestPutDtoToEntity(AssignmentRequestPutDto dto, Assignment foundAssignment){
+        User assignTo = userRepository.findById(dto.getAssignTo()).orElseThrow(
+                () -> new ResourceNotFoundException(String.format("User with id %s is not found", dto.getAssignTo()))
+        );
+        Asset foundAsset = assetRepository.findById(dto.getAssetId()).orElseThrow(
+                () -> new ResourceNotFoundException(String.format("Asset with id %s is not found", dto.getAssetId()))
+        );
+        foundAssignment.setAssignedTo(assignTo);
+        foundAssignment.setAssignedDate(dto.getAssignedDate());
+        foundAssignment.setAsset(foundAsset);
+        foundAssignment.setNote(dto.getNote());
+        return foundAssignment;
+    }
 }

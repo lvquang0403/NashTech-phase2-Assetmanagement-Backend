@@ -1,18 +1,19 @@
 package com.nashtech.rookies.java05.AssetManagement.services.impl;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentRequestPostDto;
+import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentRequestPutDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssignmentResponseInsertDto;
 import com.nashtech.rookies.java05.AssetManagement.entities.Assignment;
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssetState;
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssignmentState;
 import com.nashtech.rookies.java05.AssetManagement.exceptions.BadRequestException;
+import com.nashtech.rookies.java05.AssetManagement.exceptions.ResourceNotFoundException;
 import com.nashtech.rookies.java05.AssetManagement.mappers.AssignmentMapper;
 import com.nashtech.rookies.java05.AssetManagement.repository.AssignmentRepository;
 import com.nashtech.rookies.java05.AssetManagement.services.AssignmentService;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.APIResponse;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssignmentDetailDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssignmentListResponseDto;
-import com.nashtech.rookies.java05.AssetManagement.exceptions.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -54,7 +55,17 @@ public class AssignmentServiceImpl implements AssignmentService {
         newAssignment.getAsset().setState(AssetState.ASSIGNED);
         return assignmentMapper.mapEntityToResponseInsertDto(assignmentRepository.save(newAssignment));
     }
-
+    @Override
+    public void update(AssignmentRequestPutDto dto, Integer id) {
+        Assignment foundAssignment = assignmentRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException(String.format("Assignment with id %s is not found", id))
+        );
+        Assignment updateAssignment = assignmentMapper.mapRequestPutDtoToEntity(dto, foundAssignment);
+        Date dateNow = new Date();
+        Timestamp now = new Timestamp(dateNow.getTime());
+        updateAssignment.setUpdatedWhen(now);
+        assignmentRepository.save(updateAssignment);
+    }
     @Override
     public APIResponse<List<AssignmentListResponseDto>> getAssignmentByPredicates
             (List<String> stateFilterList, String assignDate, String keyword, int page, String orderBy) {

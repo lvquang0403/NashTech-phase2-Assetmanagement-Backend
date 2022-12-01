@@ -1,11 +1,13 @@
 package com.nashtech.rookies.java05.AssetManagement.controllers;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentRequestPostDto;
+import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentRequestPutDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssignmentResponseInsertDto;
 import com.nashtech.rookies.java05.AssetManagement.services.AssignmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -51,5 +53,12 @@ public class AssignmentController {
              @RequestParam(defaultValue = "updatedWhen_DESC") String orderBy)
     {
         return assignmentService.getAssignmentsByUser(id, page,orderBy);
+    }
+    @PutMapping("{id}")
+    public ResponseEntity<?> update(
+            @PathVariable Integer id,
+            @RequestBody @Valid AssignmentRequestPutDto dto){
+        assignmentService.update(dto, id);
+        return ResponseEntity.ok().build();
     }
 }

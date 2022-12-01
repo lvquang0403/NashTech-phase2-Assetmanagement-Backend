@@ -1,6 +1,7 @@
 package com.nashtech.rookies.java05.AssetManagement.services;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentRequestPostDto;
+import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentRequestPutDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssignmentResponseInsertDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.APIResponse;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssignmentDetailDto;
@@ -10,6 +11,7 @@ import java.util.List;
 
 public interface AssignmentService {
     AssignmentResponseInsertDto create(AssignmentRequestPostDto dto);
+    void update(AssignmentRequestPutDto dto, Integer id);
     APIResponse<List<AssignmentListResponseDto>> getAssignmentByPredicates
             (List<String> stateFilterList, String assignDate, String keyword, int page, String orderBy);
     AssignmentDetailDto getAssignment(int id);
