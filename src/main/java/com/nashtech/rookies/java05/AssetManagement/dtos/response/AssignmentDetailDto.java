@@ -16,6 +16,6 @@ public class AssignmentDetailDto {
     private String assignTo;
     private String assignBy;
     private Date assignedDate;
-    private AssignmentState state;
+    private String state;
     private String note;
 }

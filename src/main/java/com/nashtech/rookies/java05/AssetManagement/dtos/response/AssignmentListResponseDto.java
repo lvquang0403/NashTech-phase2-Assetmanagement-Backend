@@ -17,5 +17,5 @@ public class AssignmentListResponseDto {
     private String assignBy;
     private String category;
     private Date assignedDate;
-    private AssignmentState state;
+    private String state;
 }

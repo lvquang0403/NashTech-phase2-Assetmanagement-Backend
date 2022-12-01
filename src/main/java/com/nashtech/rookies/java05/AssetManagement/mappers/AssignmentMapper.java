@@ -82,7 +82,7 @@ public class AssignmentMapper {
                     .assignTo(a.getAssignedTo().getUsername())
                     .assignBy(a.getAssignedBy().getUsername())
                     .assignedDate(a.getAssignedDate())
-                    .state(a.getState())
+                    .state(a.getState().getName())
                     .category(a.getAsset().getCategory().getName())
                     .build();
             return assetViewResponseDto;
@@ -100,7 +100,7 @@ public class AssignmentMapper {
                 .assignTo(a.getAssignedTo().getUsername())
                 .assignBy(a.getAssignedBy().getUsername())
                 .assignedDate(a.getAssignedDate())
-                .state(a.getState())
+                .state(a.getState().getName())
                 .note(a.getNote())
                 .build();
         return assignmentDetailDto;
