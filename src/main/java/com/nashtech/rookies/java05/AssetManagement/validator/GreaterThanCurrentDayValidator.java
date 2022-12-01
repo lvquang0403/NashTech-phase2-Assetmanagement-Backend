@@ -13,7 +13,11 @@ public class GreaterThanCurrentDayValidator implements ConstraintValidator<Great
 
     @Override
     public boolean isValid(Date value, ConstraintValidatorContext context) {
-        Date currentDay = Date.valueOf(LocalDate.now());
+        long millis = System.currentTimeMillis();
+        Date currentDay = new Date(millis);
+        if(value.toString().equals(currentDay.toString())){
+            return true;
+        }
         return value.after(currentDay);
     }
 }
