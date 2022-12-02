@@ -20,6 +20,7 @@ import lombok.Builder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Date;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -59,6 +60,7 @@ public class AssignmentServiceImpl implements AssignmentService {
         return assignmentMapper.mapEntityToResponseInsertDto(assignmentRepository.save(newAssignment));
     }
     @Override
+    @Transactional
     public void update(AssignmentRequestPutDto dto, Integer id) {
         Assignment foundAssignment = assignmentRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException(String.format("Assignment with id %s is not found", id))
@@ -80,6 +82,8 @@ public class AssignmentServiceImpl implements AssignmentService {
         if(foundAssignment.getState() != AssignmentState.WAITING){
             throw new BadRequestException("Only can delete assignments that have state is WATING");
         }
+        foundAssignment.getAsset().setState(AssetState.AVAILABLE);
+        assignmentRepository.save(foundAssignment);
         assignmentRepository.delete(foundAssignment);
     }
     @Override

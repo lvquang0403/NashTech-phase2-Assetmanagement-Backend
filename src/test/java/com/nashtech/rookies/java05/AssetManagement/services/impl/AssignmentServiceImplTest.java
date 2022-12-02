@@ -10,7 +10,6 @@ import com.nashtech.rookies.java05.AssetManagement.entities.Assignment;
 import com.nashtech.rookies.java05.AssetManagement.entities.Returning;
 import com.nashtech.rookies.java05.AssetManagement.entities.User;
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssetState;
-import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssignmentReturnState;
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssignmentState;
 import com.nashtech.rookies.java05.AssetManagement.exceptions.BadRequestException;
 import com.nashtech.rookies.java05.AssetManagement.exceptions.ResourceNotFoundException;
@@ -42,18 +41,14 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.hamcrest.Matchers.emptyCollectionOf;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyCollection;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class AssignmentServiceImplTest {
-    private AssignmentMapper assignmentMapper;
     private AssignmentRepository assignmentRepository;
     private AssignmentService assignmentService;
-
     private AssetRepository assetRepository;
     private UserRepository userRepository;
     private AssignmentMapper assignmentMapper2;
@@ -74,7 +69,7 @@ class AssignmentServiceImplTest {
 
         assetRepository = Mockito.mock(AssetRepository.class);
         userRepository = Mockito.mock(UserRepository.class);
-        assignmentMapper = AssignmentMapper.builder()
+        AssignmentMapper assignmentMapper = AssignmentMapper.builder()
                 .assetRepository(assetRepository)
                 .userRepository(userRepository)
                 .build();
@@ -281,6 +276,44 @@ class AssignmentServiceImplTest {
         assertThat(actual.getAsset().getId()).isEqualTo(newAssetId);
     }
 
+    @Test
+    void testDeleteWhenAssignmentNotExistShouldThrowException(){
+        Integer assignmentIdNotExist = 999;
+        ResourceNotFoundException resourceNotFoundException = Assertions.assertThrows(ResourceNotFoundException.class,
+                () -> assignmentService.delete(assignmentIdNotExist));
+        assertThat(resourceNotFoundException.getMessage()).isEqualTo(String.format("Assignment with id %s is not found", assignmentIdNotExist));
+    }
+
+    @Test
+    void testDeleteWhenAssignmentStateNotValidShouldThrowException(){
+        Integer assignmentId = 1;
+        Mockito.when(assignmentRepository.findById(assignmentId))
+                .thenReturn(Optional.of(Assignment.builder().state(AssignmentState.ACCEPTED).build()));
+        BadRequestException badRequestException = Assertions.assertThrows(BadRequestException.class,
+                () -> assignmentService.delete(assignmentId));
+        assertThat(badRequestException.getMessage()).isEqualTo("Only can delete assignments that have state is WATING");
+    }
+
+    @Test
+    void testDeleteWhenAssignmentValidShouldDeleteSuccess() {
+        Integer assignmentId = 1;
+        Asset assignedAsset = Asset.builder().state(AssetState.ASSIGNED).build();
+        Assignment assignment = Assignment.builder()
+                .id(assignmentId)
+                .asset(assignedAsset)
+                .state(AssignmentState.WAITING)
+                .build();
+        Mockito.when(assignmentRepository.findById(assignmentId))
+                .thenReturn(Optional.of(assignment));
+        assignmentService.delete(assignmentId);
+        ArgumentCaptor<Assignment> assignmentArgumentCaptor = ArgumentCaptor.forClass(Assignment.class);
+        Mockito.verify(assignmentRepository).save(assignmentArgumentCaptor.capture());
+        Assignment actual = assignmentArgumentCaptor.getValue();
+        assertThat(actual.getId()).isEqualTo(assignmentId);
+        assertThat(actual.getAsset().getState()).isEqualTo(AssetState.AVAILABLE);
+        Mockito.verify(assignmentRepository).delete(assignment);
+
+    }
     @Test
     void getAssignment_ShouldReturnValue_WhenAssignmentIdIsIsValid() {
 
