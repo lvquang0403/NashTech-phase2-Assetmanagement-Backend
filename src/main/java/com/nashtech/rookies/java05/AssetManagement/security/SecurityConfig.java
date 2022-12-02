@@ -46,6 +46,8 @@ public class SecurityConfig {
                 .antMatchers("/api/categories/name/**").hasAnyAuthority(ADMIN)
                 .antMatchers("/api/users/reset-password").authenticated()
                 .antMatchers("/api/users/**").hasAnyAuthority(ADMIN)
+
+                .antMatchers("/api/reports").hasAnyAuthority(ADMIN)
 //categories
                 .antMatchers(HttpMethod.POST, "/api/categories").hasAnyAuthority(ADMIN)
 //assets
