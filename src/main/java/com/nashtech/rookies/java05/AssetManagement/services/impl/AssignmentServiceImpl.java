@@ -2,7 +2,7 @@ package com.nashtech.rookies.java05.AssetManagement.services.impl;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentRequestPostDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentRequestPutDto;
-import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssignmentResponseInsertDto;
+import com.nashtech.rookies.java05.AssetManagement.dtos.response.*;
 import com.nashtech.rookies.java05.AssetManagement.entities.Assignment;
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssetState;
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssignmentReturnState;
@@ -12,9 +12,6 @@ import com.nashtech.rookies.java05.AssetManagement.exceptions.ResourceNotFoundEx
 import com.nashtech.rookies.java05.AssetManagement.mappers.AssignmentMapper;
 import com.nashtech.rookies.java05.AssetManagement.repository.AssignmentRepository;
 import com.nashtech.rookies.java05.AssetManagement.services.AssignmentService;
-import com.nashtech.rookies.java05.AssetManagement.dtos.response.APIResponse;
-import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssignmentDetailDto;
-import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssignmentListResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +27,7 @@ import java.sql.Timestamp;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -111,10 +109,11 @@ public class AssignmentServiceImpl implements AssignmentService {
 
     @Override
     public AssignmentDetailDto getAssignment(int id) {
-        Assignment assetFound = assignmentRepository.findById(id).orElseThrow(() ->
-                new ResourceNotFoundException("Assignment not exist with id: " + id));
-
-        return assignmentMapper.mapAssignmentToAssignmentDetailDto(assetFound);
+        Optional<Assignment> assignmentFound = assignmentRepository.findById(id);
+        if(assignmentFound.isEmpty()){
+            return AssignmentDetailDto.builder().build();
+        }
+        return assignmentMapper.mapAssignmentToAssignmentDetailDto(assignmentFound.get());
     }
 
     @Override
