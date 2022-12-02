@@ -6,6 +6,7 @@ import lombok.*;
 
 
 import javax.persistence.*;
+import java.sql.Date;
 import java.sql.Timestamp;
 
 @Getter
@@ -26,6 +27,9 @@ public class Assignment {
 
     @Column(name = "updated_when")
     private Timestamp updatedWhen;
+
+    @Column(name = "assigned_date")
+    private Date assignedDate;
 
     @Column(name = "note")
     private String note;

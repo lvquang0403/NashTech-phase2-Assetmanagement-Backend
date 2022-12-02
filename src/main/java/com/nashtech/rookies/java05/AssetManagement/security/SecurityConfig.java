@@ -60,6 +60,10 @@ public class SecurityConfig {
 //users
                 .antMatchers(HttpMethod.POST, "/api/users").hasAnyAuthority(ADMIN)
                 .antMatchers(HttpMethod.PUT, "/api/users/**").hasAnyAuthority(ADMIN)
+//assignments
+                .antMatchers(HttpMethod.POST, "/api/assignments").hasAnyAuthority(ADMIN)
+                .antMatchers(HttpMethod.PUT, "/api/assignments/**").hasAnyAuthority(ADMIN)
+                .antMatchers(HttpMethod.DELETE, "/api/assignments/**").hasAnyAuthority(ADMIN)
 
                 .antMatchers("/api/**").authenticated();
         httpSecurity.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
