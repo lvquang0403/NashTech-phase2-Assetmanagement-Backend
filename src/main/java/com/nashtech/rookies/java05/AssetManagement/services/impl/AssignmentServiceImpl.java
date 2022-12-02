@@ -65,6 +65,9 @@ public class AssignmentServiceImpl implements AssignmentService {
         Assignment foundAssignment = assignmentRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException(String.format("Assignment with id %s is not found", id))
         );
+        if(!foundAssignment.getState().equals(AssignmentState.WAITING)){
+            throw new BadRequestException("Only can update assignment that have state is WATING");
+        }
         Assignment updateAssignment = assignmentMapper.mapRequestPutDtoToEntity(dto, foundAssignment);
         Date dateNow = new Date();
         Timestamp now = new Timestamp(dateNow.getTime());

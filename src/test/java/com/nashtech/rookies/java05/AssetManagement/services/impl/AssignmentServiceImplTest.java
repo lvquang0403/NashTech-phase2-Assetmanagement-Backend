@@ -180,12 +180,58 @@ class AssignmentServiceImplTest {
                 .assetId(assetIdNotExist)
                 .assignTo("any")
                 .build();
-        Mockito.when(assignmentRepository.findById(any())).thenReturn(Optional.of(Mockito.mock(Assignment.class)));
+        Mockito.when(assignmentRepository.findById(any())).thenReturn(Optional.of(Assignment.builder().state(AssignmentState.WAITING).build()));
         Mockito.when(userRepository.findById("any")).thenReturn(Optional.of(Mockito.mock(User.class)));
         ResourceNotFoundException resourceNotFoundException = Assertions.assertThrows(ResourceNotFoundException.class,
                 () -> assignmentService.update(dto, 2));
         assertThat(resourceNotFoundException.getMessage()).isEqualTo(String.format("Asset with id %s is not found", assetIdNotExist));
 
+    }
+
+    @Test
+    void testUpdateWhenAssignToNotExistShouldThrowException(){
+        String assignToIdNotExist = "SD123449";
+        AssignmentRequestPutDto dto = AssignmentRequestPutDto.builder()
+                .assetId("any")
+                .assignTo(assignToIdNotExist)
+                .build();
+        Mockito.when(assignmentRepository.findById(any())).thenReturn(Optional.of(Assignment.builder().state(AssignmentState.WAITING).build()));
+        ResourceNotFoundException resourceNotFoundException = Assertions.assertThrows(ResourceNotFoundException.class,
+                () -> assignmentService.update(dto, 2));
+        assertThat(resourceNotFoundException.getMessage()).isEqualTo(String.format("User with id %s is not found", assignToIdNotExist));
+    }
+
+    @Test
+    void testUpdateWhenDataValidShouldUpdateNewValue(){
+        Integer oldAssignmentId = 1;
+        String newUserAssignToId = "SD0002";
+        String newAssetId = "LA000001";
+        String newNote = "note";
+        Date newAssignDate = Date.valueOf("2023-03-31");
+        AssignmentRequestPutDto dto = AssignmentRequestPutDto.builder()
+                .assignTo(newUserAssignToId)
+                .assignedDate(newAssignDate)
+                .assetId(newAssetId)
+                .note(newNote)
+                .build();
+        Assignment oldAssignment = Assignment.builder()
+                .id(oldAssignmentId)
+                .state(AssignmentState.WAITING)
+                .build();
+        Mockito.when(assignmentRepository.findById(oldAssignmentId))
+                .thenReturn(Optional.of(oldAssignment));
+        Mockito.when(userRepository.findById(newUserAssignToId))
+                .thenReturn(Optional.of(User.builder().id(newUserAssignToId).build()));
+        Mockito.when(assetRepository.findById(newAssetId))
+                .thenReturn(Optional.of(Asset.builder().id(newAssetId).build()));
+        assignmentService.update(dto, oldAssignmentId);
+        ArgumentCaptor<Assignment> assignmentArgumentCaptor = ArgumentCaptor.forClass(Assignment.class);
+        Mockito.verify(assignmentRepository).save(assignmentArgumentCaptor.capture());
+        Assignment actual = assignmentArgumentCaptor.getValue();
+        assertThat(actual.getAssignedDate()).isEqualTo(newAssignDate);
+        assertThat(actual.getAssignedTo().getId()).isEqualTo(newUserAssignToId);
+        assertThat(actual.getNote()).isEqualTo(newNote);
+        assertThat(actual.getAsset().getId()).isEqualTo(newAssetId);
     }
 
 }
