@@ -105,7 +105,7 @@ public class UserServiceImpl implements UserService {
         String username = prefixUsername + maxCodeUsername;
 
         SimpleDateFormat format = new SimpleDateFormat("ddMMyyyy");
-        String password = prefixUsername + "@" + format.format(user.getBirth());
+        String password = username + "@" + format.format(user.getBirth());
 
         Role role = roleRepository.findById(userRequestDto.getRoleId()).get();
         Location location = locationRepository.findById(userRequestDto.getLocationId()).get();
