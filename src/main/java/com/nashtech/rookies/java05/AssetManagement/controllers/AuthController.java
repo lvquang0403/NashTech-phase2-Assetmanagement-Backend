@@ -3,7 +3,7 @@ package com.nashtech.rookies.java05.AssetManagement.controllers;
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.UserLoginRequestDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.SuccessResponse;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.UserLoginResponseDto;
-import com.nashtech.rookies.java05.AssetManagement.services.AuthService;
+import com.nashtech.rookies.java05.AssetManagement.controler.services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

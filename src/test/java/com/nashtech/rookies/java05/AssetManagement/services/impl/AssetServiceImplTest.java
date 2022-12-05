@@ -1,5 +1,6 @@
 package com.nashtech.rookies.java05.AssetManagement.services.impl;
 
+import com.nashtech.rookies.java05.AssetManagement.controler.services.impl.AssetServiceImpl;
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssetRequestDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.APIResponse;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssetResponseDto;
@@ -19,7 +20,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;

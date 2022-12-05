@@ -2,7 +2,7 @@ package com.nashtech.rookies.java05.AssetManagement.controllers;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssetRequestDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.*;
-import com.nashtech.rookies.java05.AssetManagement.services.AssetService;
+import com.nashtech.rookies.java05.AssetManagement.controler.services.AssetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

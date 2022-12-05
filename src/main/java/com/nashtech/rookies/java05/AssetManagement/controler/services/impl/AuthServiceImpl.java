@@ -1,4 +1,4 @@
-package com.nashtech.rookies.java05.AssetManagement.services.impl;
+package com.nashtech.rookies.java05.AssetManagement.controler.services.impl;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.UserLoginRequestDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.SuccessResponse;
@@ -7,7 +7,7 @@ import com.nashtech.rookies.java05.AssetManagement.entities.User;
 import com.nashtech.rookies.java05.AssetManagement.exceptions.UnauthorizedException;
 import com.nashtech.rookies.java05.AssetManagement.mappers.UserMapper;
 import com.nashtech.rookies.java05.AssetManagement.repository.UserRepository;
-import com.nashtech.rookies.java05.AssetManagement.services.AuthService;
+import com.nashtech.rookies.java05.AssetManagement.controler.services.AuthService;
 import com.nashtech.rookies.java05.AssetManagement.utils.JwtUtil;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;

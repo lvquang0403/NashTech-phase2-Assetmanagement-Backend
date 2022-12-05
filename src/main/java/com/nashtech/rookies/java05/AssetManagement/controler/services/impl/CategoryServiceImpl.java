@@ -1,12 +1,12 @@
-package com.nashtech.rookies.java05.AssetManagement.services.impl;
+package com.nashtech.rookies.java05.AssetManagement.controler.services.impl;
 
+import com.nashtech.rookies.java05.AssetManagement.controler.services.CategoryService;
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.CategoryRequestDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.CategoryResponseDto;
 import com.nashtech.rookies.java05.AssetManagement.entities.Category;
 import com.nashtech.rookies.java05.AssetManagement.exceptions.RepeatDataException;
 import com.nashtech.rookies.java05.AssetManagement.mappers.CategoryMapper;
 import com.nashtech.rookies.java05.AssetManagement.repository.CategoryRepository;
-import com.nashtech.rookies.java05.AssetManagement.services.CategoryService;
 import com.nashtech.rookies.java05.AssetManagement.utils.EntityCheckUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package com.nashtech.rookies.java05.AssetManagement.services;
+package com.nashtech.rookies.java05.AssetManagement.controler.services;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.CategoryRequestDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.CategoryResponseDto;

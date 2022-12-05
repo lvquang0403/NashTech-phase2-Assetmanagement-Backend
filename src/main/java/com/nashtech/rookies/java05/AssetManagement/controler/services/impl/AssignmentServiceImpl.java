@@ -1,5 +1,6 @@
-package com.nashtech.rookies.java05.AssetManagement.services.impl;
+package com.nashtech.rookies.java05.AssetManagement.controler.services.impl;
 
+import com.nashtech.rookies.java05.AssetManagement.controler.services.AssignmentService;
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentRequestPostDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentRequestPutDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.*;
@@ -11,7 +12,6 @@ import com.nashtech.rookies.java05.AssetManagement.exceptions.BadRequestExceptio
 import com.nashtech.rookies.java05.AssetManagement.exceptions.ResourceNotFoundException;
 import com.nashtech.rookies.java05.AssetManagement.mappers.AssignmentMapper;
 import com.nashtech.rookies.java05.AssetManagement.repository.AssignmentRepository;
-import com.nashtech.rookies.java05.AssetManagement.services.AssignmentService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

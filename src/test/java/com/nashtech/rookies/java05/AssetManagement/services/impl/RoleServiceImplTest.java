@@ -1,17 +1,13 @@
 package com.nashtech.rookies.java05.AssetManagement.services.impl;
 
+import com.nashtech.rookies.java05.AssetManagement.controler.services.impl.RoleServiceImpl;
 import com.nashtech.rookies.java05.AssetManagement.entities.Role;
 import com.nashtech.rookies.java05.AssetManagement.repository.RoleRepository;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 class RoleServiceImplTest {
 
