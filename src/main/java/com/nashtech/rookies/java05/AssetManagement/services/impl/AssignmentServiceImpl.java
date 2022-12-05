@@ -2,7 +2,7 @@ package com.nashtech.rookies.java05.AssetManagement.services.impl;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentRequestPostDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentRequestPutDto;
-import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssignmentResponseInsertDto;
+import com.nashtech.rookies.java05.AssetManagement.dtos.response.*;
 import com.nashtech.rookies.java05.AssetManagement.entities.Assignment;
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssetState;
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssignmentReturnState;
@@ -12,9 +12,6 @@ import com.nashtech.rookies.java05.AssetManagement.exceptions.ResourceNotFoundEx
 import com.nashtech.rookies.java05.AssetManagement.mappers.AssignmentMapper;
 import com.nashtech.rookies.java05.AssetManagement.repository.AssignmentRepository;
 import com.nashtech.rookies.java05.AssetManagement.services.AssignmentService;
-import com.nashtech.rookies.java05.AssetManagement.dtos.response.APIResponse;
-import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssignmentDetailDto;
-import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssignmentListResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +20,7 @@ import lombok.Builder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Date;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -30,6 +28,7 @@ import java.sql.Timestamp;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -61,10 +60,14 @@ public class AssignmentServiceImpl implements AssignmentService {
         return assignmentMapper.mapEntityToResponseInsertDto(assignmentRepository.save(newAssignment));
     }
     @Override
+    @Transactional
     public void update(AssignmentRequestPutDto dto, Integer id) {
         Assignment foundAssignment = assignmentRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException(String.format("Assignment with id %s is not found", id))
         );
+        if(!foundAssignment.getState().equals(AssignmentState.WAITING)){
+            throw new BadRequestException("Only can update assignment that have state is WATING");
+        }
         Assignment updateAssignment = assignmentMapper.mapRequestPutDtoToEntity(dto, foundAssignment);
         Date dateNow = new Date();
         Timestamp now = new Timestamp(dateNow.getTime());
@@ -79,6 +82,8 @@ public class AssignmentServiceImpl implements AssignmentService {
         if(foundAssignment.getState() != AssignmentState.WAITING){
             throw new BadRequestException("Only can delete assignments that have state is WATING");
         }
+        foundAssignment.getAsset().setState(AssetState.AVAILABLE);
+        assignmentRepository.save(foundAssignment);
         assignmentRepository.delete(foundAssignment);
     }
     @Override
@@ -119,10 +124,11 @@ public class AssignmentServiceImpl implements AssignmentService {
 
     @Override
     public AssignmentDetailDto getAssignment(int id) {
-        Assignment assetFound = assignmentRepository.findById(id).orElseThrow(() ->
-                new ResourceNotFoundException("Assignment not exist with id: " + id));
-
-        return assignmentMapper.mapAssignmentToAssignmentDetailDto(assetFound);
+        Optional<Assignment> assignmentFound = assignmentRepository.findById(id);
+        if(assignmentFound.isEmpty()){
+            return AssignmentDetailDto.builder().build();
+        }
+        return assignmentMapper.mapAssignmentToAssignmentDetailDto(assignmentFound.get());
     }
 
     @Override
