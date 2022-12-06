@@ -34,6 +34,10 @@ public class Returning {
     @JoinColumn(name = "assignedBy_id",referencedColumnName = "id")
     private User assignedBy;
 
+    @ManyToOne
+    @JoinColumn(name = "acceptedBy_id",referencedColumnName = "id")
+    private User acceptedBy;
+
     @OneToOne
     @JoinColumn(name = "assignment_id", referencedColumnName = "id")
     private Assignment assignment;

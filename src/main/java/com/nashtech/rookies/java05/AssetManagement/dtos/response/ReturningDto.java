@@ -4,7 +4,6 @@ import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssignmentRetu
 import lombok.Builder;
 import lombok.Data;
 
-import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
@@ -16,7 +15,7 @@ public class ReturningDto {
     private Integer id;
     private Timestamp returnedDate;
     private AssignmentReturnState state;
-    private String AssignTo;
-    private String AssignBy;
+    private String assignTo;
+    private String assignBy;
     private AssignmentResponseDto assignmentResponseDto;
 }

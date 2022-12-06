@@ -73,6 +73,9 @@ public class User {
     @OneToMany(mappedBy = "assignedBy")
     private List<Returning> listReturningAssignBy;
 
+    @OneToMany(mappedBy = "acceptedBy")
+    private List<Returning> listReturningAcceptedBy;
+
     @ManyToOne
     @JoinColumn(name = "location_id",referencedColumnName = "id")
     private Location location;

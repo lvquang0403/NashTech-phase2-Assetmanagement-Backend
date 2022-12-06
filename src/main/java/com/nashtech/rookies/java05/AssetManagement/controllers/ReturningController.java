@@ -15,13 +15,4 @@ import java.util.List;
 @RequestMapping(value = "api/returns")
 public class ReturningController {
 
-    @Autowired
-    private ReturningRepository returningRepository;
-    @Autowired
-    private ReturningMapper returningMapper;
-
-    //temp api
-
-
-
 }
