@@ -1,5 +1,8 @@
 package com.nashtech.rookies.java05.AssetManagement.controllers;
 
+import com.nashtech.rookies.java05.AssetManagement.dtos.response.APIResponse;
+import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssetViewResponseDto;
+import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssignmentListResponseDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.ReturningDto;
 import com.nashtech.rookies.java05.AssetManagement.entities.Returning;
 import com.nashtech.rookies.java05.AssetManagement.mappers.ReturningMapper;
@@ -14,5 +17,17 @@ import java.util.List;
 @CrossOrigin
 @RequestMapping(value = "api/returns")
 public class ReturningController {
+
+    @GetMapping("")
+    public APIResponse<List<AssignmentListResponseDto>> getAllAssignment
+            (@RequestParam(required = false, defaultValue = "") List<String> states,
+             @RequestParam(required = false) String returnedDate,
+             @RequestParam(required = false, defaultValue = "") String keyword,
+             @RequestParam(value = "page", required = false, defaultValue = "0") int page,
+             @RequestParam(defaultValue = "updatedWhen_DESC") String orderBy) {
+
+        return null;
+    }
+
 
 }

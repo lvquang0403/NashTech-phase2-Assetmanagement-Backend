@@ -17,5 +17,7 @@ public class ReturningDto {
     private AssignmentReturnState state;
     private String assignTo;
     private String assignBy;
+    private String acceptedBy;
+    private AssetViewResponseDto assetViewResponseDto;
     private AssignmentResponseDto assignmentResponseDto;
 }
