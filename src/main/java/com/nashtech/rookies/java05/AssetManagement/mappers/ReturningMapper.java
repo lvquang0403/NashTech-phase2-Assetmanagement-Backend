@@ -18,7 +18,7 @@ public class ReturningMapper {
         List<ReturningDto> returningDtoList = returningList.stream().map(returning -> {
             ReturningDto returningDto = ReturningDto.builder()
                     .id(returning.getId())
-                    .state(returning.getState())
+                    .state(returning.getState().getName())
                     .assignBy(returning.getAssignedBy().getUsername())
                     .assignTo(returning.getAssignedTo().getUsername())
                     .acceptedBy(returning.getAcceptedBy().getUsername())

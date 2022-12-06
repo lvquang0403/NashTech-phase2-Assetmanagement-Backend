@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 public class ReturningDto {
     private Integer id;
     private Timestamp returnedDate;
-    private AssignmentReturnState state;
+    private String state;
     private String assignTo;
     private String assignBy;
     private String acceptedBy;
