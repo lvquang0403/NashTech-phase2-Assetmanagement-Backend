@@ -1,5 +1,6 @@
 package com.nashtech.rookies.java05.AssetManagement.services.impl;
 
+import com.nashtech.rookies.java05.AssetManagement.services.AssignmentService;
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentRequestPostDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentRequestPutDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.*;
@@ -11,7 +12,6 @@ import com.nashtech.rookies.java05.AssetManagement.exceptions.BadRequestExceptio
 import com.nashtech.rookies.java05.AssetManagement.exceptions.ResourceNotFoundException;
 import com.nashtech.rookies.java05.AssetManagement.mappers.AssignmentMapper;
 import com.nashtech.rookies.java05.AssetManagement.repository.AssignmentRepository;
-import com.nashtech.rookies.java05.AssetManagement.services.AssignmentService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,14 +21,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Date;
+import java.sql.Array;
+import java.util.*;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.sql.Timestamp;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -136,26 +134,29 @@ public class AssignmentServiceImpl implements AssignmentService {
         String[] parts = orderBy.split("_");
         String columnName = parts[0];
         String order = parts[1];
-        Pageable pageable;
+        Sort s;
         if ("DESC".equals(order)) {
-            pageable = PageRequest.of(page, pageSize, Sort.Direction.DESC, columnName);
+             s = Sort.by(Sort.Direction.DESC, columnName);
+            //pageable = PageRequest.of(page, pageSize, Sort.Direction.DESC, columnName);
         } else {
-            pageable = PageRequest.of(page, pageSize, Sort.Direction.ASC, columnName);
+             s = Sort.by(Sort.Direction.ASC, columnName);
+            //pageable = PageRequest.of(page, pageSize, Sort.Direction.ASC, columnName);
         }
 
         LocalDate localDate = LocalDate.now();
         ZoneId defaultZoneId = ZoneId.systemDefault();
         Date date = Date.from(localDate.atStartOfDay(defaultZoneId).toInstant());
 
-        Page<Assignment> assignments;
+        List<Assignment> assignments;
         assignments = assignmentRepository.findByUserId
-                (id, date, pageable);
+                (id, date, s);
 
-        List<Assignment> result2 = assignments.stream().filter(a -> a.getReturning() == null ||
+        List<Assignment> result = assignments.stream().filter(a -> a.getReturning() == null ||
                 a.getReturning().getState() == AssignmentReturnState.WAITING_FOR_RETURNING).collect(Collectors.toList());
 
+
         //return null;
-        return new APIResponse<>(result2.toArray().length/15 + 1,
-                assignmentMapper.mapAssignmentListToAssignmentListResponseDto(result2));
+        return new APIResponse<>(Math.floorDiv(result.size(), 15) + 1,
+                assignmentMapper.mapAssignmentListToAssignmentListResponseDto(result.subList(page*15, page+15)));
     }
 }
