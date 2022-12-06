@@ -1,6 +1,5 @@
 package com.nashtech.rookies.java05.AssetManagement.services.impl;
 
-import com.nashtech.rookies.java05.AssetManagement.controler.services.impl.RoleServiceImpl;
 import com.nashtech.rookies.java05.AssetManagement.entities.Role;
 import com.nashtech.rookies.java05.AssetManagement.repository.RoleRepository;
 import org.junit.jupiter.api.BeforeEach;

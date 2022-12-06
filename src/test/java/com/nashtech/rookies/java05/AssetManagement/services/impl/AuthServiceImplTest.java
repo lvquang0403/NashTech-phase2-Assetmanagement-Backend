@@ -1,6 +1,5 @@
 package com.nashtech.rookies.java05.AssetManagement.services.impl;
 
-import com.nashtech.rookies.java05.AssetManagement.controler.services.impl.AuthServiceImpl;
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.UserLoginRequestDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.SuccessResponse;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.UserLoginResponseDto;

@@ -1,4 +1,4 @@
-package com.nashtech.rookies.java05.AssetManagement.controler.services;
+package com.nashtech.rookies.java05.AssetManagement.services;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.ReportDto;
 

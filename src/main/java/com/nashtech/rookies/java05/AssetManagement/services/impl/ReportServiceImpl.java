@@ -1,6 +1,6 @@
-package com.nashtech.rookies.java05.AssetManagement.controler.services.impl;
+package com.nashtech.rookies.java05.AssetManagement.services.impl;
 
-import com.nashtech.rookies.java05.AssetManagement.controler.services.ReportService;
+import com.nashtech.rookies.java05.AssetManagement.services.ReportService;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.ReportDto;
 import com.nashtech.rookies.java05.AssetManagement.entities.Category;
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssetState;

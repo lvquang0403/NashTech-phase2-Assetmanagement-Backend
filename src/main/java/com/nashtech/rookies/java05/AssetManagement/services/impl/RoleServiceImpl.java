@@ -1,8 +1,8 @@
-package com.nashtech.rookies.java05.AssetManagement.controler.services.impl;
+package com.nashtech.rookies.java05.AssetManagement.services.impl;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.RoleResponseDto;
 import com.nashtech.rookies.java05.AssetManagement.repository.RoleRepository;
-import com.nashtech.rookies.java05.AssetManagement.controler.services.RoleService;
+import com.nashtech.rookies.java05.AssetManagement.services.RoleService;
 import lombok.Builder;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

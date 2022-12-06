@@ -2,7 +2,7 @@ package com.nashtech.rookies.java05.AssetManagement.controllers;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.CategoryRequestDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.CategoryResponseDto;
-import com.nashtech.rookies.java05.AssetManagement.controler.services.CategoryService;
+import com.nashtech.rookies.java05.AssetManagement.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

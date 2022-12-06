@@ -1,6 +1,6 @@
-package com.nashtech.rookies.java05.AssetManagement.controler.services.impl;
+package com.nashtech.rookies.java05.AssetManagement.services.impl;
 
-import com.nashtech.rookies.java05.AssetManagement.controler.services.AssignmentService;
+import com.nashtech.rookies.java05.AssetManagement.services.AssignmentService;
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentRequestPostDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentRequestPutDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.*;

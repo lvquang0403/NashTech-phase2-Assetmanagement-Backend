@@ -3,7 +3,7 @@ package com.nashtech.rookies.java05.AssetManagement.controllers;
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentRequestPostDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentRequestPutDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssignmentResponseInsertDto;
-import com.nashtech.rookies.java05.AssetManagement.controler.services.AssignmentService;
+import com.nashtech.rookies.java05.AssetManagement.services.AssignmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

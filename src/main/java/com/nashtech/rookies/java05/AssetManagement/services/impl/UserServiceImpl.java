@@ -1,6 +1,6 @@
-package com.nashtech.rookies.java05.AssetManagement.controler.services.impl;
+package com.nashtech.rookies.java05.AssetManagement.services.impl;
 
-import com.nashtech.rookies.java05.AssetManagement.controler.services.UserService;
+import com.nashtech.rookies.java05.AssetManagement.services.UserService;
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.ResetPasswordDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.UserRequestDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.*;

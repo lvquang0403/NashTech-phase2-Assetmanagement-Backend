@@ -1,6 +1,6 @@
 package com.nashtech.rookies.java05.AssetManagement.controllers;
 
-import com.nashtech.rookies.java05.AssetManagement.controler.services.LocationService;
+import com.nashtech.rookies.java05.AssetManagement.services.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;

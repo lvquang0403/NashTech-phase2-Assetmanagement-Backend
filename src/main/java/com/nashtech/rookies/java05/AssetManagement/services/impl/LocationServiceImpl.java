@@ -1,8 +1,8 @@
-package com.nashtech.rookies.java05.AssetManagement.controler.services.impl;
+package com.nashtech.rookies.java05.AssetManagement.services.impl;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.LocationResponseDto;
 import com.nashtech.rookies.java05.AssetManagement.repository.LocationRepository;
-import com.nashtech.rookies.java05.AssetManagement.controler.services.LocationService;
+import com.nashtech.rookies.java05.AssetManagement.services.LocationService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

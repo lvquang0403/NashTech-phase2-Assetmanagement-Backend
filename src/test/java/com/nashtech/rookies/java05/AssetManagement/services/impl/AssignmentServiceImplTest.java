@@ -1,6 +1,5 @@
 package com.nashtech.rookies.java05.AssetManagement.services.impl;
 
-import com.nashtech.rookies.java05.AssetManagement.controler.services.impl.AssignmentServiceImpl;
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentRequestPostDto;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentRequestPutDto;
@@ -18,7 +17,7 @@ import com.nashtech.rookies.java05.AssetManagement.mappers.AssignmentMapper;
 import com.nashtech.rookies.java05.AssetManagement.repository.AssetRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.AssignmentRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.UserRepository;
-import com.nashtech.rookies.java05.AssetManagement.controler.services.AssignmentService;
+import com.nashtech.rookies.java05.AssetManagement.services.AssignmentService;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

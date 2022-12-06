@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.ResetPasswordDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.UserRequestDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.*;
-import com.nashtech.rookies.java05.AssetManagement.controler.services.UserService;
+import com.nashtech.rookies.java05.AssetManagement.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
