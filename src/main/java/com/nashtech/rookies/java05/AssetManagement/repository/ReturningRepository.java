@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface ReturningRepository extends JpaRepository<Returning, Integer> {
     List<Returning> findByAssetIdAndState(String assetId, AssignmentReturnState state);
+
 }

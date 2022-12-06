@@ -21,14 +21,7 @@ public class ReturningController {
     private ReturningMapper returningMapper;
 
     //temp api
-    @GetMapping("")
-    public List<ReturningDto> getAllReturns() {
-        List<Returning> list = returningRepository.findAll();
 
-        List<ReturningDto> result = new ArrayList<>();
-        result = returningMapper.mapReturningEntityToReturningDto(list);
-        return  result;
-    }
 
 
 }
