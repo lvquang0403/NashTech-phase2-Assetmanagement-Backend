@@ -7,6 +7,7 @@ import com.nashtech.rookies.java05.AssetManagement.dtos.response.ReturningDto;
 import com.nashtech.rookies.java05.AssetManagement.entities.Returning;
 import com.nashtech.rookies.java05.AssetManagement.mappers.ReturningMapper;
 import com.nashtech.rookies.java05.AssetManagement.repository.ReturningRepository;
+import com.nashtech.rookies.java05.AssetManagement.services.ReturningService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,16 +19,18 @@ import java.util.List;
 @RequestMapping(value = "api/returns")
 public class ReturningController {
 
+    @Autowired
+    ReturningService returningService;
+
     @GetMapping("")
-    public APIResponse<List<AssignmentListResponseDto>> getAllAssignment
+    public APIResponse<List<ReturningDto>> getAllAssignment
             (@RequestParam(required = false, defaultValue = "") List<String> states,
              @RequestParam(required = false) String returnedDate,
              @RequestParam(required = false, defaultValue = "") String keyword,
              @RequestParam(value = "page", required = false, defaultValue = "0") int page,
-             @RequestParam(defaultValue = "updatedWhen_DESC") String orderBy) {
+             @RequestParam(defaultValue = "asset.id_DESC") String orderBy) {
 
-        return null;
+        return returningService.getReturningByPredicates(states, returnedDate, keyword, page, orderBy);
     }
-
 
 }

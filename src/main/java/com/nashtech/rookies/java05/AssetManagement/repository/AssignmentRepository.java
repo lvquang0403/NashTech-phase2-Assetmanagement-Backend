@@ -1,7 +1,6 @@
 package com.nashtech.rookies.java05.AssetManagement.repository;
 
 import com.nashtech.rookies.java05.AssetManagement.entities.Assignment;
-import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssignmentReturnState;
 
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssignmentState;
 import org.springframework.data.domain.Page;

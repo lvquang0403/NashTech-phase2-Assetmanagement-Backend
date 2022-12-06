@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 public class ReturningMapper {
     @Autowired
     private AssignmentMapper assignmentMapper;
+    @Autowired
+    private AssetMapper assetMapper;
     public List<ReturningDto> mapReturningEntityToReturningDto(List<Returning> returningList){
         List<ReturningDto> returningDtoList = returningList.stream().map(returning -> {
             ReturningDto returningDto = ReturningDto.builder()
@@ -19,8 +21,10 @@ public class ReturningMapper {
                     .state(returning.getState())
                     .assignBy(returning.getAssignedBy().getUsername())
                     .assignTo(returning.getAssignedTo().getUsername())
+                    .acceptedBy(returning.getAcceptedBy().getUsername())
                     .returnedDate(returning.getReturnedDate())
                     .assignmentResponseDto(assignmentMapper.mapAssignmentEntityToResponseDto(returning.getAssignment()))
+                    .assetViewResponseDto(assetMapper.mapAssetToAssetViewResponseDto(returning.getAsset()))
                     .build();
             return returningDto;
         }).collect(Collectors.toList());
