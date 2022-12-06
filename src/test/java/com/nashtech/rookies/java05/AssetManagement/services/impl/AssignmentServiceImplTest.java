@@ -333,57 +333,6 @@ class AssignmentServiceImplTest {
         MatcherAssert.assertThat(expected, is(result));
     }
 
-    @Test
-    void getAssignmentByUserId_ShouldReturnValue_WhenUserIdIsIsValid() {
-        Page<Assignment> result = mock(Page.class);
-        User user = Mockito.mock(User.class);
-        String orderBy = "updatedWhen_DESC";
-
-
-        LocalDate localDate = LocalDate.now();
-        ZoneId defaultZoneId = ZoneId.systemDefault();
-        java.util.Date date = java.util.Date.from(localDate.atStartOfDay(defaultZoneId).toInstant());
-
-        Pageable pageable = PageRequest.of(0, 15, Sort.Direction.DESC, "updatedWhen");
-        when(assignmentRepository.findByUserId(user.getId(), date, pageable))
-                .thenReturn(result);
-
-        when(assignmentMapper2.mapAssignmentListToAssignmentListResponseDto(any()))
-                .thenReturn(assignmentListResponseDtos);
-
-        APIResponse<List<AssignmentListResponseDto>> expected = new APIResponse<>(0, assignmentListResponseDtos);
-
-        expected.setTotalPage(1);
-        APIResponse<List<AssignmentListResponseDto>> listResult =
-                assignmentServiceImpl.getAssignmentsByUser(user.getId(), 0, orderBy);
-        MatcherAssert.assertThat(expected, is(listResult));
-    }
-
-    @Test
-    void getAssignmentByUserId_ShouldReturnEmptyObject_WhenUserIdIsNotValid() {
-        Page<Assignment> result = mock(Page.class);
-        User user = Mockito.mock(User.class);
-        String orderBy = "updatedWhen_DESC";
-
-
-        LocalDate localDate = LocalDate.now();
-        ZoneId defaultZoneId = ZoneId.systemDefault();
-        java.util.Date date = java.util.Date.from(localDate.atStartOfDay(defaultZoneId).toInstant());
-
-        Pageable pageable = PageRequest.of(0, 15, Sort.Direction.DESC, "updatedWhen");
-        when(assignmentRepository.findByUserId(user.getId(), date, pageable))
-                .thenReturn(result);
-
-        when(assignmentMapper2.mapAssignmentListToAssignmentListResponseDto(any()))
-                .thenReturn(assignmentListResponseDtos);
-
-        APIResponse<List<AssignmentListResponseDto>> expected = new APIResponse<>(0, assignmentListResponseDtos);
-
-        expected.setTotalPage(1);
-        APIResponse<List<AssignmentListResponseDto>> listResult =
-                assignmentServiceImpl.getAssignmentsByUser(user.getId(), 0, orderBy);
-        MatcherAssert.assertThat(listResult, is(expected));
-    }
 
     @Test
     void getAssignments_ShouldReturnValue() {
