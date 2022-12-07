@@ -134,29 +134,24 @@ public class AssignmentServiceImpl implements AssignmentService {
         String[] parts = orderBy.split("_");
         String columnName = parts[0];
         String order = parts[1];
-        Sort s;
+        Pageable pageable;
         if ("DESC".equals(order)) {
-             s = Sort.by(Sort.Direction.DESC, columnName);
-            //pageable = PageRequest.of(page, pageSize, Sort.Direction.DESC, columnName);
+
+            pageable = PageRequest.of(page, pageSize, Sort.Direction.DESC, columnName);
         } else {
-             s = Sort.by(Sort.Direction.ASC, columnName);
-            //pageable = PageRequest.of(page, pageSize, Sort.Direction.ASC, columnName);
+
+            pageable = PageRequest.of(page, pageSize, Sort.Direction.ASC, columnName);
         }
 
         LocalDate localDate = LocalDate.now();
         ZoneId defaultZoneId = ZoneId.systemDefault();
         Date date = Date.from(localDate.atStartOfDay(defaultZoneId).toInstant());
 
-        List<Assignment> assignments;
+        Page<Assignment> assignments;
         assignments = assignmentRepository.findByUserId
-                (id, date, s);
+                (id, date, pageable);
 
-        List<Assignment> result = assignments.stream().filter(a -> a.getReturning() == null ||
-                a.getReturning().getState() == AssignmentReturnState.WAITING_FOR_RETURNING).collect(Collectors.toList());
-
-
-        //return null;
-        return new APIResponse<>(Math.floorDiv(result.size(), 15) + 1,
-                assignmentMapper.mapAssignmentListToAssignmentListResponseDto(result.subList(page*15, page+15)));
+        return new APIResponse<>(assignments.getTotalPages(),
+                assignmentMapper.mapAssignmentListToAssignmentListResponseDto(assignments.toList()));
     }
 }
