@@ -5,6 +5,7 @@ import com.nashtech.rookies.java05.AssetManagement.entities.Assignment;
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssignmentState;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -35,10 +36,10 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Integer>
             "  AND (a.assignedTo.id = :id)" +
             " AND  (a.assignedDate <= :curDate)"
     )
-    Page<Assignment> findByUserId(
+    List<Assignment> findByUserId(
             @Param("id") String id,
             @Param("curDate") Date curDate,
-            Pageable pageable
+            Sort sort
     );
 
 }
