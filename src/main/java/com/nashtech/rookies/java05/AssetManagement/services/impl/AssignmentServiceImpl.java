@@ -162,7 +162,7 @@ public class AssignmentServiceImpl implements AssignmentService {
     @Override
     public AssignmentDetailDto changeStateAssignment(int assignmentId, ChangeStateAssignmentDto req) {
         Assignment foundAssignment = assignmentRepository.findById(assignmentId).orElseThrow(
-                () -> new ResourceNotFoundException(String.format("Assignment not found with id" + assignmentId ))
+                () -> new ResourceNotFoundException(String.format("Assignment not found with id: " + assignmentId ))
         );
         if (!foundAssignment.getState().equals(AssignmentState.WAITING)) {
             throw new BadRequestException("Only can update assignment that have state is WATING");
