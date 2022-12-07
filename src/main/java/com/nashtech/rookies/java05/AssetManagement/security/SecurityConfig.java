@@ -68,6 +68,10 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.DELETE, "/api/assignments/**").hasAnyAuthority(ADMIN)
 
                 .antMatchers(HttpMethod.PUT, "/api/assignments/**/state").authenticated()
+
+//Returning
+
+                .antMatchers(HttpMethod.POST, "/api/returns").hasAnyAuthority(ADMIN, STAFF)
                 .antMatchers("/api/**").authenticated();
         httpSecurity.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();

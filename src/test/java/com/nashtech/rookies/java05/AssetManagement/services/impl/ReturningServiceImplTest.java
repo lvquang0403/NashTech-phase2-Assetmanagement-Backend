@@ -68,10 +68,10 @@ public class ReturningServiceImplTest {
     }
 
     @Test
-    void create_ShouldThrowNullPointerException_WhenStateOfAssignmentNotSuitable() {
+    void create_ShouldThrowIllegalArgumentException_WhenStateOfAssignmentNotSuitable() {
 
         Assignment assignment = Assignment.builder()
-                .state(AssignmentState.ACCEPTED)
+                .state(AssignmentState.WAITING)
                 .build();
         User user = new User();
         initialReturning.setAssignment(assignment);
