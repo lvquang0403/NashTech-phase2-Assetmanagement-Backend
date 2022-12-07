@@ -2,6 +2,7 @@ package com.nashtech.rookies.java05.AssetManagement.services;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentRequestPostDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentRequestPutDto;
+import com.nashtech.rookies.java05.AssetManagement.dtos.request.ChangeStateAssignmentDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssignmentResponseInsertDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.APIResponse;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssignmentDetailDto;
@@ -19,4 +20,6 @@ public interface AssignmentService {
     AssignmentDetailDto getAssignment(int id);
     APIResponse<List<AssignmentListResponseDto>> getAssignmentsByUser
             (String id, int page, String orderBy);
+
+    AssignmentDetailDto  changeStateAssignment(int assignmentId , ChangeStateAssignmentDto req);
 }

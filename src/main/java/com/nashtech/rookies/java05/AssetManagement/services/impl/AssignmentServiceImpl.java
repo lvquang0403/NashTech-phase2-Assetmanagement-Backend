@@ -1,5 +1,6 @@
 package com.nashtech.rookies.java05.AssetManagement.services.impl;
 
+import com.nashtech.rookies.java05.AssetManagement.dtos.request.ChangeStateAssignmentDto;
 import com.nashtech.rookies.java05.AssetManagement.services.AssignmentService;
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentRequestPostDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentRequestPutDto;
@@ -57,13 +58,14 @@ public class AssignmentServiceImpl implements AssignmentService {
         newAssignment.getAsset().setState(AssetState.ASSIGNED);
         return assignmentMapper.mapEntityToResponseInsertDto(assignmentRepository.save(newAssignment));
     }
+
     @Override
     @Transactional
     public void update(AssignmentRequestPutDto dto, Integer id) {
         Assignment foundAssignment = assignmentRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException(String.format("Assignment with id %s is not found", id))
         );
-        if(!foundAssignment.getState().equals(AssignmentState.WAITING)){
+        if (!foundAssignment.getState().equals(AssignmentState.WAITING)) {
             throw new BadRequestException("Only can update assignment that have state is WATING");
         }
         Assignment updateAssignment = assignmentMapper.mapRequestPutDtoToEntity(dto, foundAssignment);
@@ -72,18 +74,20 @@ public class AssignmentServiceImpl implements AssignmentService {
         updateAssignment.setUpdatedWhen(now);
         assignmentRepository.save(updateAssignment);
     }
+
     @Override
     public void delete(Integer id) {
-        Assignment foundAssignment =  assignmentRepository.findById(id).orElseThrow(
+        Assignment foundAssignment = assignmentRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException(String.format("Assignment with id %s is not found", id))
         );
-        if(foundAssignment.getState() != AssignmentState.WAITING){
+        if (foundAssignment.getState() != AssignmentState.WAITING) {
             throw new BadRequestException("Only can delete assignments that have state is WATING");
         }
         foundAssignment.getAsset().setState(AssetState.AVAILABLE);
         assignmentRepository.save(foundAssignment);
         assignmentRepository.delete(foundAssignment);
     }
+
     @Override
     public APIResponse<List<AssignmentListResponseDto>> getAssignmentByPredicates
             (List<String> stateFilterList, String assignDate, String keyword, int page, String orderBy) {
@@ -123,7 +127,7 @@ public class AssignmentServiceImpl implements AssignmentService {
     @Override
     public AssignmentDetailDto getAssignment(int id) {
         Optional<Assignment> assignmentFound = assignmentRepository.findById(id);
-        if(assignmentFound.isEmpty()){
+        if (assignmentFound.isEmpty()) {
             return AssignmentDetailDto.builder().build();
         }
         return assignmentMapper.mapAssignmentToAssignmentDetailDto(assignmentFound.get());
@@ -153,5 +157,28 @@ public class AssignmentServiceImpl implements AssignmentService {
 
         return new APIResponse<>(assignments.getTotalPages(),
                 assignmentMapper.mapAssignmentListToAssignmentListResponseDto(assignments.toList()));
+    }
+
+    @Override
+    public AssignmentDetailDto changeStateAssignment(int assignmentId, ChangeStateAssignmentDto req) {
+        Assignment foundAssignment = assignmentRepository.findById(assignmentId).orElseThrow(
+                () -> new ResourceNotFoundException(String.format("Assignment not found with id" + assignmentId ))
+        );
+        if (!foundAssignment.getState().equals(AssignmentState.WAITING)) {
+            throw new BadRequestException("Only can update assignment that have state is WATING");
+        }
+        AssignmentState[] assignmentStates = AssignmentState.values();
+        for (AssignmentState assignmentState : assignmentStates) {
+            if (req.getState().equals(assignmentState.toString()) ) {
+                foundAssignment.setState(assignmentState);
+            }
+        }
+
+        Date dateNow = new Date();
+        Timestamp now = new Timestamp(dateNow.getTime());
+        foundAssignment.setUpdatedWhen(now);
+        Assignment result = assignmentRepository.save(foundAssignment);
+
+        return assignmentMapper.mapAssignmentToAssignmentDetailDto(result);
     }
 }
