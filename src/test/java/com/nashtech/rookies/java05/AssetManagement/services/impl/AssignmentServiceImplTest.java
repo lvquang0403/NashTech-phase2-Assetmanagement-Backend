@@ -4,6 +4,7 @@ import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentReques
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentRequestPutDto;
 
+import com.nashtech.rookies.java05.AssetManagement.dtos.request.ChangeStateAssignmentDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.*;
 import com.nashtech.rookies.java05.AssetManagement.entities.Asset;
 import com.nashtech.rookies.java05.AssetManagement.entities.Assignment;
@@ -91,7 +92,7 @@ class AssignmentServiceImplTest {
     }
 
     @Test
-    void testInsertWhenAssetStateNotAvailableShouldThrowException(){
+    void testInsertWhenAssetStateNotAvailableShouldThrowException() {
         AssignmentRequestPostDto dto = new AssignmentRequestPostDto(
                 "anyone",
                 "anyone",
@@ -109,7 +110,7 @@ class AssignmentServiceImplTest {
     }
 
     @Test
-    void testInsertWhenUserDisableShouldThrowException(){
+    void testInsertWhenUserDisableShouldThrowException() {
         AssignmentRequestPostDto dto = new AssignmentRequestPostDto(
                 "anyone",
                 "SD1111",
@@ -129,7 +130,7 @@ class AssignmentServiceImplTest {
     }
 
     @Test
-    void testCreateWhenUserAssignToNotExistShouldThrowException(){
+    void testCreateWhenUserAssignToNotExistShouldThrowException() {
         String userAssignToNotExistId = "SD0000";
         AssignmentRequestPostDto dto = new AssignmentRequestPostDto(
                 "anyone",
@@ -142,8 +143,9 @@ class AssignmentServiceImplTest {
                 () -> assignmentService.create(dto));
         assertThat(resourceNotFoundException.getMessage()).isEqualTo("User with id SD0000 is not found");
     }
+
     @Test
-    void testCreateWhenAssetNotExistShouldThrowException(){
+    void testCreateWhenAssetNotExistShouldThrowException() {
         String assetNotExistId = "LAA0000";
         AssignmentRequestPostDto dto = new AssignmentRequestPostDto(
                 "anyone",
@@ -159,7 +161,7 @@ class AssignmentServiceImplTest {
     }
 
     @Test
-    void testInsertWhenUserValidShouldInsertSuccess(){
+    void testInsertWhenUserValidShouldInsertSuccess() {
         String userAssignById = "SD0001";
         String userAssignToId = "SD0002";
         String assetId = "LA000001";
@@ -207,7 +209,7 @@ class AssignmentServiceImplTest {
     }
 
     @Test
-    void testUpdateWhenAssignmentNotExistShouldThrowException(){
+    void testUpdateWhenAssignmentNotExistShouldThrowException() {
         Integer assignmentIdNotExist = 999;
         AssignmentRequestPutDto dto = Mockito.mock(AssignmentRequestPutDto.class);
         ResourceNotFoundException resourceNotFoundException = Assertions.assertThrows(ResourceNotFoundException.class,
@@ -216,7 +218,7 @@ class AssignmentServiceImplTest {
     }
 
     @Test
-    void testUpdateWhenAssetNotExistShouldThrowException(){
+    void testUpdateWhenAssetNotExistShouldThrowException() {
         String assetIdNotExist = "SD1234";
         AssignmentRequestPutDto dto = AssignmentRequestPutDto.builder()
                 .assetId(assetIdNotExist)
@@ -231,7 +233,7 @@ class AssignmentServiceImplTest {
     }
 
     @Test
-    void testUpdateWhenAssignToNotExistShouldThrowException(){
+    void testUpdateWhenAssignToNotExistShouldThrowException() {
         String assignToIdNotExist = "SD123449";
         AssignmentRequestPutDto dto = AssignmentRequestPutDto.builder()
                 .assetId("any")
@@ -244,7 +246,7 @@ class AssignmentServiceImplTest {
     }
 
     @Test
-    void testUpdateWhenDataValidShouldUpdateNewValue(){
+    void testUpdateWhenDataValidShouldUpdateNewValue() {
         Integer oldAssignmentId = 1;
         String newUserAssignToId = "SD0002";
         String newAssetId = "LA000001";
@@ -277,7 +279,7 @@ class AssignmentServiceImplTest {
     }
 
     @Test
-    void testDeleteWhenAssignmentNotExistShouldThrowException(){
+    void testDeleteWhenAssignmentNotExistShouldThrowException() {
         Integer assignmentIdNotExist = 999;
         ResourceNotFoundException resourceNotFoundException = Assertions.assertThrows(ResourceNotFoundException.class,
                 () -> assignmentService.delete(assignmentIdNotExist));
@@ -285,7 +287,7 @@ class AssignmentServiceImplTest {
     }
 
     @Test
-    void testDeleteWhenAssignmentStateNotValidShouldThrowException(){
+    void testDeleteWhenAssignmentStateNotValidShouldThrowException() {
         Integer assignmentId = 1;
         Mockito.when(assignmentRepository.findById(assignmentId))
                 .thenReturn(Optional.of(Assignment.builder().state(AssignmentState.ACCEPTED).build()));
@@ -314,6 +316,7 @@ class AssignmentServiceImplTest {
         Mockito.verify(assignmentRepository).delete(assignment);
 
     }
+
     @Test
     void getAssignment_ShouldReturnValue_WhenAssignmentIdIsIsValid() {
 
@@ -362,4 +365,53 @@ class AssignmentServiceImplTest {
         MatcherAssert.assertThat(expected, is(listResult));
     }
 
+    @Test
+    void getAssignmentByUserId_ShouldReturnValue_WhenUserIdIsIsValid() {
+        Page<Assignment> result = mock(Page.class);
+        User user = Mockito.mock(User.class);
+        String orderBy = "updatedWhen_DESC";
+
+
+        LocalDate localDate = LocalDate.now();
+        ZoneId defaultZoneId = ZoneId.systemDefault();
+        java.util.Date date = java.util.Date.from(localDate.atStartOfDay(defaultZoneId).toInstant());
+
+        Pageable pageable = PageRequest.of(0, 15, Sort.Direction.DESC, "updatedWhen");
+        when(assignmentRepository.findByUserId(user.getId(), date, pageable))
+                .thenReturn(result);
+
+        when(assignmentMapper2.mapAssignmentListToAssignmentListResponseDto(any()))
+                .thenReturn(assignmentListResponseDtos);
+
+        APIResponse<List<AssignmentListResponseDto>> expected = new APIResponse<>(result.getTotalPages(), assignmentListResponseDtos);
+
+        APIResponse<List<AssignmentListResponseDto>> listResult =
+                assignmentServiceImpl.getAssignmentsByUser(user.getId(), 0, orderBy);
+        MatcherAssert.assertThat(listResult, is(expected));
+    }
+
+    @Test
+    void changeStateAssignment_ShouldReturnResult_WhenAssignmentIdIsValid() {
+        ChangeStateAssignmentDto dto = new ChangeStateAssignmentDto();
+        dto.setState("ACCEPTED");
+        dto.setId(1000);
+        assignment = mock(Assignment.class);
+        AssignmentDetailDto expected = mock(AssignmentDetailDto.class);
+
+        when(assignmentRepository.findById(1000)).thenReturn(Optional.of(assignment));
+        when(assignmentRepository.save(assignment)).thenReturn(assignment);
+        when(assignmentMapper2.mapAssignmentToAssignmentDetailDto(assignment)).thenReturn(expected);
+
+        AssignmentDetailDto result = assignmentServiceImpl.changeStateAssignment(1000, dto);
+        MatcherAssert.assertThat(result, is(expected));
+    }
+
+    @Test
+    void changeStateAssignment_ShouldThrowException_WhenAssignmentIdIsNotValid() {
+        ChangeStateAssignmentDto dto = mock(ChangeStateAssignmentDto.class);
+
+        ResourceNotFoundException resourceNotFoundException = Assertions.assertThrows(ResourceNotFoundException.class,
+                () -> assignmentServiceImpl.changeStateAssignment(1000, dto));
+        Assertions.assertEquals("Assignment not found with id: 1000", resourceNotFoundException.getMessage());
+    }
 }
