@@ -5,6 +5,7 @@ import com.nashtech.rookies.java05.AssetManagement.entities.Returning;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,7 +24,7 @@ public class ReturningMapper {
                     .assignTo(returning.getAssignedTo().getUsername())
                     .requestedBy(returning.getRequestedBy().getUsername())
                     .acceptedBy(returning.getAcceptedBy() == null ? "" : returning.getAcceptedBy().getUsername())
-                    .returnedDate(returning.getReturnedDate())
+                    .returnedDate(returning.getReturnedDate() == null ? null : Date.valueOf(returning.getReturnedDate().toLocalDateTime().toLocalDate()))
                     .assignmentResponseDto(assignmentMapper.mapAssignmentEntityToResponseDto(returning.getAssignment()))
                     .assetViewResponseDto(assetMapper.mapAssetToAssetViewResponseDto(returning.getAsset()))
                     .build();

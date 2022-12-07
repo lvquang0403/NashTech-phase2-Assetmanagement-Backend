@@ -4,6 +4,7 @@ import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssignmentRetu
 import lombok.Builder;
 import lombok.Data;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 
 /**
@@ -13,7 +14,7 @@ import java.sql.Timestamp;
 @Builder
 public class ReturningDto {
     private Integer id;
-    private Timestamp returnedDate;
+    private Date returnedDate;
     private String state;
     private String assignTo;
     private String assignBy;
