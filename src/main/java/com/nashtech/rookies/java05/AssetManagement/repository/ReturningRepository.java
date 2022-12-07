@@ -15,7 +15,7 @@ import java.util.List;
 public interface ReturningRepository extends JpaRepository<Returning, Integer> {
     List<Returning> findByAssetIdAndState(String assetId, AssignmentReturnState state);
 
-    @Query(value = "SELECT r FROM Returning r left join r.asset" +
+    @Query(value = "SELECT r FROM Returning r left join r.asset left join User u on r.acceptedBy.id = u.id" +
             " WHERE (r.state IN :states)" +
             " AND (to_char(r.returnedDate, 'yyyy-mm-dd')= :returnedDate OR :returnedDate is null) " +
             " AND (r.requestedBy.location.id = 1)" +
