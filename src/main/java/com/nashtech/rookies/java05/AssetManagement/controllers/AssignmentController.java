@@ -2,6 +2,7 @@ package com.nashtech.rookies.java05.AssetManagement.controllers;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentRequestPostDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentRequestPutDto;
+import com.nashtech.rookies.java05.AssetManagement.dtos.request.ChangeStateAssignmentDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssignmentResponseInsertDto;
 import com.nashtech.rookies.java05.AssetManagement.services.AssignmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +28,10 @@ public class AssignmentController {
 
 
     @PostMapping
-    public ResponseEntity<AssignmentResponseInsertDto> create(@RequestBody @Valid AssignmentRequestPostDto dto){
+    public ResponseEntity<AssignmentResponseInsertDto> create(@RequestBody @Valid AssignmentRequestPostDto dto) {
         return ResponseEntity.ok(assignmentService.create(dto));
     }
+
     @GetMapping("")
     public APIResponse<List<AssignmentListResponseDto>> getAllAssignment
             (@RequestParam(required = false, defaultValue = "") List<String> states,
@@ -50,20 +52,28 @@ public class AssignmentController {
     public APIResponse<List<AssignmentListResponseDto>> getAssignmentByUser
             (@PathVariable String id,
              @RequestParam(value = "page", required = false, defaultValue = "0") int page,
-             @RequestParam(defaultValue = "updatedWhen_DESC") String orderBy)
-    {
-        return assignmentService.getAssignmentsByUser(id, page,orderBy);
+             @RequestParam(defaultValue = "updatedWhen_DESC") String orderBy) {
+        return assignmentService.getAssignmentsByUser(id, page, orderBy);
     }
+
     @PutMapping("{id}")
     public ResponseEntity<?> update(
             @PathVariable Integer id,
-            @RequestBody @Valid AssignmentRequestPutDto dto){
+            @RequestBody @Valid AssignmentRequestPutDto dto) {
         assignmentService.update(dto, id);
         return ResponseEntity.ok().build();
     }
+
     @DeleteMapping("{id}")
-    public ResponseEntity<?> delete(@PathVariable Integer id){
+    public ResponseEntity<?> delete(@PathVariable Integer id) {
         assignmentService.delete(id);
         return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{id}/state")
+    public AssignmentDetailDto changeStateAssignment(
+            @PathVariable Integer id,
+            @RequestBody @Valid ChangeStateAssignmentDto req) {
+        return assignmentService.changeStateAssignment(id, req);
     }
 }
