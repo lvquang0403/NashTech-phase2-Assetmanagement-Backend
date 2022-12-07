@@ -21,7 +21,7 @@ public class ReturningMapper {
                     .state(returning.getState().getName())
                     .assignBy(returning.getAssignedBy().getUsername())
                     .assignTo(returning.getAssignedTo().getUsername())
-                    .acceptedBy(returning.getAcceptedBy().getUsername())
+                    .acceptedBy(returning.getAcceptedBy() == null ? "" : returning.getAcceptedBy().getUsername())
                     .returnedDate(returning.getReturnedDate())
                     .assignmentResponseDto(assignmentMapper.mapAssignmentEntityToResponseDto(returning.getAssignment()))
                     .assetViewResponseDto(assetMapper.mapAssetToAssetViewResponseDto(returning.getAsset()))
