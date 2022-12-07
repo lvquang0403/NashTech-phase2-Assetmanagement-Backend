@@ -65,6 +65,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.PUT, "/api/assignments/**").hasAnyAuthority(ADMIN)
                 .antMatchers(HttpMethod.DELETE, "/api/assignments/**").hasAnyAuthority(ADMIN)
 
+                .antMatchers(HttpMethod.PUT, "/api/assignments/**/state").authenticated()
                 .antMatchers("/api/**").authenticated();
         httpSecurity.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
