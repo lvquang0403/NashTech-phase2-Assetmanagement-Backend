@@ -33,13 +33,15 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Integer>
 
     @Query(value = "SELECT a FROM Assignment a join a.asset" +
             " WHERE a.state IS NOT 'DECLINED'" +
+            "  AND ( not exists(SELECT r FROM a.returning r) OR " +
+            "exists(SELECT r FROM a.returning r WHERE r.state = 'WAITING_FOR_RETURNING'))" +
             "  AND (a.assignedTo.id = :id)" +
             " AND  (a.assignedDate <= :curDate)"
     )
-    List<Assignment> findByUserId(
+    Page<Assignment> findByUserId(
             @Param("id") String id,
             @Param("curDate") Date curDate,
-            Sort sort
+            Pageable p
     );
 
 }
