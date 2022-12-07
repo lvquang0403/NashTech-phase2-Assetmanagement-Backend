@@ -395,7 +395,8 @@ class AssignmentServiceImplTest {
         ChangeStateAssignmentDto dto = new ChangeStateAssignmentDto();
         dto.setState("ACCEPTED");
         dto.setId(1000);
-        assignment = mock(Assignment.class);
+        assignment =new Assignment();
+        assignment.setState(AssignmentState.WAITING);
         AssignmentDetailDto expected = mock(AssignmentDetailDto.class);
 
         when(assignmentRepository.findById(1000)).thenReturn(Optional.of(assignment));
