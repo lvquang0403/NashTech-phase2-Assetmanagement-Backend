@@ -1,10 +1,10 @@
 package com.nashtech.rookies.java05.AssetManagement.services.impl;
 
+import com.nashtech.rookies.java05.AssetManagement.services.ReportService;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.ReportDto;
 import com.nashtech.rookies.java05.AssetManagement.entities.Category;
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssetState;
 import com.nashtech.rookies.java05.AssetManagement.repository.CategoryRepository;
-import com.nashtech.rookies.java05.AssetManagement.services.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

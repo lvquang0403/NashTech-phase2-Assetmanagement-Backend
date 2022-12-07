@@ -35,6 +35,7 @@ public class AssignmentMapper {
                 .builder()
                 .updatedWhen(assignment.getUpdatedWhen())
                 .id(assignment.getId())
+                .assignedDate(assignment.getAssignedDate())
                 .createdWhen(assignment.getCreatedWhen())
                 .state(assignment.getState())
                 .note(assignment.getNote())

@@ -1,12 +1,13 @@
 package com.nashtech.rookies.java05.AssetManagement.controllers;
 
-import com.nashtech.rookies.java05.AssetManagement.dtos.request.CategoryRequestDto;
-import com.nashtech.rookies.java05.AssetManagement.dtos.response.CategoryResponseDto;
+import com.nashtech.rookies.java05.AssetManagement.dtos.response.APIResponse;
+import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssetViewResponseDto;
+import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssignmentListResponseDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.ReturningDto;
 import com.nashtech.rookies.java05.AssetManagement.entities.Returning;
 import com.nashtech.rookies.java05.AssetManagement.mappers.ReturningMapper;
 import com.nashtech.rookies.java05.AssetManagement.repository.ReturningRepository;
-import com.nashtech.rookies.java05.AssetManagement.services.CategoryService;
+import com.nashtech.rookies.java05.AssetManagement.services.ReturningService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,19 +20,17 @@ import java.util.List;
 public class ReturningController {
 
     @Autowired
-    private ReturningRepository returningRepository;
-    @Autowired
-    private ReturningMapper returningMapper;
+    ReturningService returningService;
 
-    //temp api
     @GetMapping("")
-    public List<ReturningDto> getAllReturns() {
-        List<Returning> list = returningRepository.findAll();
+    public APIResponse<List<ReturningDto>> getAllAssignment
+            (@RequestParam(required = false, defaultValue = "") List<String> states,
+             @RequestParam(required = false) String returnedDate,
+             @RequestParam(required = false, defaultValue = "") String keyword,
+             @RequestParam(value = "page", required = false, defaultValue = "0") int page,
+             @RequestParam(defaultValue = "asset.id_DESC") String orderBy) {
 
-        List<ReturningDto> result = new ArrayList<>();
-        result = returningMapper.mapReturningEntityToReturningDto(list);
-        return  result;
+        return returningService.getReturningByPredicates(states, returnedDate, keyword, page, orderBy);
     }
-
 
 }

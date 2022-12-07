@@ -1,5 +1,6 @@
 package com.nashtech.rookies.java05.AssetManagement.services.impl;
 
+import com.nashtech.rookies.java05.AssetManagement.services.UserService;
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.ResetPasswordDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.UserRequestDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.*;
@@ -15,10 +16,8 @@ import com.nashtech.rookies.java05.AssetManagement.mappers.UserMapper;
 import com.nashtech.rookies.java05.AssetManagement.repository.LocationRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.RoleRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.UserRepository;
-import com.nashtech.rookies.java05.AssetManagement.services.UserService;
 import com.nashtech.rookies.java05.AssetManagement.utils.UserUtils;
 import lombok.Builder;
-import org.mindrot.jbcrypt.BCrypt;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

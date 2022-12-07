@@ -147,5 +147,16 @@ public class AssetMapper {
         return assetViewResponseDtoList;
     }
 
+    public AssetViewResponseDto mapAssetToAssetViewResponseDto(Asset asset) {
+        AssetViewResponseDto assetViewResponseDtoList = AssetViewResponseDto
+                .builder()
+                .category(asset.getCategory().getName())
+                .state(asset.getState().getName())
+                .name(asset.getName())
+                .id(asset.getId())
+                .build();
+
+        return assetViewResponseDtoList;
+    }
 
 }

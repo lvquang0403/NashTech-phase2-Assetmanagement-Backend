@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.sql.Date;
 import java.sql.Timestamp;
 
 /**
@@ -16,6 +17,7 @@ public class AssignmentResponseDto {
     private Integer id;
     private Timestamp createdWhen;
     private Timestamp updatedWhen;
+    private Date assignedDate;
     private String note;
     private AssignmentState state;
 }

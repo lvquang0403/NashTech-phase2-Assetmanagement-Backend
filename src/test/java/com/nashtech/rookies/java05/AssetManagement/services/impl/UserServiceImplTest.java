@@ -1,8 +1,6 @@
 package com.nashtech.rookies.java05.AssetManagement.services.impl;
 
-import com.nashtech.rookies.java05.AssetManagement.dtos.request.UserRequestDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.APIResponse;
-import com.nashtech.rookies.java05.AssetManagement.dtos.response.UserResponseDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.UserViewResponseDto;
 import com.nashtech.rookies.java05.AssetManagement.entities.Role;
 import com.nashtech.rookies.java05.AssetManagement.entities.User;
@@ -13,14 +11,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

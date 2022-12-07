@@ -1,11 +1,9 @@
 package com.nashtech.rookies.java05.AssetManagement.controllers;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.ResetPasswordDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.UserRequestDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.*;
-import com.nashtech.rookies.java05.AssetManagement.entities.Assignment;
 import com.nashtech.rookies.java05.AssetManagement.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.sql.DataSourceDefinition;
 import java.text.ParseException;
 import java.util.List;
 

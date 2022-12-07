@@ -1,29 +1,19 @@
 package com.nashtech.rookies.java05.AssetManagement.services.impl;
 
-import com.nashtech.rookies.java05.AssetManagement.dtos.request.CategoryRequestDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.UserLoginRequestDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.SuccessResponse;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.UserLoginResponseDto;
-import com.nashtech.rookies.java05.AssetManagement.entities.Category;
 import com.nashtech.rookies.java05.AssetManagement.entities.User;
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.UserState;
 import com.nashtech.rookies.java05.AssetManagement.exceptions.UnauthorizedException;
-import com.nashtech.rookies.java05.AssetManagement.mappers.AssetMapper;
 import com.nashtech.rookies.java05.AssetManagement.mappers.UserMapper;
-import com.nashtech.rookies.java05.AssetManagement.repository.AssetRepository;
-import com.nashtech.rookies.java05.AssetManagement.repository.CategoryRepository;
-import com.nashtech.rookies.java05.AssetManagement.repository.ReturningRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.UserRepository;
 import com.nashtech.rookies.java05.AssetManagement.utils.JwtUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
