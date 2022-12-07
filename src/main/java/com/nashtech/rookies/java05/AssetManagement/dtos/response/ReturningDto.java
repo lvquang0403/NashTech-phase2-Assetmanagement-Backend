@@ -18,6 +18,7 @@ public class ReturningDto {
     private String assignTo;
     private String assignBy;
     private String acceptedBy;
+    private String requestedBy;
     private AssetViewResponseDto assetViewResponseDto;
     private AssignmentResponseDto assignmentResponseDto;
 }

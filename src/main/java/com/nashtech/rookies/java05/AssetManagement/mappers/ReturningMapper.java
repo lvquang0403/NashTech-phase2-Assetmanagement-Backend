@@ -21,6 +21,7 @@ public class ReturningMapper {
                     .state(returning.getState().getName())
                     .assignBy(returning.getAssignedBy().getUsername())
                     .assignTo(returning.getAssignedTo().getUsername())
+                    .requestedBy(returning.getRequestedBy().getUsername())
                     .acceptedBy(returning.getAcceptedBy() == null ? "" : returning.getAcceptedBy().getUsername())
                     .returnedDate(returning.getReturnedDate())
                     .assignmentResponseDto(assignmentMapper.mapAssignmentEntityToResponseDto(returning.getAssignment()))

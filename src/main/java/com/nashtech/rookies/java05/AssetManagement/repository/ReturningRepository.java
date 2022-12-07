@@ -18,8 +18,9 @@ public interface ReturningRepository extends JpaRepository<Returning, Integer> {
     @Query(value = "SELECT r FROM Returning r left join r.asset" +
             " WHERE (r.state IN :states)" +
             " AND (to_char(r.returnedDate, 'yyyy-mm-dd')= :returnedDate OR :returnedDate is null) " +
+            " AND (r.requestedBy.location.id = 1)" +
             " AND (LOWER(r.asset.name) LIKE concat('%',:keyword,'%') OR LOWER(r.asset.id) LIKE concat('%',:keyword,'%') " +
-            " OR LOWER(r.assignedTo.username) LIKE concat('%',:keyword,'%'))"
+            " OR LOWER(r.requestedBy.username) LIKE concat('%',:keyword,'%'))"
     )
     Page<Returning> findByPredicates(
             @Param("states") List<AssignmentReturnState> states,

@@ -46,5 +46,9 @@ public class Returning {
     @JoinColumn(name = "asset_id", referencedColumnName = "id")
     private Asset asset;
 
+    @ManyToOne
+    @JoinColumn(name = "requestedBy_id",referencedColumnName = "id")
+    private User requestedBy;
+
 
 }
