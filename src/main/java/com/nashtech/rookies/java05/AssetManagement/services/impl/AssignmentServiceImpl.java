@@ -1,6 +1,8 @@
 package com.nashtech.rookies.java05.AssetManagement.services.impl;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.ChangeStateAssignmentDto;
+import com.nashtech.rookies.java05.AssetManagement.entities.Asset;
+import com.nashtech.rookies.java05.AssetManagement.repository.AssetRepository;
 import com.nashtech.rookies.java05.AssetManagement.services.AssignmentService;
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentRequestPostDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentRequestPutDto;
@@ -39,7 +41,8 @@ public class AssignmentServiceImpl implements AssignmentService {
     private AssignmentRepository assignmentRepository;
     @Autowired
     private AssignmentMapper assignmentMapper;
-
+    @Autowired
+    private AssetRepository assetRepository;
     @Override
     public AssignmentResponseInsertDto create(AssignmentRequestPostDto dto) {
         Assignment newAssignment = assignmentMapper.mapAssignmentRequestPostDtoToAssignmentEntity(dto);
@@ -170,6 +173,11 @@ public class AssignmentServiceImpl implements AssignmentService {
         AssignmentState[] assignmentStates = AssignmentState.values();
         for (AssignmentState assignmentState : assignmentStates) {
             if (req.getState().equals(assignmentState.toString()) ) {
+                if(assignmentState == AssignmentState.DECLINED){
+                    Asset a = foundAssignment.getAsset();
+                    a.setState(AssetState.AVAILABLE);
+                    assetRepository.save(a);
+                }
                 foundAssignment.setState(assignmentState);
             }
         }
