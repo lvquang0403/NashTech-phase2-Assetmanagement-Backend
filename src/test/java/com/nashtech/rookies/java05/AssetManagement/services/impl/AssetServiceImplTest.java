@@ -108,38 +108,38 @@ public class AssetServiceImplTest {
     }
 
     @Test
-    void insert_ShouldThrowNullPointerException_WhenParamsIsNull() {
+    void create_ShouldThrowNullPointerException_WhenParamsIsNull() {
         assetRequestDto.setName(null);
 
         NullPointerException exception = Assertions.assertThrows(NullPointerException.class,
-                () -> assetServiceImpl.insert(assetRequestDto));
+                () -> assetServiceImpl.create(assetRequestDto));
 
         Assertions.assertEquals("null name", exception.getMessage());
     }
 
     @Test
-    void insert_ShouldThrowIllegalArgumentException_WhenParamsIsEmptyString() {
+    void create_ShouldThrowIllegalArgumentException_WhenParamsIsEmptyString() {
         assetRequestDto.setName("");
 
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
-                () -> assetServiceImpl.insert(assetRequestDto));
+                () -> assetServiceImpl.create(assetRequestDto));
 
         Assertions.assertEquals("empty name", exception.getMessage());
     }
 
     @Test
-    void insert_ShouldThrowIllegalArgumentException_WhenNameTooLong() {
+    void create_ShouldThrowIllegalArgumentException_WhenNameTooLong() {
         assetRequestDto.setName("aaaaaaaaaaaKaaaaaaaaaaaKaaaaaaaaaaaKaaaaaaaaaaaKaaaaaaaaaaa");
 
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
-                () -> assetServiceImpl.insert(assetRequestDto));
+                () -> assetServiceImpl.create(assetRequestDto));
 
 
         Assertions.assertEquals("name is too long, name up to 50 characters long", exception.getMessage());
     }
 
     @Test
-    void insert_ShouldThrowIllegalArgumentException_WhenSpecificationTooLong() {
+    void create_ShouldThrowIllegalArgumentException_WhenSpecificationTooLong() {
         String str = "";
         for (int i = 0; i < 51; i++) {
             str += "1234567890";
@@ -147,30 +147,30 @@ public class AssetServiceImplTest {
         assetRequestDto.setSpecification(str);
 
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
-                () -> assetServiceImpl.insert(assetRequestDto));
+                () -> assetServiceImpl.create(assetRequestDto));
 
 
         Assertions.assertEquals("specification is too long, specification up to 500 characters long", exception.getMessage());
     }
 
     @Test
-    void insert_ShouldThrowIllegalArgumentException_WhenInstalledDateNotPastDate() {
+    void create_ShouldThrowIllegalArgumentException_WhenInstalledDateNotPastDate() {
         assetRequestDto.setInstalledDate(new Date(now.getTime() + oneDay));
 
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
-                () -> assetServiceImpl.insert(assetRequestDto));
+                () -> assetServiceImpl.create(assetRequestDto));
 
         Assertions.assertEquals("installed date must be a date in the past", exception.getMessage());
     }
 
     @Test
-    void insert_ShouldThrowIllegalArgumentException_WhenNameHasSpecialCharacters() {
+    void create_ShouldThrowIllegalArgumentException_WhenNameHasSpecialCharacters() {
         assetRequestDto.setName("hahah2~");
 
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
-                () -> assetServiceImpl.insert(assetRequestDto));
+                () -> assetServiceImpl.create(assetRequestDto));
 
-        Assertions.assertEquals("Name cannot contain special characters:! @ # $ % & * ( )  _ + = |  < > ? { } [ ] ~", exception.getMessage());
+        Assertions.assertEquals("Cannot contain special characters", exception.getMessage());
     }
 
 
@@ -211,7 +211,7 @@ public class AssetServiceImplTest {
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
                 () -> assetServiceImpl.update(assetRequestDto, "PD000001"));
 
-        Assertions.assertEquals("Name cannot contain special characters:! @ # $ % & * ( )  _ + = |  < > ? { } [ ] ~", exception.getMessage());
+        Assertions.assertEquals("Cannot contain special characters", exception.getMessage());
     }
 
     @ExtendWith(MockitoExtension.class)

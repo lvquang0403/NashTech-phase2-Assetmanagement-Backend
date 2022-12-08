@@ -51,7 +51,7 @@ public class AssetServiceImpl implements AssetService {
     private EntityCheckUtils entityCheckUtils;
 
     @Override
-    public AssetResponseInsertDto insert(AssetRequestDto dto){
+    public AssetResponseInsertDto create(AssetRequestDto dto){
         entityCheckUtils.assetCheckInsert(dto);
         Asset asset = assetMapper.mapAssetRequestDtoToEntityInsert(dto);
         Asset newAsset = assetRepository.save(asset);

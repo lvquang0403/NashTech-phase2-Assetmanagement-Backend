@@ -18,8 +18,8 @@ public class CategoryController {
 
     @PostMapping(value = "")
     @ResponseBody
-    public CategoryResponseDto insert(@RequestBody CategoryRequestDto dto){
-        return categoryService.insert(dto);
+    public CategoryResponseDto create(@RequestBody CategoryRequestDto dto){
+        return categoryService.create(dto);
     }
 
     @GetMapping("/name")

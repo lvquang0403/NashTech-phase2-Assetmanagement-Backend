@@ -10,4 +10,6 @@ import lombok.*;
 public class RequestReturnDto {
     private Integer id;
     private String acceptBy;
+    private String requestById;
+    private Integer assignmentId;
 }

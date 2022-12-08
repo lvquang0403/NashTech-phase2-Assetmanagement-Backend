@@ -2,6 +2,7 @@ package com.nashtech.rookies.java05.AssetManagement.utils;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssetRequestDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.CategoryRequestDto;
+import com.nashtech.rookies.java05.AssetManagement.dtos.request.RequestReturnDto;
 import org.springframework.stereotype.Component;
 
 import java.util.regex.Matcher;
@@ -29,25 +30,25 @@ public class EntityCheckUtils {
             throw new IllegalArgumentException("prefix only 2 characters");
         }
         //        special characters
-        Pattern special = Pattern.compile ("[!@#$%&*()_+=|<>?{}\\[\\]~]");
+        String special = "^[a-zA-Z0-9\\- \\s]+$";
         //        accented Vietnamese
         Pattern accented = Pattern.compile ("[áàảạãăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵđ]");
-        Matcher checkSpecialName = special.matcher(dto.getName());
+
         Matcher checkAccentedName = accented.matcher(dto.getName().toLowerCase());
-        Matcher checkSpecialId = special.matcher(dto.getId());
         Matcher checkAccentedId = accented.matcher(dto.getId().toLowerCase());
-        if (checkSpecialName.find()) {
-            throw new IllegalArgumentException("Name cannot contain special characters:! @ # $ % & * ( )  _ + = |  < > ? { } [ ] ~");
-        }
         if (checkAccentedName.find()) {
             throw new IllegalArgumentException("Name Do not use Vietnamese with accents");
-        }
-        if (checkSpecialId.find()) {
-            throw new IllegalArgumentException("ID cannot contain special characters:! @ # $ % & * ( )  _ + = |  < > ? { } [ ] ~");
         }
         if (checkAccentedId.find()) {
             throw new IllegalArgumentException("ID Do not use Vietnamese with accents");
         }
+        if(!Pattern.matches(special, dto.getName())) {
+            throw new IllegalArgumentException("Name Cannot contain special characters");
+        }
+        if(!Pattern.matches(special, dto.getId())) {
+            throw new IllegalArgumentException("ID Cannot contain special characters");
+        }
+
     }
 
     public void assetCheckInsert(AssetRequestDto dto){
@@ -88,11 +89,15 @@ public class EntityCheckUtils {
         if (dto.getSpecification().length() >500 ) {
             throw new IllegalArgumentException("specification is too long, specification up to 500 characters long");
         }
-//        special characters
-        Pattern special = Pattern.compile ("[!@#$%&*()_+=|<>?{}\\[\\]~]");
-        Matcher check = special.matcher(dto.getName());
-        if (check.find()) {
-            throw new IllegalArgumentException("Name cannot contain special characters:! @ # $ % & * ( )  _ + = |  < > ? { } [ ] ~");
+
+        //        special characters
+        String special = "^[a-zA-Z0-9\\- \\s]+$";
+        String specialSpecification = "^[a-zA-Z0-9\\- \\s,.;:^/\"'!@#$%&*()_+=|<>?{}\\[\\]~]+$";
+        if(!Pattern.matches(special, dto.getName())) {
+            throw new IllegalArgumentException("Cannot contain special characters");
+        }
+        if(!Pattern.matches(specialSpecification, dto.getSpecification())) {
+            throw new IllegalArgumentException("Cannot contain special characters");
         }
 
         if(now.compareTo(dto.getInstalledDate()) < 0){
@@ -130,19 +135,32 @@ public class EntityCheckUtils {
             throw new IllegalArgumentException("specification is too long, specification up to 500 characters long");
         }
 //        special characters
-        Pattern special = Pattern.compile ("[!@#$%&*()_+=|<>?{}\\[\\]~]");
+        String special = "^[a-zA-Z0-9\\- \\s]+$";
+        String specialSpecification = "^[a-zA-Z0-9\\- \\s,.;:^/\"'!@#$%&*()_+=|<>?{}\\[\\]~]+$";
         Pattern accented = Pattern.compile ("[áàảạãăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵđ]");
-        Matcher checkSpecialName = special.matcher(dto.getName());
         Matcher checkAccentedName = accented.matcher(dto.getName().toLowerCase());
-        if (checkSpecialName.find()) {
-            throw new IllegalArgumentException("Name cannot contain special characters:! @ # $ % & * ( )  _ + = |  < > ? { } [ ] ~");
-        }
+
         if (checkAccentedName.find()) {
             throw new IllegalArgumentException("Name Do not use Vietnamese with accents");
         }
-
+        if(!Pattern.matches(special, dto.getName())) {
+            throw new IllegalArgumentException("Cannot contain special characters");
+        }
+        if(!Pattern.matches(specialSpecification, dto.getSpecification())) {
+            throw new IllegalArgumentException("Cannot contain special characters");
+        }
         if(now.compareTo(dto.getInstalledDate()) < 0){
             throw new IllegalArgumentException("installed date must be a date in the past");
+        }
+    }
+
+    public void returnCheckCreate(RequestReturnDto dto){
+        java.util.Date now = new java.util.Date();
+        if (dto.getRequestById() == null || dto.getRequestById().trim().equals("")) {
+            throw new NullPointerException("null Request sender");
+        }
+        if (dto.getAssignmentId() == null) {
+            throw new NullPointerException("null Assignment");
         }
     }
 }

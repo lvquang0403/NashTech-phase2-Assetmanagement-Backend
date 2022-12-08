@@ -1,7 +1,6 @@
 package com.nashtech.rookies.java05.AssetManagement.controllers;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.RequestReturnDto;
-import com.nashtech.rookies.java05.AssetManagement.dtos.request.ReturningRequestCreateDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.APIResponse;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.ReturningDto;
 import com.nashtech.rookies.java05.AssetManagement.services.ReturningService;
@@ -37,7 +36,7 @@ public class ReturningController {
         return ResponseEntity.ok().build();
     }
     @PostMapping("")
-    public ReturningDto create(@RequestBody ReturningRequestCreateDto dto) {
+    public ReturningDto create(@RequestBody RequestReturnDto dto) {
         return returningService.create(dto);
     }
 

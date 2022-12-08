@@ -25,7 +25,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private EntityCheckUtils entityCheckUtils;
 
-    public CategoryResponseDto insert(CategoryRequestDto dto) {
+    public CategoryResponseDto create(CategoryRequestDto dto) {
         Optional<List<Category>> optional = Optional.of(categoryRepository.findAll());
         if (!optional.isEmpty()) {
             for (Category category : optional.get()) {

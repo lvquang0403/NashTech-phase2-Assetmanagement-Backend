@@ -14,7 +14,7 @@ import java.util.Set;
 @Component
 public interface AssetService {
 
-    public AssetResponseInsertDto insert(AssetRequestDto dto);
+    public AssetResponseInsertDto create(AssetRequestDto dto);
 
     public AssetResponseInsertDto update(AssetRequestDto dto, String id);
 

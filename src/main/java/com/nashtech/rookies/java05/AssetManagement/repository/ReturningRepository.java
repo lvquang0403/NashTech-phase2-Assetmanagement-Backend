@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ReturningRepository extends JpaRepository<Returning, Integer> {
@@ -29,4 +30,6 @@ public interface ReturningRepository extends JpaRepository<Returning, Integer> {
             @Param("locationId") int locationId,
             Pageable pageable
     );
+
+    Returning findByAssignmentId(Integer assignmentId);
 }

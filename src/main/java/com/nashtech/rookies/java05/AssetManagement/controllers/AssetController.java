@@ -34,8 +34,8 @@ public class AssetController {
     }
 
     @PostMapping("")
-    public AssetResponseInsertDto insert(@RequestBody @Valid AssetRequestDto dto) {
-        return assetService.insert(dto);
+    public AssetResponseInsertDto create(@RequestBody @Valid AssetRequestDto dto) {
+        return assetService.create(dto);
     }
 
     @PutMapping("/{id}")
