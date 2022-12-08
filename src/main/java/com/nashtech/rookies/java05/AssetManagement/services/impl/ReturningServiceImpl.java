@@ -1,12 +1,18 @@
 package com.nashtech.rookies.java05.AssetManagement.services.impl;
 
+import com.nashtech.rookies.java05.AssetManagement.dtos.request.RequestReturnDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.ReturningRequestCreateDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.APIResponse;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.ReturningDto;
 import com.nashtech.rookies.java05.AssetManagement.entities.Returning;
+import com.nashtech.rookies.java05.AssetManagement.entities.User;
+import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssetState;
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssignmentReturnState;
+import com.nashtech.rookies.java05.AssetManagement.exceptions.BadRequestException;
+import com.nashtech.rookies.java05.AssetManagement.exceptions.ResourceNotFoundException;
 import com.nashtech.rookies.java05.AssetManagement.mappers.ReturningMapper;
 import com.nashtech.rookies.java05.AssetManagement.repository.ReturningRepository;
+import com.nashtech.rookies.java05.AssetManagement.repository.UserRepository;
 import com.nashtech.rookies.java05.AssetManagement.services.ReturningService;
 import lombok.Builder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +22,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Builder
@@ -26,6 +34,8 @@ public class ReturningServiceImpl implements ReturningService {
 
     @Autowired
     private ReturningRepository returningRepository;
+    @Autowired
+    private UserRepository userRepository;
     @Autowired
     ReturningMapper returningMapper;
     @Override
@@ -60,6 +70,26 @@ public class ReturningServiceImpl implements ReturningService {
         return new APIResponse<>(result.getTotalPages(),
                 returningMapper.toDtoList(result.toList()));
 
+    }
+
+    @Override
+    public void completeRequest(RequestReturnDto dto, Integer id) {
+        Returning foundReturning = returningRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException(String.format("Return request with id %s is not found", id))
+        );
+        User acceptBy = userRepository.findById(dto.getAcceptBy()).orElseThrow(
+                () -> new ResourceNotFoundException(String.format("User with id %s is not found", dto.getAcceptBy()))
+        );
+        if (!foundReturning.getState().equals(AssignmentReturnState.WAITING_FOR_RETURNING)) {
+            throw new BadRequestException("Only complete request returning have state is wating for returning");
+        }
+        Date dayNow = new Date();
+        Timestamp now = new Timestamp(dayNow.getTime());
+        foundReturning.setReturnedDate(now);
+        foundReturning.setState(AssignmentReturnState.COMPLETED);
+        foundReturning.getAsset().setState(AssetState.AVAILABLE);
+        foundReturning.setAcceptedBy(acceptBy);
+        returningRepository.save(foundReturning);
     }
     @Override
     public ReturningDto create(ReturningRequestCreateDto requestDto) {

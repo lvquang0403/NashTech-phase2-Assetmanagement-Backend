@@ -1,18 +1,13 @@
 package com.nashtech.rookies.java05.AssetManagement.controllers;
 
+import com.nashtech.rookies.java05.AssetManagement.dtos.request.RequestReturnDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.ReturningRequestCreateDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.APIResponse;
-import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssetViewResponseDto;
-import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssignmentListResponseDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.ReturningDto;
-import com.nashtech.rookies.java05.AssetManagement.entities.Returning;
-import com.nashtech.rookies.java05.AssetManagement.mappers.ReturningMapper;
-import com.nashtech.rookies.java05.AssetManagement.repository.ReturningRepository;
 import com.nashtech.rookies.java05.AssetManagement.services.ReturningService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -34,7 +29,13 @@ public class ReturningController {
 
         return returningService.getReturningByPredicates(states, returnedDate, keyword, page, orderBy, locationId);
     }
-
+    @PutMapping("/{id}")
+    public ResponseEntity<?> completeRequest(@PathVariable Integer id,
+                                             @RequestBody RequestReturnDto dto)
+    {
+        returningService.completeRequest(dto, id);
+        return ResponseEntity.ok().build();
+    }
     @PostMapping("")
     public ReturningDto create(@RequestBody ReturningRequestCreateDto dto) {
         return returningService.create(dto);

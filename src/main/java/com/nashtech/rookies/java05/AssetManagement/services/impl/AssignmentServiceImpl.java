@@ -9,7 +9,6 @@ import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentReques
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.*;
 import com.nashtech.rookies.java05.AssetManagement.entities.Assignment;
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssetState;
-import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssignmentReturnState;
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssignmentState;
 import com.nashtech.rookies.java05.AssetManagement.exceptions.BadRequestException;
 import com.nashtech.rookies.java05.AssetManagement.exceptions.ResourceNotFoundException;
@@ -24,7 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.sql.Array;
 import java.util.*;
 import java.time.LocalDate;
 import java.time.ZoneId;

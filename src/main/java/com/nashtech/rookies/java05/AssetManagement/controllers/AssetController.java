@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
 
@@ -33,7 +34,7 @@ public class AssetController {
     }
 
     @PostMapping("")
-    public AssetResponseInsertDto insert(@RequestBody AssetRequestDto dto) {
+    public AssetResponseInsertDto insert(@RequestBody @Valid AssetRequestDto dto) {
         return assetService.insert(dto);
     }
 

@@ -5,7 +5,6 @@ import com.nashtech.rookies.java05.AssetManagement.entities.Assignment;
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssignmentState;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface AssignmentRepository extends JpaRepository<Assignment, Integer> {
@@ -22,7 +20,10 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Integer>
             " AND (to_char(a.assignedDate, 'yyyy-mm-dd')= :assignDate Or :assignDate is null) " +
             " AND (LOWER(a.asset.name) LIKE concat('%',:keyword,'%') OR LOWER(a.asset.id) LIKE concat('%',:keyword,'%') " +
             " OR LOWER(a.assignedTo.username) LIKE concat('%',:keyword,'%') " +
-            " OR LOWER(a.assignedBy.username) LIKE concat('%',:keyword,'%'))"
+            " OR LOWER(a.assignedBy.username) LIKE concat('%',:keyword,'%'))" +
+            " AND a.returning NOT IN " +
+            " (SELECT r FROM Returning r" +
+            " WHERE r.state = 'COMPLETED') "
     )
     Page<Assignment> findByPredicates(
             @Param("states") List<AssignmentState> states,
