@@ -1,5 +1,6 @@
 package com.nashtech.rookies.java05.AssetManagement.controllers;
 
+import com.nashtech.rookies.java05.AssetManagement.dtos.request.ReturningRequestCreateDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.APIResponse;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssetViewResponseDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssignmentListResponseDto;
@@ -32,6 +33,11 @@ public class ReturningController {
              @RequestParam int locationId) {
 
         return returningService.getReturningByPredicates(states, returnedDate, keyword, page, orderBy, locationId);
+    }
+
+    @PostMapping("")
+    public ReturningDto create(@RequestBody ReturningRequestCreateDto dto) {
+        return returningService.create(dto);
     }
 
 }

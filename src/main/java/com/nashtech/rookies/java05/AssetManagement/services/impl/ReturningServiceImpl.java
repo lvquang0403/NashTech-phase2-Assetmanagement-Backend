@@ -1,5 +1,6 @@
 package com.nashtech.rookies.java05.AssetManagement.services.impl;
 
+import com.nashtech.rookies.java05.AssetManagement.dtos.request.ReturningRequestCreateDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.APIResponse;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.ReturningDto;
 import com.nashtech.rookies.java05.AssetManagement.entities.Returning;
@@ -59,5 +60,11 @@ public class ReturningServiceImpl implements ReturningService {
         return new APIResponse<>(result.getTotalPages(),
                 returningMapper.toDtoList(result.toList()));
 
+    }
+    @Override
+    public ReturningDto create(ReturningRequestCreateDto requestDto) {
+        Returning returning = returningMapper.mapReturningRequestDtoToEntityCreate(requestDto);
+        Returning newReturning = returningRepository.save(returning);
+        return returningMapper.mapReturningEntityCreateToReturningDto(newReturning);
     }
 }
