@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -128,7 +127,7 @@ public class AssetMapper {
                 .updatedWhen(asset.getUpdatedWhen())
                 .installedDate(asset.getInstalledDate())
                 .state(asset.getState().getName())
-                .returningDtoList(returningMapper.mapReturningEntityToReturningDto(asset.getReturningList()))
+                .returningDtoList(returningMapper.toDtoList(asset.getReturningList()))
                 .build();
         return assetResponseDto;
     }

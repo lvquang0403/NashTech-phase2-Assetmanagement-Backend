@@ -57,7 +57,7 @@ public class ReturningServiceImpl implements ReturningService {
                 (stateList, returnedDate, keyword.toLowerCase(), locationId, pageable);
         //return null;
         return new APIResponse<>(result.getTotalPages(),
-                returningMapper.mapReturningEntityToReturningDto(result.toList()));
+                returningMapper.toDtoList(result.toList()));
 
     }
 }

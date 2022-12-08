@@ -15,7 +15,7 @@ public class ReturningMapper {
     private AssignmentMapper assignmentMapper;
     @Autowired
     private AssetMapper assetMapper;
-    public List<ReturningDto> mapReturningEntityToReturningDto(List<Returning> returningList){
+    public List<ReturningDto> toDtoList(List<Returning> returningList){
         List<ReturningDto> returningDtoList = returningList.stream().map(returning -> {
             ReturningDto returningDto = ReturningDto.builder()
                     .id(returning.getId())
