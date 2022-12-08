@@ -28,9 +28,10 @@ public class ReturningController {
              @RequestParam(required = false) String returnedDate,
              @RequestParam(required = false, defaultValue = "") String keyword,
              @RequestParam(value = "page", required = false, defaultValue = "0") int page,
-             @RequestParam(defaultValue = "asset.id_DESC") String orderBy) {
+             @RequestParam(defaultValue = "asset.id_DESC") String orderBy,
+             @RequestParam int locationId) {
 
-        return returningService.getReturningByPredicates(states, returnedDate, keyword, page, orderBy);
+        return returningService.getReturningByPredicates(states, returnedDate, keyword, page, orderBy, locationId);
     }
 
 }
