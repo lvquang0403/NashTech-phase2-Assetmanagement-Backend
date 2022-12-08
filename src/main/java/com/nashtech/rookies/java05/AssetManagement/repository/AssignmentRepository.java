@@ -17,13 +17,12 @@ import java.util.List;
 public interface AssignmentRepository extends JpaRepository<Assignment, Integer> {
     @Query(value = "SELECT a FROM Assignment a join a.asset" +
             " WHERE (a.state IN :states)" +
+            " AND ( not exists (SELECT r FROM a.returning r) OR " +
+            " exists(SELECT r FROM a.returning r WHERE r.state = 'WAITING_FOR_RETURNING'))" +
             " AND (to_char(a.assignedDate, 'yyyy-mm-dd')= :assignDate Or :assignDate is null) " +
             " AND (LOWER(a.asset.name) LIKE concat('%',:keyword,'%') OR LOWER(a.asset.id) LIKE concat('%',:keyword,'%') " +
             " OR LOWER(a.assignedTo.username) LIKE concat('%',:keyword,'%') " +
-            " OR LOWER(a.assignedBy.username) LIKE concat('%',:keyword,'%'))" +
-            " AND a.returning NOT IN " +
-            " (SELECT r FROM Returning r" +
-            " WHERE r.state = 'COMPLETED') "
+            " OR LOWER(a.assignedBy.username) LIKE concat('%',:keyword,'%'))"
     )
     Page<Assignment> findByPredicates(
             @Param("states") List<AssignmentState> states,
@@ -35,7 +34,7 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Integer>
 
     @Query(value = "SELECT a FROM Assignment a join a.asset" +
             " WHERE a.state IS NOT 'DECLINED'" +
-            "  AND ( not exists(SELECT r FROM a.returning r) OR " +
+            " AND ( not exists (SELECT r FROM a.returning r) OR " +
             "exists(SELECT r FROM a.returning r WHERE r.state = 'WAITING_FOR_RETURNING'))" +
             "  AND (a.assignedTo.id = :id)" +
             " AND  (a.assignedDate <= :curDate)"
