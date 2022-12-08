@@ -20,7 +20,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
-@Builder
 public class ReturningMapper {
     @Autowired
     private AssignmentRepository assignmentRepository;
