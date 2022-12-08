@@ -29,7 +29,7 @@ public class ReturningServiceImpl implements ReturningService {
     @Autowired
     ReturningMapper returningMapper;
     @Override
-    public APIResponse<List<ReturningDto>> getReturningByPredicates(List<String> stateFilterList, String returnedDate, String keyword, int page, String orderBy) {
+    public APIResponse<List<ReturningDto>> getReturningByPredicates(List<String> stateFilterList, String returnedDate, String keyword, int page, String orderBy, int locationId) {
         String[] parts = orderBy.split("_");
         String columnName = parts[0];
         String order = parts[1];
@@ -55,10 +55,10 @@ public class ReturningServiceImpl implements ReturningService {
         }
         Page<Returning> result;
         result = returningRepository.findByPredicates
-                (stateList, returnedDate, keyword.toLowerCase(), pageable);
+                (stateList, returnedDate, keyword.toLowerCase(), locationId, pageable);
         //return null;
         return new APIResponse<>(result.getTotalPages(),
-                returningMapper.mapReturningEntityToReturningDto(result.toList()));
+                returningMapper.toDtoList(result.toList()));
 
     }
     @Override
