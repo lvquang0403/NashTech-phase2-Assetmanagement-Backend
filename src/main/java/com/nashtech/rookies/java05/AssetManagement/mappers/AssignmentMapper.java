@@ -2,7 +2,6 @@ package com.nashtech.rookies.java05.AssetManagement.mappers;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssignmentResponseDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssignmentDetailDto;
-import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssignmentListResponseDto;
 import com.nashtech.rookies.java05.AssetManagement.entities.Assignment;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -15,21 +14,21 @@ import java.util.stream.Collectors;
 @Builder
 @NoArgsConstructor
 public class AssignmentMapper {
-    public AssignmentResponseDto mapAssignmentEntityToResponseDto(Assignment assignment){
+    public AssignmentResponseDto ToResponseDto(Assignment assignment){
         AssignmentResponseDto result = AssignmentResponseDto
                 .builder()
                 .updatedWhen(assignment.getUpdatedWhen())
                 .id(assignment.getId())
                 .assignedDate(assignment.getAssignedDate())
                 .createdWhen(assignment.getCreatedWhen())
-                .state(assignment.getState())
+                .state(assignment.getState().getName())
                 .note(assignment.getNote())
                 .build();
         return result;
     }
-    public List<AssignmentListResponseDto> mapAssignmentListToAssignmentListResponseDto(List<Assignment> assignmentList) {
-        List<AssignmentListResponseDto> assignmentListResponseDtos = assignmentList.stream().map(a -> {
-            AssignmentListResponseDto assetViewResponseDto = AssignmentListResponseDto.builder()
+    public List<AssignmentResponseDto> toListResponseDto(List<Assignment> assignmentList) {
+        List<AssignmentResponseDto> assignmentListResponseDtos = assignmentList.stream().map(a -> {
+            AssignmentResponseDto assetViewResponseDto = AssignmentResponseDto.builder()
                     .id(a.getId())
                     .assetId(a.getAsset().getId())
                     .assetName(a.getAsset().getName())
@@ -46,7 +45,7 @@ public class AssignmentMapper {
         return assignmentListResponseDtos;
     }
 
-    public AssignmentDetailDto mapAssignmentToAssignmentDetailDto(Assignment a) {
+    public AssignmentDetailDto ToAssignmentDetailDto(Assignment a) {
         AssignmentDetailDto assignmentDetailDto = AssignmentDetailDto.builder()
                 .id(a.getId())
                 .assetId(a.getAsset().getId())

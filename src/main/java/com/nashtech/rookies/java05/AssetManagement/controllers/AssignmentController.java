@@ -1,7 +1,6 @@
 package com.nashtech.rookies.java05.AssetManagement.controllers;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentDto;
-import com.nashtech.rookies.java05.AssetManagement.dtos.request.ChangeStateAssignmentDto;
 import com.nashtech.rookies.java05.AssetManagement.services.AssignmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +30,7 @@ public class AssignmentController {
     }
 
     @GetMapping("")
-    public APIResponse<List<AssignmentListResponseDto>> getAllAssignment
+    public APIResponse<List<AssignmentResponseDto>> getAllAssignment
             (@RequestParam(required = false, defaultValue = "") List<String> states,
              @RequestParam(required = false) String assignDate,
              @RequestParam(required = false, defaultValue = "") String keyword,
@@ -47,7 +46,7 @@ public class AssignmentController {
     }
 
     @GetMapping("/user/{id}")
-    public APIResponse<List<AssignmentListResponseDto>> getAssignmentByUser
+    public APIResponse<List<AssignmentResponseDto>> getAssignmentByUser
             (@PathVariable String id,
              @RequestParam(value = "page", required = false, defaultValue = "0") int page,
              @RequestParam(defaultValue = "updatedWhen_DESC") String orderBy) {
@@ -71,7 +70,7 @@ public class AssignmentController {
     @PutMapping("/{id}/state")
     public AssignmentDetailDto changeStateAssignment(
             @PathVariable Integer id,
-            @RequestBody @Valid ChangeStateAssignmentDto req) {
+            @RequestBody @Valid AssignmentDto req) {
         return assignmentService.changeStateAssignment(id, req);
     }
 }
