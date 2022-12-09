@@ -177,7 +177,7 @@ public class AssignmentServiceImpl implements AssignmentService {
                 if(assignmentState == AssignmentState.DECLINED){
                     Asset a = foundAssignment.getAsset();
                     a.setState(AssetState.AVAILABLE);
-                    a.setUpdatedWhen(now)
+                    a.setUpdatedWhen(now);
                     assetRepository.save(a);
                 }
                 foundAssignment.setState(assignmentState);
