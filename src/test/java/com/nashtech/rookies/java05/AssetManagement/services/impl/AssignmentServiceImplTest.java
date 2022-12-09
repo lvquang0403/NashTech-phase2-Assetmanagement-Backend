@@ -1,8 +1,6 @@
 package com.nashtech.rookies.java05.AssetManagement.services.impl;
 
-import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentRequestPostDto;
-
-import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentRequestPutDto;
+import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentDto;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.ChangeStateAssignmentDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.*;
@@ -54,7 +52,6 @@ class AssignmentServiceImplTest {
     private UserRepository userRepository;
     private AssignmentMapper assignmentMapper2;
     private AssignmentServiceImpl assignmentServiceImpl;
-
     private Assignment assignment;
     private AssignmentDetailDto assignmentDetailDto;
 
@@ -70,14 +67,8 @@ class AssignmentServiceImplTest {
 
         assetRepository = Mockito.mock(AssetRepository.class);
         userRepository = Mockito.mock(UserRepository.class);
-        AssignmentMapper assignmentMapper = AssignmentMapper.builder()
-                .assetRepository(assetRepository)
-                .userRepository(userRepository)
-                .build();
-
+        AssignmentMapper assignmentMapper = AssignmentMapper.builder().build();
         assignmentMapper2 = Mockito.mock(AssignmentMapper.class);
-
-
         assignment = Mockito.mock(Assignment.class);
         assignmentDetailDto = Mockito.mock(AssignmentDetailDto.class);
         assignmentServiceImpl = AssignmentServiceImpl
@@ -88,18 +79,20 @@ class AssignmentServiceImplTest {
         assignmentService = AssignmentServiceImpl.builder()
                 .assignmentMapper(assignmentMapper)
                 .assignmentRepository(assignmentRepository)
+                .assetRepository(assetRepository)
+                .userRepository(userRepository)
                 .build();
     }
 
     @Test
     void testInsertWhenAssetStateNotAvailableShouldThrowException() {
-        AssignmentRequestPostDto dto = new AssignmentRequestPostDto(
-                "anyone",
-                "anyone",
-                "LA00001",
-                Date.valueOf("2022-12-12"),
-                "note"
-        );
+        AssignmentDto dto = AssignmentDto.builder()
+                .assignTo("anyone")
+                .assignBy("anyone")
+                .assetId("LA00001")
+                .assignedDate(Date.valueOf("2022-12-12"))
+                .note("note")
+                .build();
         Asset notValidAsset = Asset.builder().state(AssetState.ASSIGNED).build();
         Mockito.when(userRepository.findById(any())).thenReturn(Optional.of(Mockito.mock(User.class)));
         Mockito.when(assetRepository.findById("LA00001")).thenReturn(Optional.of(notValidAsset));
@@ -111,13 +104,13 @@ class AssignmentServiceImplTest {
 
     @Test
     void testInsertWhenUserDisableShouldThrowException() {
-        AssignmentRequestPostDto dto = new AssignmentRequestPostDto(
-                "anyone",
-                "SD1111",
-                "LA00001",
-                Date.valueOf("2022-12-12"),
-                "note"
-        );
+        AssignmentDto dto = AssignmentDto.builder()
+                .assignTo("SD1111")
+                .assignBy("anyone")
+                .assetId("LA00001")
+                .assignedDate(Date.valueOf("2022-12-12"))
+                .note("note")
+                .build();
         User userDisabled = User.builder().id("SD1111").isDisabled(true).build();
         Asset validAsset = Asset.builder().state(AssetState.AVAILABLE).build();
         Mockito.when(userRepository.findById("SD1111")).thenReturn(Optional.of(userDisabled));
@@ -132,13 +125,13 @@ class AssignmentServiceImplTest {
     @Test
     void testCreateWhenUserAssignToNotExistShouldThrowException() {
         String userAssignToNotExistId = "SD0000";
-        AssignmentRequestPostDto dto = new AssignmentRequestPostDto(
-                "anyone",
-                userAssignToNotExistId,
-                "LA00001",
-                Date.valueOf("2022-12-12"),
-                "note"
-        );
+        AssignmentDto dto = AssignmentDto.builder()
+                .assignTo(userAssignToNotExistId)
+                .assignBy("anyone")
+                .assetId("LA00001")
+                .assignedDate(Date.valueOf("2022-12-12"))
+                .note("note")
+                .build();
         ResourceNotFoundException resourceNotFoundException = Assertions.assertThrows(ResourceNotFoundException.class,
                 () -> assignmentService.create(dto));
         assertThat(resourceNotFoundException.getMessage()).isEqualTo("User with id SD0000 is not found");
@@ -147,13 +140,13 @@ class AssignmentServiceImplTest {
     @Test
     void testCreateWhenAssetNotExistShouldThrowException() {
         String assetNotExistId = "LAA0000";
-        AssignmentRequestPostDto dto = new AssignmentRequestPostDto(
-                "anyone",
-                "anyone",
-                assetNotExistId,
-                Date.valueOf("2022-12-12"),
-                "note"
-        );
+        AssignmentDto dto = AssignmentDto.builder()
+                .assignTo("anyone")
+                .assignBy("anyone")
+                .assetId(assetNotExistId)
+                .assignedDate(Date.valueOf("2022-12-12"))
+                .note("note")
+                .build();
         Mockito.when(userRepository.findById("anyone")).thenReturn(Optional.of(Mockito.mock(User.class)));
         ResourceNotFoundException resourceNotFoundException = Assertions.assertThrows(ResourceNotFoundException.class,
                 () -> assignmentService.create(dto));
@@ -174,13 +167,13 @@ class AssignmentServiceImplTest {
                 .id(userAssignToId)
                 .build();
         Asset asset = Asset.builder().id(assetId).state(AssetState.AVAILABLE).build();
-        AssignmentRequestPostDto dto = new AssignmentRequestPostDto(
-                userAssignById,
-                userAssignToId,
-                assetId,
-                assignDate,
-                note
-        );
+        AssignmentDto dto = AssignmentDto.builder()
+                .assignTo(userAssignToId)
+                .assignBy(userAssignById)
+                .assetId(assetId)
+                .assignedDate(assignDate)
+                .note(note)
+                .build();
         Assignment assignment = Assignment.builder()
                 .id(1)
                 .createdWhen(new Timestamp(10000))
@@ -211,7 +204,7 @@ class AssignmentServiceImplTest {
     @Test
     void testUpdateWhenAssignmentNotExistShouldThrowException() {
         Integer assignmentIdNotExist = 999;
-        AssignmentRequestPutDto dto = Mockito.mock(AssignmentRequestPutDto.class);
+        AssignmentDto dto = Mockito.mock(AssignmentDto.class);
         ResourceNotFoundException resourceNotFoundException = Assertions.assertThrows(ResourceNotFoundException.class,
                 () -> assignmentService.update(dto, assignmentIdNotExist));
         assertThat(resourceNotFoundException.getMessage()).isEqualTo(String.format("Assignment with id %s is not found", assignmentIdNotExist));
@@ -220,7 +213,7 @@ class AssignmentServiceImplTest {
     @Test
     void testUpdateWhenAssetNotExistShouldThrowException() {
         String assetIdNotExist = "SD1234";
-        AssignmentRequestPutDto dto = AssignmentRequestPutDto.builder()
+        AssignmentDto dto = AssignmentDto.builder()
                 .assetId(assetIdNotExist)
                 .assignTo("any")
                 .build();
@@ -235,7 +228,7 @@ class AssignmentServiceImplTest {
     @Test
     void testUpdateWhenAssignToNotExistShouldThrowException() {
         String assignToIdNotExist = "SD123449";
-        AssignmentRequestPutDto dto = AssignmentRequestPutDto.builder()
+        AssignmentDto dto = AssignmentDto.builder()
                 .assetId("any")
                 .assignTo(assignToIdNotExist)
                 .build();
@@ -252,10 +245,10 @@ class AssignmentServiceImplTest {
         String newAssetId = "LA000001";
         String newNote = "note";
         Date newAssignDate = Date.valueOf("2023-03-31");
-        AssignmentRequestPutDto dto = AssignmentRequestPutDto.builder()
+        AssignmentDto dto = AssignmentDto.builder()
                 .assignTo(newUserAssignToId)
-                .assignedDate(newAssignDate)
                 .assetId(newAssetId)
+                .assignedDate(newAssignDate)
                 .note(newNote)
                 .build();
         Assignment oldAssignment = Assignment.builder()

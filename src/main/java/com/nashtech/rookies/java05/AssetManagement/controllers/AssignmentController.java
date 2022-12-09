@@ -1,9 +1,7 @@
 package com.nashtech.rookies.java05.AssetManagement.controllers;
 
-import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentRequestPostDto;
-import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentRequestPutDto;
+import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.ChangeStateAssignmentDto;
-import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssignmentResponseInsertDto;
 import com.nashtech.rookies.java05.AssetManagement.services.AssignmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +26,7 @@ public class AssignmentController {
 
 
     @PostMapping
-    public ResponseEntity<AssignmentResponseInsertDto> create(@RequestBody @Valid AssignmentRequestPostDto dto) {
+    public ResponseEntity<AssignmentResponseDto> create(@RequestBody AssignmentDto dto) {
         return ResponseEntity.ok(assignmentService.create(dto));
     }
 
@@ -59,7 +57,7 @@ public class AssignmentController {
     @PutMapping("{id}")
     public ResponseEntity<?> update(
             @PathVariable Integer id,
-            @RequestBody @Valid AssignmentRequestPutDto dto) {
+            @RequestBody AssignmentDto dto) {
         assignmentService.update(dto, id);
         return ResponseEntity.ok().build();
     }

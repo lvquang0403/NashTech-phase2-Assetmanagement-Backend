@@ -47,7 +47,7 @@ public class Returning {
     private Asset asset;
 
     @ManyToOne
-    @JoinColumn(name = "requestedBy_id",referencedColumnName = "id")
+    @JoinColumn(name = "requested_by_user_id",referencedColumnName = "id")
     private User requestedBy;
 
 

@@ -1,11 +1,12 @@
 package com.nashtech.rookies.java05.AssetManagement.services.impl;
 
+import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.ChangeStateAssignmentDto;
 import com.nashtech.rookies.java05.AssetManagement.entities.Asset;
+import com.nashtech.rookies.java05.AssetManagement.entities.User;
 import com.nashtech.rookies.java05.AssetManagement.repository.AssetRepository;
+import com.nashtech.rookies.java05.AssetManagement.repository.UserRepository;
 import com.nashtech.rookies.java05.AssetManagement.services.AssignmentService;
-import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentRequestPostDto;
-import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentRequestPutDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.*;
 import com.nashtech.rookies.java05.AssetManagement.entities.Assignment;
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssetState;
@@ -28,52 +29,78 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.sql.Timestamp;
 
-import java.util.stream.Collectors;
-
 @Service
 @Builder
 public class AssignmentServiceImpl implements AssignmentService {
     private static final int pageSize = 15;
-
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private AssetRepository assetRepository;
     @Autowired
     private AssignmentRepository assignmentRepository;
     @Autowired
     private AssignmentMapper assignmentMapper;
-    @Autowired
-    private AssetRepository assetRepository;
     @Override
-    public AssignmentResponseInsertDto create(AssignmentRequestPostDto dto) {
-        Assignment newAssignment = assignmentMapper.mapAssignmentRequestPostDtoToAssignmentEntity(dto);
-        if (!newAssignment.getAsset().getState().equals(AssetState.AVAILABLE)) {
+    public AssignmentResponseDto create(AssignmentDto dto) {
+        User assignTo = userRepository.findById(dto.getAssignTo()).orElseThrow(
+                () -> new ResourceNotFoundException(String.format("User with id %s is not found", dto.getAssignTo()))
+        );
+        User assignBy = userRepository.findById(dto.getAssignBy()).orElseThrow(
+                () -> new ResourceNotFoundException(String.format("User with id %s is not found", dto.getAssignBy()))
+        );
+        Asset foundAsset = assetRepository.findById(dto.getAssetId()).orElseThrow(
+                () -> new ResourceNotFoundException(String.format("Asset with id %s is not found", dto.getAssetId()))
+        );
+        if (!foundAsset.getState().equals(AssetState.AVAILABLE)) {
             throw new BadRequestException("This asset isn't available to assign");
         }
-        if (newAssignment.getAssignedTo().isDisabled()) {
-            throw new BadRequestException(String.format("User is assigned with id %s is disabled", newAssignment.getAssignedTo().getId()));
+        if (assignTo.isDisabled()) {
+            throw new BadRequestException(String.format("User is assigned with id %s is disabled", assignTo.getId()));
         }
+        foundAsset.setState(AssetState.ASSIGNED);
         Date dateNow = new Date();
         Timestamp now = new Timestamp(dateNow.getTime());
-        newAssignment.setCreatedWhen(now);
-        newAssignment.setUpdatedWhen(now);
-        newAssignment.setAssignedDate(dto.getAssignedDate());
-        newAssignment.setState(AssignmentState.WAITING);
-        newAssignment.getAsset().setState(AssetState.ASSIGNED);
-        return assignmentMapper.mapEntityToResponseInsertDto(assignmentRepository.save(newAssignment));
+        Assignment newAssignment =  Assignment.builder()
+                .assignedBy(assignBy)
+                .assignedTo(assignTo)
+                .asset(foundAsset)
+                .note(dto.getNote())
+                .createdWhen(now)
+                .updatedWhen(now)
+                .assignedDate(dto.getAssignedDate())
+                .state(AssignmentState.WAITING)
+                .asset(foundAsset)
+                .build();
+        return assignmentMapper.mapAssignmentEntityToResponseDto(assignmentRepository.save(newAssignment));
     }
 
     @Override
     @Transactional
-    public void update(AssignmentRequestPutDto dto, Integer id) {
+    public void update(AssignmentDto dto, Integer id) {
         Assignment foundAssignment = assignmentRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException(String.format("Assignment with id %s is not found", id))
+        );
+        User assignTo = userRepository.findById(dto.getAssignTo()).orElseThrow(
+                () -> new ResourceNotFoundException(String.format("User with id %s is not found", dto.getAssignTo()))
+        );
+        Asset foundAsset = assetRepository.findById(dto.getAssetId()).orElseThrow(
+                () -> new ResourceNotFoundException(String.format("Asset with id %s is not found", dto.getAssetId()))
         );
         if (!foundAssignment.getState().equals(AssignmentState.WAITING)) {
             throw new BadRequestException("Only can update assignment that have state is WATING");
         }
-        Assignment updateAssignment = assignmentMapper.mapRequestPutDtoToEntity(dto, foundAssignment);
+        foundAsset.setState(AssetState.ASSIGNED);
         Date dateNow = new Date();
         Timestamp now = new Timestamp(dateNow.getTime());
-        updateAssignment.setUpdatedWhen(now);
-        assignmentRepository.save(updateAssignment);
+        foundAssignment.getAsset().setState(AssetState.AVAILABLE);
+        assignmentRepository.save(foundAssignment);
+        foundAssignment.setAssignedTo(assignTo);
+        foundAssignment.setAssignedDate(dto.getAssignedDate());
+        foundAssignment.setAsset(foundAsset);
+        foundAssignment.setNote(dto.getNote());
+        foundAssignment.setUpdatedWhen(now);
+        assignmentRepository.save(foundAssignment);
     }
 
     @Override

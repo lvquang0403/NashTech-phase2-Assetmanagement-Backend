@@ -1,6 +1,7 @@
 package com.nashtech.rookies.java05.AssetManagement.dtos.request;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

@@ -4,20 +4,17 @@ import com.nashtech.rookies.java05.AssetManagement.validator.GreaterThanCurrentD
 import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.sql.Date;
 
 @Getter
 @Setter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AssignmentRequestPutDto {
-    @NotEmpty
+@Builder
+public class AssignmentDto {
+    private String assignBy;
     private String assignTo;
-    @NotEmpty
     private String assetId;
-    @GreaterThanCurrentDayConstraint
     private Date assignedDate;
     private String note;
 }
