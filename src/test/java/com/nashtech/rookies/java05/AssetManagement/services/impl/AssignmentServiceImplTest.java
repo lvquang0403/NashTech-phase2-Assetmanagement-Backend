@@ -42,8 +42,7 @@ import java.util.Optional;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class AssignmentServiceImplTest {
     private AssignmentRepository assignmentRepository;
@@ -254,6 +253,7 @@ class AssignmentServiceImplTest {
         Assignment oldAssignment = Assignment.builder()
                 .id(oldAssignmentId)
                 .state(AssignmentState.WAITING)
+                .asset(Asset.builder().build())
                 .build();
         Mockito.when(assignmentRepository.findById(oldAssignmentId))
                 .thenReturn(Optional.of(oldAssignment));
@@ -263,8 +263,8 @@ class AssignmentServiceImplTest {
                 .thenReturn(Optional.of(Asset.builder().id(newAssetId).build()));
         assignmentService.update(dto, oldAssignmentId);
         ArgumentCaptor<Assignment> assignmentArgumentCaptor = ArgumentCaptor.forClass(Assignment.class);
-        Mockito.verify(assignmentRepository).save(assignmentArgumentCaptor.capture());
-        Assignment actual = assignmentArgumentCaptor.getValue();
+        Mockito.verify(assignmentRepository,times(2)).save(assignmentArgumentCaptor.capture());
+        Assignment actual = assignmentArgumentCaptor.getAllValues().get(1);
         assertThat(actual.getAssignedDate()).isEqualTo(newAssignDate);
         assertThat(actual.getAssignedTo().getId()).isEqualTo(newUserAssignToId);
         assertThat(actual.getNote()).isEqualTo(newNote);
