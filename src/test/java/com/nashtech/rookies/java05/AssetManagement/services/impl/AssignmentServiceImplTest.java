@@ -1,7 +1,6 @@
 package com.nashtech.rookies.java05.AssetManagement.services.impl;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentDto;
-
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.*;
 import com.nashtech.rookies.java05.AssetManagement.entities.Asset;
 import com.nashtech.rookies.java05.AssetManagement.entities.Assignment;
@@ -95,7 +94,7 @@ class AssignmentServiceImplTest {
         Mockito.when(userRepository.findById(any())).thenReturn(Optional.of(Mockito.mock(User.class)));
         Mockito.when(assetRepository.findById("LA00001")).thenReturn(Optional.of(notValidAsset));
         BadRequestException badRequestException = Assertions.assertThrows(BadRequestException.class,
-                () -> assignmentService.create(dto)
+                () -> assignmentService.createAssignment(dto)
         );
         assertThat(badRequestException.getMessage()).isEqualTo("This asset isn't available to assign");
     }
@@ -115,7 +114,7 @@ class AssignmentServiceImplTest {
         Mockito.when(userRepository.findById("anyone")).thenReturn(Optional.of(Mockito.mock(User.class)));
         Mockito.when(assetRepository.findById(any())).thenReturn(Optional.of(validAsset));
         BadRequestException badRequestException = Assertions.assertThrows(BadRequestException.class,
-                () -> assignmentService.create(dto)
+                () -> assignmentService.createAssignment(dto)
         );
         assertThat(badRequestException.getMessage()).isEqualTo("User is assigned with id SD1111 is disabled");
     }
@@ -131,7 +130,7 @@ class AssignmentServiceImplTest {
                 .note("note")
                 .build();
         ResourceNotFoundException resourceNotFoundException = Assertions.assertThrows(ResourceNotFoundException.class,
-                () -> assignmentService.create(dto));
+                () -> assignmentService.createAssignment(dto));
         assertThat(resourceNotFoundException.getMessage()).isEqualTo("User with id SD0000 is not found");
     }
 
@@ -147,7 +146,7 @@ class AssignmentServiceImplTest {
                 .build();
         Mockito.when(userRepository.findById("anyone")).thenReturn(Optional.of(Mockito.mock(User.class)));
         ResourceNotFoundException resourceNotFoundException = Assertions.assertThrows(ResourceNotFoundException.class,
-                () -> assignmentService.create(dto));
+                () -> assignmentService.createAssignment(dto));
         assertThat(resourceNotFoundException.getMessage()).isEqualTo(String.format("Asset with id %s is not found", assetNotExistId));
     }
 
@@ -188,7 +187,7 @@ class AssignmentServiceImplTest {
         Mockito.when(userRepository.findById("SD0002")).thenReturn(Optional.of(assignTo));
         Mockito.when(assetRepository.findById("LA000001")).thenReturn(Optional.of(asset));
         Mockito.when(assignmentRepository.save(any())).thenReturn(assignment);
-        assignmentService.create(dto);
+        assignmentService.createAssignment(dto);
         ArgumentCaptor<Assignment> assignmentArgumentCaptor = ArgumentCaptor.forClass(Assignment.class);
         Mockito.verify(assignmentRepository).save(assignmentArgumentCaptor.capture());
         Assignment actual = assignmentArgumentCaptor.getValue();
@@ -204,7 +203,7 @@ class AssignmentServiceImplTest {
         Integer assignmentIdNotExist = 999;
         AssignmentDto dto = Mockito.mock(AssignmentDto.class);
         ResourceNotFoundException resourceNotFoundException = Assertions.assertThrows(ResourceNotFoundException.class,
-                () -> assignmentService.update(dto, assignmentIdNotExist));
+                () -> assignmentService.updateAssignment(dto, assignmentIdNotExist));
         assertThat(resourceNotFoundException.getMessage()).isEqualTo(String.format("Assignment with id %s is not found", assignmentIdNotExist));
     }
 
@@ -218,7 +217,7 @@ class AssignmentServiceImplTest {
         Mockito.when(assignmentRepository.findById(any())).thenReturn(Optional.of(Assignment.builder().state(AssignmentState.WAITING).build()));
         Mockito.when(userRepository.findById("any")).thenReturn(Optional.of(Mockito.mock(User.class)));
         ResourceNotFoundException resourceNotFoundException = Assertions.assertThrows(ResourceNotFoundException.class,
-                () -> assignmentService.update(dto, 2));
+                () -> assignmentService.updateAssignment(dto, 2));
         assertThat(resourceNotFoundException.getMessage()).isEqualTo(String.format("Asset with id %s is not found", assetIdNotExist));
 
     }
@@ -232,7 +231,7 @@ class AssignmentServiceImplTest {
                 .build();
         Mockito.when(assignmentRepository.findById(any())).thenReturn(Optional.of(Assignment.builder().state(AssignmentState.WAITING).build()));
         ResourceNotFoundException resourceNotFoundException = Assertions.assertThrows(ResourceNotFoundException.class,
-                () -> assignmentService.update(dto, 2));
+                () -> assignmentService.updateAssignment(dto, 2));
         assertThat(resourceNotFoundException.getMessage()).isEqualTo(String.format("User with id %s is not found", assignToIdNotExist));
     }
 
@@ -260,7 +259,7 @@ class AssignmentServiceImplTest {
                 .thenReturn(Optional.of(User.builder().id(newUserAssignToId).build()));
         Mockito.when(assetRepository.findById(newAssetId))
                 .thenReturn(Optional.of(Asset.builder().id(newAssetId).build()));
-        assignmentService.update(dto, oldAssignmentId);
+        assignmentService.updateAssignment(dto, oldAssignmentId);
         ArgumentCaptor<Assignment> assignmentArgumentCaptor = ArgumentCaptor.forClass(Assignment.class);
         Mockito.verify(assignmentRepository,times(2)).save(assignmentArgumentCaptor.capture());
         Assignment actual = assignmentArgumentCaptor.getAllValues().get(1);
@@ -274,7 +273,7 @@ class AssignmentServiceImplTest {
     void testDeleteWhenAssignmentNotExistShouldThrowException() {
         Integer assignmentIdNotExist = 999;
         ResourceNotFoundException resourceNotFoundException = Assertions.assertThrows(ResourceNotFoundException.class,
-                () -> assignmentService.delete(assignmentIdNotExist));
+                () -> assignmentService.deleteAssignment(assignmentIdNotExist));
         assertThat(resourceNotFoundException.getMessage()).isEqualTo(String.format("Assignment with id %s is not found", assignmentIdNotExist));
     }
 
@@ -284,7 +283,7 @@ class AssignmentServiceImplTest {
         Mockito.when(assignmentRepository.findById(assignmentId))
                 .thenReturn(Optional.of(Assignment.builder().state(AssignmentState.ACCEPTED).build()));
         BadRequestException badRequestException = Assertions.assertThrows(BadRequestException.class,
-                () -> assignmentService.delete(assignmentId));
+                () -> assignmentService.deleteAssignment(assignmentId));
         assertThat(badRequestException.getMessage()).isEqualTo("Only can delete assignments that have state is WATING");
     }
 
@@ -299,7 +298,7 @@ class AssignmentServiceImplTest {
                 .build();
         Mockito.when(assignmentRepository.findById(assignmentId))
                 .thenReturn(Optional.of(assignment));
-        assignmentService.delete(assignmentId);
+        assignmentService.deleteAssignment(assignmentId);
         ArgumentCaptor<Assignment> assignmentArgumentCaptor = ArgumentCaptor.forClass(Assignment.class);
         Mockito.verify(assignmentRepository).save(assignmentArgumentCaptor.capture());
         Assignment actual = assignmentArgumentCaptor.getValue();

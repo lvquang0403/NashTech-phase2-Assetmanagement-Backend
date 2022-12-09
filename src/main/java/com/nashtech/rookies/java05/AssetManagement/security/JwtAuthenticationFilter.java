@@ -53,7 +53,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if (request.getRequestURI().equals("/api/login")) {
+        if (request.getRequestURI().equals("/api/login")
+                || request.getRequestURI().contains("/swagger-ui")
+                || request.getRequestURI().equals("/swagger-ui.html")
+                || request.getRequestURI().contains("/v3/api-docs")
+        ) {
             filterChain.doFilter(request, response);
         } else {
             final Optional<String> requestTokenHeaderOpt = getJwtFromRequest(request);

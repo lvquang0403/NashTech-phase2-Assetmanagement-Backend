@@ -8,8 +8,8 @@ import java.util.List;
 
 @Component
 public interface CategoryService {
-    public CategoryResponseDto create(CategoryRequestDto dto);
-    List<String> getAllCategoriesName();
+    CategoryResponseDto createCategory(CategoryRequestDto dto);
+    List<String> getCategoryNames();
 
-    public List<CategoryResponseDto> getAll();
+    List<CategoryResponseDto> getCategories();
 }

@@ -26,7 +26,7 @@ public class AssignmentController {
 
     @PostMapping
     public ResponseEntity<AssignmentResponseDto> create(@RequestBody AssignmentDto dto) {
-        return ResponseEntity.ok(assignmentService.create(dto));
+        return ResponseEntity.ok(assignmentService.createAssignment(dto));
     }
 
     @GetMapping("")
@@ -57,13 +57,13 @@ public class AssignmentController {
     public ResponseEntity<?> update(
             @PathVariable Integer id,
             @RequestBody AssignmentDto dto) {
-        assignmentService.update(dto, id);
+        assignmentService.updateAssignment(dto, id);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<?> delete(@PathVariable Integer id) {
-        assignmentService.delete(id);
+        assignmentService.deleteAssignment(id);
         return ResponseEntity.ok().build();
     }
 

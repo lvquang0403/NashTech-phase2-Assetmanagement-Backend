@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface ReturningService {
     APIResponse<List<ReturningDto>> getReturningByPredicates(List<String> states, String returnedDate, String keyword, int page, String orderBy, int locationId);
-    void completeRequest(RequestReturnDto dto, Integer id);
-    ReturningDto  create(RequestReturnDto requestDto);
+    void completeReturning(RequestReturnDto dto, Integer id);
+    ReturningDto createReturning(RequestReturnDto requestDto);
 }

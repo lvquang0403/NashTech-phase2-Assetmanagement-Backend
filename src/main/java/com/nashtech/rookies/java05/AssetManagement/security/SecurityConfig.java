@@ -20,6 +20,16 @@ import org.springframework.web.context.WebApplicationContext;
 public class SecurityConfig {
     private static final String STAFF = "Staff";
     private static final String ADMIN = "Admin";
+    private static final String[] AUTH_WHITELIST = {
+            // -- Swagger UI v2
+            "/v3/api-docs/**",
+            "/configuration/ui",
+            "/swagger-resources/**",
+            "/configuration/security",
+            "/swagger-ui.html",
+            "/webjars/**",
+            "swagger-ui/**"
+    };
 
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -40,6 +50,7 @@ public class SecurityConfig {
         httpSecurity.cors().and().csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         httpSecurity.authorizeRequests()
                 .antMatchers("/api/login").permitAll()
+                .antMatchers(AUTH_WHITELIST).permitAll()
                 .antMatchers("/api/assets/**").hasAnyAuthority(ADMIN)
                 .antMatchers("/api/assets/states/**").hasAnyAuthority(ADMIN)
                 .antMatchers("/api/categories/**").hasAnyAuthority(ADMIN)
@@ -77,5 +88,4 @@ public class SecurityConfig {
         httpSecurity.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
-
 }

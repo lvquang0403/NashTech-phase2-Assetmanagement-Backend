@@ -51,7 +51,7 @@ public class AssetServiceImpl implements AssetService {
     private EntityCheckUtils entityCheckUtils;
 
     @Override
-    public AssetResponseInsertDto create(AssetRequestDto dto){
+    public AssetResponseInsertDto createAsset(AssetRequestDto dto){
         entityCheckUtils.assetCheckInsert(dto);
         Asset asset = assetMapper.mapAssetRequestDtoToEntityInsert(dto);
         Asset newAsset = assetRepository.save(asset);
@@ -59,7 +59,7 @@ public class AssetServiceImpl implements AssetService {
     }
 
     @Override
-    public AssetResponseInsertDto update(AssetRequestDto dto, String id) {
+    public AssetResponseInsertDto updateAsset(AssetRequestDto dto, String id) {
         entityCheckUtils.assetCheckUpdate(dto);
         Optional<Asset> optional = assetRepository.findById(id);
         if(optional.isEmpty()){

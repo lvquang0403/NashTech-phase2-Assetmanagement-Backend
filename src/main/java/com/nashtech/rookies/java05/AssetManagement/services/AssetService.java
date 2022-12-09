@@ -14,9 +14,9 @@ import java.util.Set;
 @Component
 public interface AssetService {
 
-    public AssetResponseInsertDto create(AssetRequestDto dto);
+    public AssetResponseInsertDto createAsset(AssetRequestDto dto);
 
-    public AssetResponseInsertDto update(AssetRequestDto dto, String id);
+    public AssetResponseInsertDto updateAsset(AssetRequestDto dto, String id);
 
 
     APIResponse<List<AssetViewResponseDto>> getAssetsByPredicates

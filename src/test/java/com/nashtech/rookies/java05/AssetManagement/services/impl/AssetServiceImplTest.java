@@ -112,7 +112,7 @@ public class AssetServiceImplTest {
         assetRequestDto.setName(null);
 
         NullPointerException exception = Assertions.assertThrows(NullPointerException.class,
-                () -> assetServiceImpl.create(assetRequestDto));
+                () -> assetServiceImpl.createAsset(assetRequestDto));
 
         Assertions.assertEquals("null name", exception.getMessage());
     }
@@ -122,7 +122,7 @@ public class AssetServiceImplTest {
         assetRequestDto.setName("");
 
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
-                () -> assetServiceImpl.create(assetRequestDto));
+                () -> assetServiceImpl.createAsset(assetRequestDto));
 
         Assertions.assertEquals("empty name", exception.getMessage());
     }
@@ -132,7 +132,7 @@ public class AssetServiceImplTest {
         assetRequestDto.setName("aaaaaaaaaaaKaaaaaaaaaaaKaaaaaaaaaaaKaaaaaaaaaaaKaaaaaaaaaaa");
 
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
-                () -> assetServiceImpl.create(assetRequestDto));
+                () -> assetServiceImpl.createAsset(assetRequestDto));
 
 
         Assertions.assertEquals("name is too long, name up to 50 characters long", exception.getMessage());
@@ -147,7 +147,7 @@ public class AssetServiceImplTest {
         assetRequestDto.setSpecification(str);
 
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
-                () -> assetServiceImpl.create(assetRequestDto));
+                () -> assetServiceImpl.createAsset(assetRequestDto));
 
 
         Assertions.assertEquals("specification is too long, specification up to 500 characters long", exception.getMessage());
@@ -158,7 +158,7 @@ public class AssetServiceImplTest {
         assetRequestDto.setInstalledDate(new Date(now.getTime() + oneDay));
 
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
-                () -> assetServiceImpl.create(assetRequestDto));
+                () -> assetServiceImpl.createAsset(assetRequestDto));
 
         Assertions.assertEquals("installed date must be a date in the past", exception.getMessage());
     }
@@ -168,7 +168,7 @@ public class AssetServiceImplTest {
         assetRequestDto.setName("hahah2~");
 
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
-                () -> assetServiceImpl.create(assetRequestDto));
+                () -> assetServiceImpl.createAsset(assetRequestDto));
 
         Assertions.assertEquals("Cannot contain special characters", exception.getMessage());
     }
@@ -179,7 +179,7 @@ public class AssetServiceImplTest {
         assetRequestDto.setName(null);
 
         NullPointerException exception = Assertions.assertThrows(NullPointerException.class,
-                () -> assetServiceImpl.update(assetRequestDto, "PD000001"));
+                () -> assetServiceImpl.updateAsset(assetRequestDto, "PD000001"));
 
         Assertions.assertEquals("null name", exception.getMessage());
     }
@@ -189,7 +189,7 @@ public class AssetServiceImplTest {
         assetRequestDto.setName("");
 
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
-                () -> assetServiceImpl.update(assetRequestDto, "PD000001"));
+                () -> assetServiceImpl.updateAsset(assetRequestDto, "PD000001"));
 
         Assertions.assertEquals("empty name", exception.getMessage());
     }
@@ -199,7 +199,7 @@ public class AssetServiceImplTest {
         assetRequestDto.setInstalledDate(new Date(now.getTime() + oneDay));
 
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
-                () -> assetServiceImpl.update(assetRequestDto, "PD000001"));
+                () -> assetServiceImpl.updateAsset(assetRequestDto, "PD000001"));
 
         Assertions.assertEquals("installed date must be a date in the past", exception.getMessage());
     }
@@ -209,7 +209,7 @@ public class AssetServiceImplTest {
         assetRequestDto.setName("hahah2~");
 
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
-                () -> assetServiceImpl.update(assetRequestDto, "PD000001"));
+                () -> assetServiceImpl.updateAsset(assetRequestDto, "PD000001"));
 
         Assertions.assertEquals("Cannot contain special characters", exception.getMessage());
     }

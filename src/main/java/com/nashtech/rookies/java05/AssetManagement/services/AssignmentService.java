@@ -8,9 +8,9 @@ import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssignmentRespo
 import java.util.List;
 
 public interface AssignmentService {
-    AssignmentResponseDto create(AssignmentDto dto);
-    void update(AssignmentDto dto, Integer id);
-    void delete(Integer id);
+    AssignmentResponseDto createAssignment(AssignmentDto dto);
+    void updateAssignment(AssignmentDto dto, Integer id);
+    void deleteAssignment(Integer id);
     APIResponse<List<AssignmentResponseDto>> getAssignmentByPredicates
             (List<String> stateFilterList, String assignDate, String keyword, int page, String orderBy);
     AssignmentDetailDto getAssignment(int id);

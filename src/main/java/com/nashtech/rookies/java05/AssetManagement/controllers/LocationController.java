@@ -17,7 +17,7 @@ public class LocationController {
     LocationService locationService;
 
     @GetMapping
-    public ResponseEntity getAllLocations(){
-        return ResponseEntity.ok(locationService.getAllLocations());
+    public ResponseEntity getLocations(){
+        return ResponseEntity.ok(locationService.getLocations());
     }
 }

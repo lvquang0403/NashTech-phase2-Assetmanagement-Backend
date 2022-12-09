@@ -32,12 +32,12 @@ public class ReturningController {
     public ResponseEntity<?> completeRequest(@PathVariable Integer id,
                                              @RequestBody RequestReturnDto dto)
     {
-        returningService.completeRequest(dto, id);
+        returningService.completeReturning(dto, id);
         return ResponseEntity.ok().build();
     }
     @PostMapping("")
     public ReturningDto create(@RequestBody RequestReturnDto dto) {
-        return returningService.create(dto);
+        return returningService.createReturning(dto);
     }
 
 }

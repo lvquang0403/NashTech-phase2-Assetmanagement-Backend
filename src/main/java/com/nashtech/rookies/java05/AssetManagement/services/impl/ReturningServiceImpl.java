@@ -83,7 +83,7 @@ public class ReturningServiceImpl implements ReturningService {
     }
 
     @Override
-    public void completeRequest(RequestReturnDto dto, Integer id) {
+    public void completeReturning(RequestReturnDto dto, Integer id) {
         Returning foundReturning = returningRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException(String.format("Return request with id %s is not found", id))
         );
@@ -102,7 +102,7 @@ public class ReturningServiceImpl implements ReturningService {
         returningRepository.save(foundReturning);
     }
     @Override
-    public ReturningDto create(RequestReturnDto requestDto) {
+    public ReturningDto createReturning(RequestReturnDto requestDto) {
 //        validate
         entityCheckUtils.returnCheckCreate(requestDto);
         Optional<Assignment> optionalAssignment = assignmentRepository.findById(requestDto.getAssignmentId());

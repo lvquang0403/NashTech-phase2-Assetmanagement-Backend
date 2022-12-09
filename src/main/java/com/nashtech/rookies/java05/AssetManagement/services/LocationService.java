@@ -5,5 +5,5 @@ import com.nashtech.rookies.java05.AssetManagement.dtos.response.LocationRespons
 import java.util.List;
 
 public interface LocationService {
-    public List<LocationResponseDto> getAllLocations();
+    public List<LocationResponseDto> getLocations();
 }

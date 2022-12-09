@@ -19,17 +19,17 @@ public class CategoryController {
     @PostMapping(value = "")
     @ResponseBody
     public CategoryResponseDto create(@RequestBody CategoryRequestDto dto){
-        return categoryService.create(dto);
+        return categoryService.createCategory(dto);
     }
 
     @GetMapping("/name")
     public List<String> getAllCategoriesName(){
-        List<String> result = categoryService.getAllCategoriesName();
+        List<String> result = categoryService.getCategoryNames();
         return result;
     }
 
     @GetMapping("")
     public List<CategoryResponseDto> getAll(){
-        return categoryService.getAll();
+        return categoryService.getCategories();
     }
 }

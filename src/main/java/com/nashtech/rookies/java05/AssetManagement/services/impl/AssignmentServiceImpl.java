@@ -41,7 +41,7 @@ public class AssignmentServiceImpl implements AssignmentService {
     @Autowired
     private AssignmentMapper assignmentMapper;
     @Override
-    public AssignmentResponseDto create(AssignmentDto dto) {
+    public AssignmentResponseDto createAssignment(AssignmentDto dto) {
         User assignTo = userRepository.findById(dto.getAssignTo()).orElseThrow(
                 () -> new ResourceNotFoundException(String.format("User with id %s is not found", dto.getAssignTo()))
         );
@@ -76,7 +76,7 @@ public class AssignmentServiceImpl implements AssignmentService {
 
     @Override
     @Transactional
-    public void update(AssignmentDto dto, Integer id) {
+    public void updateAssignment(AssignmentDto dto, Integer id) {
         Assignment foundAssignment = assignmentRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException(String.format("Assignment with id %s is not found", id))
         );
@@ -103,7 +103,7 @@ public class AssignmentServiceImpl implements AssignmentService {
     }
 
     @Override
-    public void delete(Integer id) {
+    public void deleteAssignment(Integer id) {
         Assignment foundAssignment = assignmentRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException(String.format("Assignment with id %s is not found", id))
         );

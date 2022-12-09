@@ -81,7 +81,7 @@ public class ReturningServiceImplTest {
         when(userRepository.findById("SD00006")).thenReturn(Optional.ofNullable(user));
 
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
-                () -> returningServiceImpl.create(dataRequest));
+                () -> returningServiceImpl.createReturning(dataRequest));
 
         Assertions.assertEquals("state of assignment not suitable", exception.getMessage());
     }
@@ -98,7 +98,7 @@ public class ReturningServiceImplTest {
         when(userRepository.findById("SD00006")).thenReturn(Optional.ofNullable(user));
 
         RepeatDataException exception = Assertions.assertThrows(RepeatDataException.class,
-                () -> returningServiceImpl.create(dataRequest));
+                () -> returningServiceImpl.createReturning(dataRequest));
 
         Assertions.assertEquals("Request already exists", exception.getMessage());
     }

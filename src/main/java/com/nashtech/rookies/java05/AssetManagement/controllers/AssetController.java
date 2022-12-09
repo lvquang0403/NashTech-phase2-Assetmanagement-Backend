@@ -35,12 +35,12 @@ public class AssetController {
 
     @PostMapping("")
     public AssetResponseInsertDto create(@RequestBody @Valid AssetRequestDto dto) {
-        return assetService.create(dto);
+        return assetService.createAsset(dto);
     }
 
     @PutMapping("/{id}")
     public AssetResponseInsertDto update(@RequestBody AssetRequestDto dto, @PathVariable String id) {
-        return assetService.update(dto, id);
+        return assetService.updateAsset(dto, id);
     }
 
     @GetMapping("/{id}")

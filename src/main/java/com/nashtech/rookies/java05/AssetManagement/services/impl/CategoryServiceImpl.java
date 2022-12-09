@@ -25,7 +25,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private EntityCheckUtils entityCheckUtils;
 
-    public CategoryResponseDto create(CategoryRequestDto dto) {
+    public CategoryResponseDto createCategory(CategoryRequestDto dto) {
         Optional<List<Category>> optional = Optional.of(categoryRepository.findAll());
         if (!optional.isEmpty()) {
             for (Category category : optional.get()) {
@@ -45,7 +45,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<String> getAllCategoriesName() {
+    public List<String> getCategoryNames() {
         List<Category> categories = categoryRepository.findAll();
         List<String> result = new ArrayList<>();
         if(categories == null){
@@ -59,7 +59,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryResponseDto> getAll() {
+    public List<CategoryResponseDto> getCategories() {
         Optional<List<Category>> optional = Optional.ofNullable(categoryRepository.findAll());
         List<CategoryResponseDto> result = new ArrayList<>();
         if(optional.isEmpty()){
