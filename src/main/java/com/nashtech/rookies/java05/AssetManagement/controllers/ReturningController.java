@@ -40,4 +40,8 @@ public class ReturningController {
         return returningService.createReturning(dto);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity cancelRequest(@PathVariable Integer id){
+        return ResponseEntity.ok(returningService.cancelReturning(id));
+    }
 }

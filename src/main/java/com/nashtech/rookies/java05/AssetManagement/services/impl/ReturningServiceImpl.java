@@ -133,4 +133,17 @@ public class ReturningServiceImpl implements ReturningService {
         Returning newReturning = returningRepository.save(returning);
         return returningMapper.toDto(newReturning);
     }
+
+    @Override
+    public String cancelReturning(Integer id) {
+        Optional<Returning> optional= returningRepository.findById(id);
+        if (optional.isEmpty() ){
+            return "Cannot find that request";
+        }
+        if (optional.get().getState()!=AssignmentReturnState.WAITING_FOR_RETURNING){
+            return "Only delete the request with state WAITING";
+        }
+        returningRepository.deleteById(id);
+        return "That request was deleted.";
+    }
 }
