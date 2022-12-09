@@ -186,7 +186,7 @@ public class UserServiceImpl implements UserService {
         if (optionalUser.isEmpty()) return null;
         User user=optionalUser.get();
         AssignmentMapper mapper = new AssignmentMapper();
-        return user.getListAssignmentsTo().stream().map((assignment)-> mapper.mapAssignmentEntityToResponseDto(assignment)).collect(Collectors.toList());
+        return user.getListAssignmentsTo().stream().map((assignment)-> mapper.ToResponseDto(assignment)).collect(Collectors.toList());
     }
 
     @Override

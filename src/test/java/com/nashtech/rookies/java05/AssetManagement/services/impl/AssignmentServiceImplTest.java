@@ -2,7 +2,6 @@ package com.nashtech.rookies.java05.AssetManagement.services.impl;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentDto;
 
-import com.nashtech.rookies.java05.AssetManagement.dtos.request.ChangeStateAssignmentDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.*;
 import com.nashtech.rookies.java05.AssetManagement.entities.Asset;
 import com.nashtech.rookies.java05.AssetManagement.entities.Assignment;
@@ -57,7 +56,7 @@ class AssignmentServiceImplTest {
     @Mock
     private List<AssignmentState> states;
     @Mock
-    private List<AssignmentListResponseDto> assignmentListResponseDtos;
+    private List<AssignmentResponseDto> assignmentListResponseDtos;
 
 
     @BeforeEach
@@ -314,7 +313,7 @@ class AssignmentServiceImplTest {
     void getAssignment_ShouldReturnValue_WhenAssignmentIdIsIsValid() {
 
         when(assignmentRepository.findById(assignment.getId())).thenReturn(Optional.of(assignment));
-        when(assignmentMapper2.mapAssignmentToAssignmentDetailDto(Optional.of(assignment).get()))
+        when(assignmentMapper2.ToAssignmentDetailDto(Optional.of(assignment).get()))
                 .thenReturn(assignmentDetailDto);
 
         AssignmentDetailDto result = assignmentServiceImpl.getAssignment(assignment.getId());
@@ -346,12 +345,12 @@ class AssignmentServiceImplTest {
         when(assignmentRepository.findByPredicates(states, "2022-11-30", "la", pageable))
                 .thenReturn(result);
 
-        when(assignmentMapper2.mapAssignmentListToAssignmentListResponseDto(any()))
+        when(assignmentMapper2.toListResponseDto(any()))
                 .thenReturn(assignmentListResponseDtos);
 
-        APIResponse<List<AssignmentListResponseDto>> expected = new APIResponse<>(result.getTotalPages(), assignmentListResponseDtos);
+        APIResponse<List<AssignmentResponseDto>> expected = new APIResponse<>(result.getTotalPages(), assignmentListResponseDtos);
 
-        APIResponse<List<AssignmentListResponseDto>> listResult =
+        APIResponse<List<AssignmentResponseDto>> listResult =
                 assignmentServiceImpl.getAssignmentByPredicates
                         (statesString, "2022-11-30", "LA", 0, orderBy);
 
@@ -373,28 +372,27 @@ class AssignmentServiceImplTest {
         when(assignmentRepository.findByUserId(user.getId(), date, pageable))
                 .thenReturn(result);
 
-        when(assignmentMapper2.mapAssignmentListToAssignmentListResponseDto(any()))
+        when(assignmentMapper2.toListResponseDto(any()))
                 .thenReturn(assignmentListResponseDtos);
 
-        APIResponse<List<AssignmentListResponseDto>> expected = new APIResponse<>(result.getTotalPages(), assignmentListResponseDtos);
+        APIResponse<List<AssignmentResponseDto>> expected = new APIResponse<>(result.getTotalPages(), assignmentListResponseDtos);
 
-        APIResponse<List<AssignmentListResponseDto>> listResult =
+        APIResponse<List<AssignmentResponseDto>> listResult =
                 assignmentServiceImpl.getAssignmentsByUser(user.getId(), 0, orderBy);
         MatcherAssert.assertThat(listResult, is(expected));
     }
 
     @Test
     void changeStateAssignment_ShouldReturnResult_WhenAssignmentIdIsValid() {
-        ChangeStateAssignmentDto dto = new ChangeStateAssignmentDto();
+        AssignmentDto dto = new AssignmentDto();
         dto.setState("ACCEPTED");
-        dto.setId(1000);
         assignment =new Assignment();
         assignment.setState(AssignmentState.WAITING);
         AssignmentDetailDto expected = mock(AssignmentDetailDto.class);
 
         when(assignmentRepository.findById(1000)).thenReturn(Optional.of(assignment));
         when(assignmentRepository.save(assignment)).thenReturn(assignment);
-        when(assignmentMapper2.mapAssignmentToAssignmentDetailDto(assignment)).thenReturn(expected);
+        when(assignmentMapper2.ToAssignmentDetailDto(assignment)).thenReturn(expected);
 
         AssignmentDetailDto result = assignmentServiceImpl.changeStateAssignment(1000, dto);
         MatcherAssert.assertThat(result, is(expected));
@@ -402,7 +400,7 @@ class AssignmentServiceImplTest {
 
     @Test
     void changeStateAssignment_ShouldThrowException_WhenAssignmentIdIsNotValid() {
-        ChangeStateAssignmentDto dto = mock(ChangeStateAssignmentDto.class);
+        AssignmentDto dto = mock(AssignmentDto.class);
 
         ResourceNotFoundException resourceNotFoundException = Assertions.assertThrows(ResourceNotFoundException.class,
                 () -> assignmentServiceImpl.changeStateAssignment(1000, dto));

@@ -17,4 +17,5 @@ public class AssignmentDto {
     private String assetId;
     private Date assignedDate;
     private String note;
+    private String state;
 }

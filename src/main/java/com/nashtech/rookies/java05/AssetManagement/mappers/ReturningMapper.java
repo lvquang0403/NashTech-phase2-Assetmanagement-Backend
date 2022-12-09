@@ -34,7 +34,7 @@ public class ReturningMapper {
                     .requestedBy(returning.getRequestedBy().getUsername())
                     .acceptedBy(returning.getAcceptedBy() == null ? "" : returning.getAcceptedBy().getUsername())
                     .returnedDate(returning.getReturnedDate() == null ? null : Date.valueOf(returning.getReturnedDate().toLocalDateTime().toLocalDate()))
-                    .assignmentResponseDto(assignmentMapper.mapAssignmentEntityToResponseDto(returning.getAssignment()))
+                    .assignmentResponseDto(assignmentMapper.ToResponseDto(returning.getAssignment()))
                     .assetViewResponseDto(assetMapper.mapAssetToAssetViewResponseDto(returning.getAsset()))
                     .build();
             return returningDto;
@@ -53,7 +53,7 @@ public class ReturningMapper {
                 .requestedBy(returning.getRequestedBy().getUsername())
                 .acceptedBy(returning.getAcceptedBy() == null ? "" : returning.getAcceptedBy().getUsername())
                 .returnedDate(returning.getReturnedDate() == null ? null : Date.valueOf(returning.getReturnedDate().toLocalDateTime().toLocalDate()))
-                .assignmentResponseDto(assignmentMapper.mapAssignmentEntityToResponseDto(returning.getAssignment()))
+                .assignmentResponseDto(assignmentMapper.ToResponseDto(returning.getAssignment()))
                 .assetViewResponseDto(assetMapper.mapAssetToAssetViewResponseDto(returning.getAsset()))
                 .build();
         return returningDto;

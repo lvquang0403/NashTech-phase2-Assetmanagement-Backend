@@ -1,7 +1,6 @@
 package com.nashtech.rookies.java05.AssetManagement.services.impl;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentDto;
-import com.nashtech.rookies.java05.AssetManagement.dtos.request.ChangeStateAssignmentDto;
 import com.nashtech.rookies.java05.AssetManagement.entities.Asset;
 import com.nashtech.rookies.java05.AssetManagement.entities.User;
 import com.nashtech.rookies.java05.AssetManagement.repository.AssetRepository;
@@ -72,7 +71,7 @@ public class AssignmentServiceImpl implements AssignmentService {
                 .state(AssignmentState.WAITING)
                 .asset(foundAsset)
                 .build();
-        return assignmentMapper.mapAssignmentEntityToResponseDto(assignmentRepository.save(newAssignment));
+        return assignmentMapper.ToResponseDto(assignmentRepository.save(newAssignment));
     }
 
     @Override
@@ -117,7 +116,7 @@ public class AssignmentServiceImpl implements AssignmentService {
     }
 
     @Override
-    public APIResponse<List<AssignmentListResponseDto>> getAssignmentByPredicates
+    public APIResponse<List<AssignmentResponseDto>> getAssignmentByPredicates
             (List<String> stateFilterList, String assignDate, String keyword, int page, String orderBy) {
         String[] parts = orderBy.split("_");
         String columnName = parts[0];
@@ -149,7 +148,7 @@ public class AssignmentServiceImpl implements AssignmentService {
                 (stateList, assignDate, keyword.toLowerCase(), pageable);
         //return null;
         return new APIResponse<>(result.getTotalPages(),
-                assignmentMapper.mapAssignmentListToAssignmentListResponseDto(result.toList()));
+                assignmentMapper.toListResponseDto(result.toList()));
     }
 
     @Override
@@ -158,11 +157,11 @@ public class AssignmentServiceImpl implements AssignmentService {
         if (assignmentFound.isEmpty()) {
             return AssignmentDetailDto.builder().build();
         }
-        return assignmentMapper.mapAssignmentToAssignmentDetailDto(assignmentFound.get());
+        return assignmentMapper.ToAssignmentDetailDto(assignmentFound.get());
     }
 
     @Override
-    public APIResponse<List<AssignmentListResponseDto>> getAssignmentsByUser(String id, int page, String orderBy) {
+    public APIResponse<List<AssignmentResponseDto>> getAssignmentsByUser(String id, int page, String orderBy) {
         String[] parts = orderBy.split("_");
         String columnName = parts[0];
         String order = parts[1];
@@ -184,11 +183,11 @@ public class AssignmentServiceImpl implements AssignmentService {
                 (id, date, pageable);
 
         return new APIResponse<>(assignments.getTotalPages(),
-                assignmentMapper.mapAssignmentListToAssignmentListResponseDto(assignments.toList()));
+                assignmentMapper.toListResponseDto(assignments.toList()));
     }
 
     @Override
-    public AssignmentDetailDto changeStateAssignment(int assignmentId, ChangeStateAssignmentDto req) {
+    public AssignmentDetailDto changeStateAssignment(int assignmentId, AssignmentDto req) {
         Assignment foundAssignment = assignmentRepository.findById(assignmentId).orElseThrow(
                 () -> new ResourceNotFoundException(String.format("Assignment not found with id: " + assignmentId ))
         );
@@ -215,6 +214,6 @@ public class AssignmentServiceImpl implements AssignmentService {
         foundAssignment.setUpdatedWhen(now);
         Assignment result = assignmentRepository.save(foundAssignment);
 
-        return assignmentMapper.mapAssignmentToAssignmentDetailDto(result);
+        return assignmentMapper.ToAssignmentDetailDto(result);
     }
 }

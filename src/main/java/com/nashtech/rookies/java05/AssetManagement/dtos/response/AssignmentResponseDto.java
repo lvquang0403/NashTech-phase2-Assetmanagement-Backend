@@ -4,20 +4,22 @@ import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssignmentStat
 import lombok.Builder;
 import lombok.Data;
 
-import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Timestamp;
 
-/**
- * A DTO for the {@link com.nashtech.rookies.java05.AssetManagement.entities.Assignment} entity
- */
 @Data
 @Builder
 public class AssignmentResponseDto {
-    private Integer id;
+    private int id;
+    private String assetId;
+    private String assetName;
+    private String assignTo;
+    private String assignBy;
+    private String category;
+    private Date assignedDate;
     private Timestamp createdWhen;
     private Timestamp updatedWhen;
-    private Date assignedDate;
     private String note;
-    private AssignmentState state;
+    private String state;
+    private boolean isRequestForReturn;
 }
