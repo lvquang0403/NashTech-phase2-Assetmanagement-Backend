@@ -168,20 +168,23 @@ public class AssignmentServiceImpl implements AssignmentService {
         if (!foundAssignment.getState().equals(AssignmentState.WAITING)) {
             throw new BadRequestException("Only can update assignment that have state is WATING");
         }
+        Date dateNow = new Date();
+        Timestamp now = new Timestamp(dateNow.getTime());
+
         AssignmentState[] assignmentStates = AssignmentState.values();
         for (AssignmentState assignmentState : assignmentStates) {
             if (req.getState().equals(assignmentState.toString()) ) {
                 if(assignmentState == AssignmentState.DECLINED){
                     Asset a = foundAssignment.getAsset();
                     a.setState(AssetState.AVAILABLE);
+                    a.setUpdatedWhen(now)
                     assetRepository.save(a);
                 }
                 foundAssignment.setState(assignmentState);
             }
         }
 
-        Date dateNow = new Date();
-        Timestamp now = new Timestamp(dateNow.getTime());
+       
         foundAssignment.setUpdatedWhen(now);
         Assignment result = assignmentRepository.save(foundAssignment);
 
