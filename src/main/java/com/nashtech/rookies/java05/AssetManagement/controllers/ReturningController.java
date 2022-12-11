@@ -18,7 +18,7 @@ public class ReturningController {
     ReturningService returningService;
 
     @GetMapping("")
-    public APIResponse<List<ReturningDto>> getAllAssignment
+    public APIResponse<List<ReturningDto>> getAllReturningRequests
             (@RequestParam(required = false, defaultValue = "") List<String> states,
              @RequestParam(required = false) String returnedDate,
              @RequestParam(required = false, defaultValue = "") String keyword,

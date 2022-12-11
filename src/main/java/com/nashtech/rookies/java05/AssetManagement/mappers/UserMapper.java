@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,7 +15,7 @@ import java.util.stream.Collectors;
 @Component
 public class UserMapper {
 
-    public List<UserViewResponseDto> mapUserEntityListToUserViewResponseDtoList(List<User> userList) {
+    public List<UserViewResponseDto> toDtoViewList(List<User> userList) {
 
         List<UserViewResponseDto> responseDtoList = userList.stream().map(user -> {
             UserViewResponseDto result = UserViewResponseDto
@@ -32,7 +31,7 @@ public class UserMapper {
         return responseDtoList;
     }
 
-    public UserLoginResponseDto mapUserEntityToUserLoginResponse(User user){
+    public UserLoginResponseDto toLoginDto(User user){
         String state = "";
         if(user.getState()!=null){
             state = user.getState().getName();

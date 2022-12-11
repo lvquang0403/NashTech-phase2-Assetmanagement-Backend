@@ -44,7 +44,7 @@ public class AssetController {
     }
 
     @GetMapping("/{id}")
-    public AssetResponseDto getAssetById(@PathVariable String id) {
+    public AssetResponseDto getAsset(@PathVariable String id) {
         return assetService.getAssetById(id);
     }
 

@@ -120,7 +120,7 @@ public class AssetServiceImpl implements AssetService {
         result = assetRepository.findByKeywordWithFilter
                 (categories, stateList, keyword.toLowerCase(), keyword.toLowerCase(), locationId, pageable);
 
-        return new APIResponse<>(result.getTotalPages(), assetMapper.mapAssetListToAssetViewResponseDto(result.toList()));
+        return new APIResponse<>(result.getTotalPages(), assetMapper.toDtoViewList(result.toList()));
     }
 
     @Override
@@ -141,7 +141,7 @@ public class AssetServiceImpl implements AssetService {
 
         List<Returning> returningHistoryList = returningRepository.findByAssetIdAndState(id, AssignmentReturnState.COMPLETED);
         assetFound.get().setReturningList(returningHistoryList);
-        return assetMapper.mapAssetEntityToAssetResponseDto(assetFound.get());
+        return assetMapper.toDto(assetFound.get());
     }
 
     @Override
