@@ -9,14 +9,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class CategoryMapper {
 
-    public Category mapCategoryRequestDtoToEntityInsert(CategoryRequestDto dto){
+    public Category toEntity(CategoryRequestDto dto){
         return  Category.builder()
                 .name(dto.getName())
                 .id(dto.getId())
                 .build();
     }
 
-    public CategoryResponseDto mapEntityToResponseInsertDto(Category category){
+    public CategoryResponseDto toDto(Category category){
         return  CategoryResponseDto.builder()
                 .name(category.getName())
                 .id(category.getId())

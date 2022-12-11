@@ -10,7 +10,9 @@ import com.nashtech.rookies.java05.AssetManagement.entities.Returning;
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssetState;
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssignmentReturnState;
 import com.nashtech.rookies.java05.AssetManagement.mappers.AssetMapper;
-import com.nashtech.rookies.java05.AssetManagement.repository.*;
+import com.nashtech.rookies.java05.AssetManagement.repository.AssetRepository;
+import com.nashtech.rookies.java05.AssetManagement.repository.CategoryRepository;
+import com.nashtech.rookies.java05.AssetManagement.repository.ReturningRepository;
 import com.nashtech.rookies.java05.AssetManagement.utils.EntityCheckUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,28 +28,20 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class AssetServiceImplTest {
-
-    @MockBean
-    AssetRepository repository;
     @MockBean
     CategoryRepository categoryRepository;
-    @MockBean
-    LocationRepository locationRepository;
-    @MockBean
-    PresentIdRepository presentIdRepository;
     EntityCheckUtils entityCheckUtils;
     ModelMapper modelMapper;
     private AssetRepository assetRepository;

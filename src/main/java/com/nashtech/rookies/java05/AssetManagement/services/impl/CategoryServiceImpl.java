@@ -1,12 +1,12 @@
 package com.nashtech.rookies.java05.AssetManagement.services.impl;
 
-import com.nashtech.rookies.java05.AssetManagement.services.CategoryService;
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.CategoryRequestDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.CategoryResponseDto;
 import com.nashtech.rookies.java05.AssetManagement.entities.Category;
 import com.nashtech.rookies.java05.AssetManagement.exceptions.RepeatDataException;
 import com.nashtech.rookies.java05.AssetManagement.mappers.CategoryMapper;
 import com.nashtech.rookies.java05.AssetManagement.repository.CategoryRepository;
+import com.nashtech.rookies.java05.AssetManagement.services.CategoryService;
 import com.nashtech.rookies.java05.AssetManagement.utils.EntityCheckUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,10 +38,10 @@ public class CategoryServiceImpl implements CategoryService {
             }
         }
         entityCheckUtils.categoryCheckInsert(dto);
-        Category category = mapper.mapCategoryRequestDtoToEntityInsert(dto);
+        Category category = mapper.toEntity(dto);
         Category newcategory = categoryRepository.save(category);
 
-        return mapper.mapEntityToResponseInsertDto(newcategory);
+        return mapper.toDto(newcategory);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class CategoryServiceImpl implements CategoryService {
             return new ArrayList<>();
         }
         optional.get().forEach(category -> {
-            result.add(mapper.mapEntityToResponseInsertDto(category));
+            result.add(mapper.toDto(category));
         });
         return result;
     }

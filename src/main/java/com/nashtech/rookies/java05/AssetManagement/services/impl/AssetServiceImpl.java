@@ -1,25 +1,16 @@
 package com.nashtech.rookies.java05.AssetManagement.services.impl;
 
-import com.nashtech.rookies.java05.AssetManagement.services.AssetService;
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssetRequestDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.APIResponse;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssetResponseDto;
-import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssetResponseInsertDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssetViewResponseDto;
-import com.nashtech.rookies.java05.AssetManagement.entities.Asset;
-import com.nashtech.rookies.java05.AssetManagement.entities.Assignment;
-import com.nashtech.rookies.java05.AssetManagement.entities.Category;
-import com.nashtech.rookies.java05.AssetManagement.entities.Returning;
-
+import com.nashtech.rookies.java05.AssetManagement.entities.*;
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssetState;
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssignmentReturnState;
 import com.nashtech.rookies.java05.AssetManagement.exceptions.ResourceNotFoundException;
 import com.nashtech.rookies.java05.AssetManagement.mappers.AssetMapper;
-import com.nashtech.rookies.java05.AssetManagement.repository.AssetRepository;
-import com.nashtech.rookies.java05.AssetManagement.repository.CategoryRepository;
-import com.nashtech.rookies.java05.AssetManagement.repository.ReturningRepository;
-
-
+import com.nashtech.rookies.java05.AssetManagement.repository.*;
+import com.nashtech.rookies.java05.AssetManagement.services.AssetService;
 import com.nashtech.rookies.java05.AssetManagement.utils.EntityCheckUtils;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +33,10 @@ public class AssetServiceImpl implements AssetService {
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
+    private LocationRepository locationRepository;
+    @Autowired
+    private PresentIdRepository presentIdRepository;
+    @Autowired
     private AssetRepository assetRepository;
     @Autowired
     private AssetMapper assetMapper;
@@ -50,24 +45,44 @@ public class AssetServiceImpl implements AssetService {
     @Autowired
     private EntityCheckUtils entityCheckUtils;
 
+
     @Override
-    public AssetResponseInsertDto createAsset(AssetRequestDto dto){
+    public AssetResponseDto createAsset(AssetRequestDto dto){
         entityCheckUtils.assetCheckInsert(dto);
-        Asset asset = assetMapper.mapAssetRequestDtoToEntityInsert(dto);
+
+        Optional<Category> optionalCategory = categoryRepository.findById(dto.getCategoryId());
+        Optional<Location> optionalLocation = locationRepository.findById(dto.getLocationId());
+        Optional<PresentId> optionalPresentId = presentIdRepository.findById("count");
+        PresentId presentId;
+        if (optionalCategory.isEmpty()) {
+            throw new ResourceNotFoundException("Category not exist");
+        }
+        if (optionalLocation.isEmpty()) {
+            throw new ResourceNotFoundException("Location not exist");
+        }
+        if (optionalPresentId.isEmpty()) {
+            presentId = new PresentId("count",1,1);
+        }else{
+            presentId = optionalPresentId.get();
+        }
+//      Create id for Asset
+        String id = createIdCategory(presentId, optionalCategory.get());
+//        Map
+        Asset asset = assetMapper.toEntityCreate(id, dto, optionalCategory.get(), optionalLocation.get());
         Asset newAsset = assetRepository.save(asset);
-        return assetMapper.mapEntityInsertToAssetResponseInsertDto(newAsset);
+        return assetMapper.toDto(newAsset);
     }
 
     @Override
-    public AssetResponseInsertDto updateAsset(AssetRequestDto dto, String id) {
+    public AssetResponseDto updateAsset(AssetRequestDto dto, String id) {
         entityCheckUtils.assetCheckUpdate(dto);
         Optional<Asset> optional = assetRepository.findById(id);
         if(optional.isEmpty()){
             throw new ResourceNotFoundException("this asset not exist");
         }
-        Asset modifiedAsset = assetMapper.mapAssetRequestDtoToEntityUpdate(dto, optional.get());
+        Asset modifiedAsset = assetMapper.toEntityUpdate(dto, optional.get());
         assetRepository.save(modifiedAsset);
-        return assetMapper.mapEntityInsertToAssetResponseInsertDto(modifiedAsset);
+        return assetMapper.toDto(modifiedAsset);
     }
 
     @Override
@@ -154,4 +169,27 @@ public class AssetServiceImpl implements AssetService {
         return false;
     }
 
+    public String createIdCategory(PresentId presentId, Category  category) {
+        Integer count = presentId.getAssetId();
+//        create id
+        String id= "";
+        if(presentId.getAssetId()<10){
+            id = category.getId()+"00000"+presentId.getAssetId();
+        }else if(count < 100){
+            id = category.getId()+"0000"+count;
+        }else if(count < 1000){
+            id = category.getId()+"000"+count;
+        }else if(count < 10000){
+            id = category.getId()+"00"+count;
+        }else if(count < 100000){
+            id = category.getId()+"0"+count;
+        }else if(count < 1000000){
+            id = category.getId()+count;
+        }else{
+            throw new IllegalArgumentException("Asset warehouse is full");
+        }
+        presentId.setAssetId(presentId.getAssetId()+1);
+        presentIdRepository.save(presentId);
+        return id;
+    }
 }

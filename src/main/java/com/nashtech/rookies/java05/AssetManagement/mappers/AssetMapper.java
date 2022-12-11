@@ -2,79 +2,27 @@ package com.nashtech.rookies.java05.AssetManagement.mappers;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssetRequestDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssetResponseDto;
-import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssetResponseInsertDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssetViewResponseDto;
 import com.nashtech.rookies.java05.AssetManagement.entities.Asset;
 import com.nashtech.rookies.java05.AssetManagement.entities.Category;
 import com.nashtech.rookies.java05.AssetManagement.entities.Location;
-import com.nashtech.rookies.java05.AssetManagement.entities.PresentId;
-import com.nashtech.rookies.java05.AssetManagement.exceptions.ResourceNotFoundException;
-import com.nashtech.rookies.java05.AssetManagement.repository.AssetRepository;
-import com.nashtech.rookies.java05.AssetManagement.repository.CategoryRepository;
-import com.nashtech.rookies.java05.AssetManagement.repository.LocationRepository;
-import com.nashtech.rookies.java05.AssetManagement.repository.PresentIdRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
 public class AssetMapper {
     @Autowired
-    private CategoryRepository categoryRepository;
-    @Autowired
-    private LocationRepository locationRepository;
-    @Autowired
-    private PresentIdRepository presentIdRepository;
-    @Autowired
     private ReturningMapper returningMapper;
-    @Autowired
-    private AssetRepository assetRepository;
 
 
-    public Asset mapAssetRequestDtoToEntityInsert(AssetRequestDto dto) {
+    public Asset toEntityCreate(String id, AssetRequestDto dto, Category  category, Location location) {
         Date dateNow = new Date();
         Timestamp now = new Timestamp(dateNow.getTime());
-        PresentId presentId;
-        Optional<Category> optionalCategory = categoryRepository.findById(dto.getCategoryId());
-        Optional<Location> optionalLocation = locationRepository.findById(dto.getLocationId());
-        Optional<PresentId> optionalPresentId = presentIdRepository.findById("count");
-        if (optionalCategory.isEmpty()) {
-            throw new ResourceNotFoundException("Category not exist");
-        }
-        if (optionalLocation.isEmpty()) {
-            throw new ResourceNotFoundException("Location not exist");
-        }
-        if (optionalPresentId.isEmpty()) {
-            presentId = new PresentId("count",1,1);
-        }else{
-            presentId = optionalPresentId.get();
-        }
-
-        Integer count = presentId.getAssetId();
-//        create id
-        String id= "";
-        if(presentId.getAssetId()<10){
-            id = optionalCategory.get().getId()+"00000"+presentId.getAssetId();
-        }else if(count < 100){
-            id = optionalCategory.get().getId()+"0000"+count;
-        }else if(count < 1000){
-            id = optionalCategory.get().getId()+"000"+count;
-        }else if(count < 10000){
-            id = optionalCategory.get().getId()+"00"+count;
-        }else if(count < 100000){
-            id = optionalCategory.get().getId()+"0"+count;
-        }else if(count < 1000000){
-            id = optionalCategory.get().getId()+count;
-        }else{
-            throw new IllegalArgumentException("Asset warehouse is full");
-        }
-        presentId.setAssetId(presentId.getAssetId()+1);
-        presentIdRepository.save(presentId);
         return Asset.builder()
                 .id(id)
                 .name(dto.getName())
@@ -82,29 +30,31 @@ public class AssetMapper {
                 .createdWhen(now)
                 .updatedWhen(now)
                 .installedDate(dto.getInstalledDate())
-                .category(optionalCategory.get())
+                .category(category)
                 .state(dto.getState())
-                .location(optionalLocation.get())
+                .location(location)
                 .build();
     }
 
-    public AssetResponseInsertDto mapEntityInsertToAssetResponseInsertDto(Asset asset) {
-
-        AssetResponseInsertDto result = AssetResponseInsertDto.builder()
+    public AssetResponseDto toDto(Asset asset) {
+        AssetResponseDto assetResponseDto = AssetResponseDto.builder()
                 .id(asset.getId())
                 .name(asset.getName())
                 .specification(asset.getSpecification())
-                .state(asset.getState())
+                .state(asset.getState().getName())
                 .createdWhen(asset.getCreatedWhen())
                 .updatedWhen(asset.getUpdatedWhen())
                 .installedDate(asset.getInstalledDate())
+                .categoryName(asset.getCategory().getName())
+                .location(asset.getLocation().getCityName())
                 .build();
-        result.setCategoryDto(asset.getCategory());
-        result.setLocationDto(asset.getLocation());
-        return result;
+        if (asset.getReturningList() != null) {
+            assetResponseDto.setReturningDtoList(returningMapper.toDtoList(asset.getReturningList()));
+        }
+        return assetResponseDto;
     }
 
-    public Asset mapAssetRequestDtoToEntityUpdate(AssetRequestDto dto, Asset oldAsset) {
+    public Asset toEntityUpdate(AssetRequestDto dto, Asset oldAsset) {
         Date dateNow = new Date();
         Timestamp now = new Timestamp(dateNow.getTime());
         oldAsset.setState(dto.getState());
