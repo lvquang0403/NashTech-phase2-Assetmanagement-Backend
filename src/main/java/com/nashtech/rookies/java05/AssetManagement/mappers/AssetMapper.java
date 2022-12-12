@@ -66,23 +66,7 @@ public class AssetMapper {
         return oldAsset;
     }
 
-    public AssetResponseDto mapAssetEntityToAssetResponseDto(Asset asset){
-        AssetResponseDto assetResponseDto = AssetResponseDto.builder()
-                .id(asset.getId())
-                .name(asset.getName())
-                .categoryName(asset.getCategory().getName())
-                .location(asset.getLocation().getCityName())
-                .specification(asset.getSpecification())
-                .createdWhen(asset.getCreatedWhen())
-                .updatedWhen(asset.getUpdatedWhen())
-                .installedDate(asset.getInstalledDate())
-                .state(asset.getState().getName())
-                .returningDtoList(returningMapper.toDtoList(asset.getReturningList()))
-                .build();
-        return assetResponseDto;
-    }
-
-    public List<AssetViewResponseDto> mapAssetListToAssetViewResponseDto(List<Asset> assetList) {
+    public List<AssetViewResponseDto> toDtoViewList(List<Asset> assetList) {
         List<AssetViewResponseDto> assetViewResponseDtoList = assetList.stream().map(asset -> {
             AssetViewResponseDto assetViewResponseDto = AssetViewResponseDto.builder()
                     .id(asset.getId())
@@ -96,7 +80,7 @@ public class AssetMapper {
         return assetViewResponseDtoList;
     }
 
-    public AssetViewResponseDto mapAssetToAssetViewResponseDto(Asset asset) {
+    public AssetViewResponseDto toDtoView(Asset asset) {
         AssetViewResponseDto assetViewResponseDtoList = AssetViewResponseDto
                 .builder()
                 .category(asset.getCategory().getName())

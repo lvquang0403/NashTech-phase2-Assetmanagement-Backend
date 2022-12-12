@@ -70,7 +70,7 @@ class UserServiceImplTest {
         Pageable pageable = PageRequest.of(page, pageSize, Sort.Direction.DESC, "updatedWhen");
         when(roleRepository.findByNameIsIn(types)).thenReturn(roleList);
         when(userRepository.findUsersWithFilter(roleList, keyword.toLowerCase(), locationId, pageable)).thenReturn(result);
-        when(userMapper.mapUserEntityListToUserViewResponseDtoList(result.toList())).thenReturn(userViewResponseDtoList);
+        when(userMapper.toDtoViewList(result.toList())).thenReturn(userViewResponseDtoList);
         APIResponse<List<UserViewResponseDto>> returnList = userService.getUsersByPredicates
                 (types, keyword,locationId,page,orderBy);
 
@@ -94,7 +94,7 @@ class UserServiceImplTest {
         Pageable pageable = PageRequest.of(page, pageSize, Sort.Direction.DESC, "updatedWhen");
         when(roleRepository.findAll()).thenReturn(roleList);
         when(userRepository.findUsersWithFilter(roleList, keyword.toLowerCase(), locationId, pageable)).thenReturn(result);
-        when(userMapper.mapUserEntityListToUserViewResponseDtoList(result.toList())).thenReturn(userViewResponseDtoList);
+        when(userMapper.toDtoViewList(result.toList())).thenReturn(userViewResponseDtoList);
         APIResponse<List<UserViewResponseDto>> returnList = userService.getUsersByPredicates
                 (null, keyword,locationId,page,orderBy);
 

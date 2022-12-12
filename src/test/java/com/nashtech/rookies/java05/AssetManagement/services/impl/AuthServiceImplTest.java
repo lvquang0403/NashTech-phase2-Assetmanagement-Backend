@@ -60,7 +60,7 @@ class AuthServiceImplTest {
         when(userRepository.findUsersByUsername(userLoginRequestDto.getUsername()))
                 .thenReturn(Optional.of(user));
         when(passwordEncoder.matches(userLoginRequestDto.getPassword(), user.getPassword())).thenReturn(true);
-        when(userMapper.mapUserEntityToUserLoginResponse(user)).thenReturn(userLoginResponseDto);
+        when(userMapper.toLoginDto(user)).thenReturn(userLoginResponseDto);
         when(jwtUtil.generateToken(user)).thenReturn(accessToken);
 
         SuccessResponse expected = new SuccessResponse<>(userLoginResponseDto);

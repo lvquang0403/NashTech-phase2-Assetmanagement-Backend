@@ -89,7 +89,7 @@ public class UserServiceImpl implements UserService {
         Page<User> result;
 
         result = userRepository.findUsersWithFilter(roleList, keyword.toLowerCase(), locationId, pageable);
-        return new APIResponse<>(result.getTotalPages(), userMapper.mapUserEntityListToUserViewResponseDtoList(result.toList()));
+        return new APIResponse<>(result.getTotalPages(), userMapper.toDtoViewList(result.toList()));
     }
 
     @Override

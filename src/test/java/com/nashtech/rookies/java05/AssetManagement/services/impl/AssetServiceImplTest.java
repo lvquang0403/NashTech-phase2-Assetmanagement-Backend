@@ -208,7 +208,6 @@ public class AssetServiceImplTest {
         Assertions.assertEquals("Cannot contain special characters", exception.getMessage());
     }
 
-    @ExtendWith(MockitoExtension.class)
     @Test
     void getAssetsByPredicates_WhenCategoryNamesParamsIsNotNull() {
         Page<Asset> result = mock(Page.class);
@@ -224,7 +223,7 @@ public class AssetServiceImplTest {
         when(assetRepository.findByKeywordWithFilter
                 (categories, states, keyword.toLowerCase(), keyword.toLowerCase(), locationId, pageable))
                 .thenReturn(result);
-        when(assetMapper.mapAssetListToAssetViewResponseDto(result.toList())).thenReturn(assetViewResponseDtos);
+        when(assetMapper.toDtoViewList(result.toList())).thenReturn(assetViewResponseDtos);
         APIResponse<List<AssetViewResponseDto>> expected = new APIResponse<>(page, assetViewResponseDtos);
 
         APIResponse<List<AssetViewResponseDto>> listResult = assetServiceImpl.getAssetsByPredicates(statesString, categoryNames, keyword, locationId, page, orderBy);
@@ -247,7 +246,7 @@ public class AssetServiceImplTest {
         when(assetRepository.findByKeywordWithFilter
                 (categories, states, keyword.toLowerCase(), keyword.toLowerCase(), locationId, pageable))
                 .thenReturn(result);
-        when(assetMapper.mapAssetListToAssetViewResponseDto(result.toList())).thenReturn(assetViewResponseDtos);
+        when(assetMapper.toDtoViewList(result.toList())).thenReturn(assetViewResponseDtos);
         APIResponse<List<AssetViewResponseDto>> expected = new APIResponse<>(page, assetViewResponseDtos);
 
         APIResponse<List<AssetViewResponseDto>> listResult = assetServiceImpl.getAssetsByPredicates(statesString, null, keyword, locationId, page, orderBy);
@@ -262,7 +261,7 @@ public class AssetServiceImplTest {
         when(returningRepository.findByAssetIdAndState(asset.getId(), AssignmentReturnState.WAITING_FOR_RETURNING))
                 .thenReturn(returningHistoryList);
 
-        when(assetMapper.mapAssetEntityToAssetResponseDto(Optional.of(asset).get())).thenReturn(assetResponseDto);
+        when(assetMapper.toDto(Optional.of(asset).get())).thenReturn(assetResponseDto);
 
         AssetResponseDto result = assetServiceImpl.getAssetById(asset.getId());
         assertThat(assetResponseDto, is(result));

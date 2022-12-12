@@ -37,7 +37,7 @@ public class AuthServiceImpl implements AuthService {
             User user = userFound.get();
             if (!user.isDisabled()) {
                     if (passwordEncoder.matches(userLoginRequestDto.getPassword(), user.getPassword())) {
-                        UserLoginResponseDto userLoginResponseDto = userMapper.mapUserEntityToUserLoginResponse(user);
+                        UserLoginResponseDto userLoginResponseDto = userMapper.toLoginDto(user);
                         userLoginResponseDto.setAccessToken(jwtUtil.generateToken(user));
                         return new SuccessResponse<>(userLoginResponseDto);
                     }
