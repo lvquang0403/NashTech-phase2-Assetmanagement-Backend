@@ -208,7 +208,6 @@ public class AssetServiceImplTest {
         Assertions.assertEquals("Cannot contain special characters", exception.getMessage());
     }
 
-    @ExtendWith(MockitoExtension.class)
     @Test
     void getAssetsByPredicates_WhenCategoryNamesParamsIsNotNull() {
         Page<Asset> result = mock(Page.class);

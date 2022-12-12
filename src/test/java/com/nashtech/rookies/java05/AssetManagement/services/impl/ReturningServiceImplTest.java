@@ -1,9 +1,12 @@
 package com.nashtech.rookies.java05.AssetManagement.services.impl;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.RequestReturnDto;
+import com.nashtech.rookies.java05.AssetManagement.dtos.response.*;
+import com.nashtech.rookies.java05.AssetManagement.entities.Asset;
 import com.nashtech.rookies.java05.AssetManagement.entities.Assignment;
 import com.nashtech.rookies.java05.AssetManagement.entities.Returning;
 import com.nashtech.rookies.java05.AssetManagement.entities.User;
+import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssignmentReturnState;
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssignmentState;
 import com.nashtech.rookies.java05.AssetManagement.exceptions.RepeatDataException;
 import com.nashtech.rookies.java05.AssetManagement.mappers.AssetMapper;
@@ -13,15 +16,29 @@ import com.nashtech.rookies.java05.AssetManagement.repository.AssignmentReposito
 import com.nashtech.rookies.java05.AssetManagement.repository.ReturningRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.UserRepository;
 import com.nashtech.rookies.java05.AssetManagement.utils.EntityCheckUtils;
+import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -37,6 +54,10 @@ public class ReturningServiceImplTest {
     private AssetMapper assetMapper;
     @MockBean
     private ReturningRepository returningRepository;
+    @Mock
+    private List<AssignmentReturnState> states;
+    @Mock
+    private List<ReturningDto> returningDtoList;
 
     private ReturningMapper returningMapper ;
     @Autowired
@@ -49,6 +70,10 @@ public class ReturningServiceImplTest {
 
     @BeforeEach
     void beforeEach() {
+        returningMapper = mock(ReturningMapper.class);
+        returningRepository = mock(ReturningRepository.class);
+        assignmentRepository = mock(AssignmentRepository.class);
+        userRepository = mock(UserRepository.class);
         dataRequest = new RequestReturnDto();
         dataRequest.setRequestById("SD00006");
         dataRequest.setAssignmentId(48);
@@ -104,5 +129,31 @@ public class ReturningServiceImplTest {
     }
 
 
+    @Test
+    void getReturningRequests_ShouldReturnValue() {
+        Page<Returning> result = mock(Page.class);
+        String orderBy = "asset.id_DESC";
+        String keyword = "";
+        int locationId = 0;
+        int page = 0;
+        int pageSize = 15;
+        states = new ArrayList<>();
+        AssignmentReturnState[] returnStates = AssignmentReturnState.values();
+        for (AssignmentReturnState returnState : returnStates) {
+            states.add(returnState);
+        }
+        List<String> statesString = new ArrayList<>();
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.Direction.DESC, "asset.id");
+        when(returningRepository.findByPredicates(states, "2022-11-30", keyword,locationId, pageable))
+                .thenReturn(result);
+        when(returningMapper.toDtoList(result.toList()))
+                .thenReturn(returningDtoList);
+        APIResponse<List<ReturningDto>> expected = new APIResponse<>(page, returningDtoList);
+
+        APIResponse<List<ReturningDto>> listResult = returningServiceImpl.getReturningByPredicates
+                (statesString, "2022-11-30", keyword, 0, orderBy, locationId);
+
+        MatcherAssert.assertThat(expected, is(listResult));
+    }
 
 }
