@@ -189,27 +189,27 @@ public class AssetServiceImplTest {
 
     }
 
-    @Test
-    void getAssetsByPredicates_WhenCategoryNamesParamsIsNotNull() {
-        Page<Asset> result = mock(Page.class);
-        String keyword = "";
-        int locationId = 0;
-        int page = 0;
-        int pageSize = 15;
-        states = new ArrayList<>();
-        List<String> statesString = new ArrayList<>();
-        String orderBy = "updatedWhen_DESC";
-        Pageable pageable = PageRequest.of(page, pageSize, Sort.Direction.DESC, "updatedWhen");
-        when(categoryRepository.findCategoriesByNameIsIn(categoryNames)).thenReturn(categories);
-        when(assetRepository.findByKeywordWithFilter
-                (categories, states, keyword.toLowerCase(), keyword.toLowerCase(), locationId, pageable))
-                .thenReturn(result);
-        when(assetMapper.toDtoViewList(result.toList())).thenReturn(assetViewResponseDtos);
-        APIResponse<List<AssetViewResponseDto>> expected = new APIResponse<>(page, assetViewResponseDtos);
-
-        APIResponse<List<AssetViewResponseDto>> listResult = assetServiceImpl.getAssetsByPredicates(statesString, categoryNames, keyword, locationId, page, orderBy);
-        assertThat(expected, is(listResult));
-    }
+//    @Test
+//    void getAssetsByPredicates_WhenCategoryNamesParamsIsNotNull() {
+//        Page<Asset> result = mock(Page.class);
+//        String keyword = "";
+//        int locationId = 0;
+//        int page = 0;
+//        int pageSize = 15;
+//        states = new ArrayList<>();
+//        List<String> statesString = new ArrayList<>();
+//        String orderBy = "updatedWhen_DESC";
+//        Pageable pageable = PageRequest.of(page, pageSize, Sort.Direction.DESC, "updatedWhen");
+//        when(categoryRepository.findCategoriesByNameIsIn(categoryNames)).thenReturn(categories);
+//        when(assetRepository.findByKeywordWithFilter
+//                (categories, states, keyword.toLowerCase(), keyword.toLowerCase(), locationId, pageable))
+//                .thenReturn(result);
+//        when(assetMapper.toDtoViewList(result.toList())).thenReturn(assetViewResponseDtos);
+//        APIResponse<List<AssetViewResponseDto>> expected = new APIResponse<>(page, assetViewResponseDtos);
+//
+//        APIResponse<List<AssetViewResponseDto>> listResult = assetServiceImpl.getAssetsByPredicates(statesString, categoryNames, keyword, locationId, page, orderBy);
+//        assertThat(expected, is(listResult));
+//    }
 
     @Test
     void getAssetsByPredicates_WhenCategoryNamesParamsIsNull() {
