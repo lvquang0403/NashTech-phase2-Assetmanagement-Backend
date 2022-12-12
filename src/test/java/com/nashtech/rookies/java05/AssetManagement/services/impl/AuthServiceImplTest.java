@@ -55,7 +55,7 @@ class AuthServiceImplTest {
         String accessToken = "";
         UserLoginResponseDto userLoginResponseDto = UserLoginResponseDto
                 .builder()
-                .State(UserState.ACTIVE.getName())
+                .status(UserState.ACTIVE.getName())
                 .build();
         when(userRepository.findUsersByUsername(userLoginRequestDto.getUsername()))
                 .thenReturn(Optional.of(user));
