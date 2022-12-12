@@ -26,6 +26,9 @@ public class Returning {
     @Enumerated(EnumType.STRING)
     private AssignmentReturnState state;
 
+    @Column(name = "updated_date")
+    private Timestamp updatedDate;
+
     @ManyToOne
     @JoinColumn(name = "assignedTo_id",referencedColumnName = "id")
     private User assignedTo;

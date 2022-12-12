@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,6 +61,8 @@ public class ReturningMapper {
     }
 
     public Returning toEntity(Assignment assignment ,User requestedBy){
+        java.util.Date dateNow = new java.util.Date();
+        Timestamp now = new Timestamp(dateNow.getTime());
         return Returning.builder()
                 .assignment(assignment)
                 .asset(assignment.getAsset())
@@ -67,6 +70,7 @@ public class ReturningMapper {
                 .assignedTo(assignment.getAssignedTo())
                 .requestedBy(requestedBy)
                 .state(AssignmentReturnState.WAITING_FOR_RETURNING)
+                .updatedDate(now)
                 .build();
     }
 }

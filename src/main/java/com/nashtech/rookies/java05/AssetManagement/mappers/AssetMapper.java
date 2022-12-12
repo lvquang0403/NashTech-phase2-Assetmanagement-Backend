@@ -25,7 +25,7 @@ public class AssetMapper {
         Timestamp now = new Timestamp(dateNow.getTime());
         return Asset.builder()
                 .id(id)
-                .name(dto.getName())
+                .name(dto.getName().trim())
                 .specification(dto.getSpecification())
                 .createdWhen(now)
                 .updatedWhen(now)
@@ -58,7 +58,7 @@ public class AssetMapper {
         Date dateNow = new Date();
         Timestamp now = new Timestamp(dateNow.getTime());
         oldAsset.setState(dto.getState());
-        oldAsset.setName(dto.getName());
+        oldAsset.setName(dto.getName().trim());
         oldAsset.setSpecification(dto.getSpecification());
         oldAsset.setInstalledDate(dto.getInstalledDate());
         oldAsset.setUpdatedWhen(now);
