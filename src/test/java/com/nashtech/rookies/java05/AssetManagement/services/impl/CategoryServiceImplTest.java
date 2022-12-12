@@ -4,7 +4,9 @@ import com.nashtech.rookies.java05.AssetManagement.dtos.request.CategoryRequestD
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.CategoryResponseDto;
 import com.nashtech.rookies.java05.AssetManagement.entities.Category;
 import com.nashtech.rookies.java05.AssetManagement.exceptions.RepeatDataException;
+import com.nashtech.rookies.java05.AssetManagement.mappers.CategoryMapper;
 import com.nashtech.rookies.java05.AssetManagement.repository.CategoryRepository;
+import com.nashtech.rookies.java05.AssetManagement.utils.EntityCheckUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,13 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-
-@SpringBootTest
 public class CategoryServiceImplTest {
-
-    @Autowired
     CategoryServiceImpl service;
-    @MockBean
     CategoryRepository repository;
     CategoryRequestDto categoryRequestDto;
     Category    initialCategory;
@@ -35,8 +32,17 @@ public class CategoryServiceImplTest {
     List<Category> categoryList;
     ModelMapper modelMapper;
 
+    CategoryMapper categoryMapper;
+
+    EntityCheckUtils entityCheckUtils;
+    CategoryResponseDto expectedResponseDto;
     @BeforeEach
     void beforeEach(){
+        repository = mock(CategoryRepository.class);
+        categoryMapper = mock(CategoryMapper.class);
+        modelMapper = mock(ModelMapper.class);
+        entityCheckUtils = new EntityCheckUtils();
+
         categoryRequestDto = new CategoryRequestDto();
         initialCategory = new Category();
         expectedCategory = new Category();
@@ -44,7 +50,14 @@ public class CategoryServiceImplTest {
         initialCategory.setName("computer");
         categoryList = new ArrayList<>();
         categoryList.add(initialCategory);
-        modelMapper = mock(ModelMapper.class);
+
+        expectedResponseDto = CategoryResponseDto.builder().build();
+
+        service= CategoryServiceImpl.builder()
+                .categoryRepository(repository)
+                .mapper(categoryMapper)
+                .entityCheckUtils(entityCheckUtils)
+                .build();
     }
 //    test insert
 
@@ -54,6 +67,7 @@ public class CategoryServiceImplTest {
         categoryRequestDto.setName(null);
 
         Mockito.when(repository.findAll()).thenReturn(categoryList);
+
         NullPointerException exception = Assertions.assertThrows(NullPointerException.class,
                 ()->service.createCategory(categoryRequestDto));
 
@@ -66,6 +80,7 @@ public class CategoryServiceImplTest {
         categoryRequestDto.setName("a");
 
         Mockito.when(repository.findAll()).thenReturn(categoryList);
+
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
                 ()->service.createCategory(categoryRequestDto));
 
@@ -124,9 +139,12 @@ public class CategoryServiceImplTest {
         categoryRequestDto.setName("mahua");
         expectedCategory.setId("qc");
         expectedCategory.setName("mahua");
+        expectedResponseDto.setId("qc");
 
         Mockito.when(repository.findAll()).thenReturn(categoryList);
+        Mockito.when(categoryMapper.toEntity(any(CategoryRequestDto.class))).thenReturn(expectedCategory);
         Mockito.when(repository.save(any(Category.class))).thenReturn(expectedCategory);
+        Mockito.when(categoryMapper.toDto(expectedCategory)).thenReturn(expectedResponseDto);
 
         CategoryResponseDto actual = service.createCategory(categoryRequestDto);
         Assertions.assertEquals(categoryRequestDto.getId(), actual.getId());

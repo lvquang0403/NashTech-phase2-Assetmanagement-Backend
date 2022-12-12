@@ -41,18 +41,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
 public class ReturningServiceImplTest {
 
-    @MockBean
+
     private AssignmentRepository assignmentRepository;
-    @MockBean
+
     private UserRepository userRepository;
-    @MockBean
-    private AssignmentMapper assignmentMapper;
-    @MockBean
-    private AssetMapper assetMapper;
-    @MockBean
+
     private ReturningRepository returningRepository;
     @Mock
     private List<AssignmentReturnState> states;
@@ -60,7 +55,7 @@ public class ReturningServiceImplTest {
     private List<ReturningDto> returningDtoList;
 
     private ReturningMapper returningMapper ;
-    @Autowired
+
     private EntityCheckUtils entityCheckUtils;
     private ReturningServiceImpl returningServiceImpl ;
 
@@ -74,6 +69,7 @@ public class ReturningServiceImplTest {
         returningRepository = mock(ReturningRepository.class);
         assignmentRepository = mock(AssignmentRepository.class);
         userRepository = mock(UserRepository.class);
+        entityCheckUtils = mock(EntityCheckUtils.class);
         dataRequest = new RequestReturnDto();
         dataRequest.setRequestById("SD00006");
         dataRequest.setAssignmentId(48);

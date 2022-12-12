@@ -8,6 +8,8 @@ import com.nashtech.rookies.java05.AssetManagement.mappers.CategoryMapper;
 import com.nashtech.rookies.java05.AssetManagement.repository.CategoryRepository;
 import com.nashtech.rookies.java05.AssetManagement.services.CategoryService;
 import com.nashtech.rookies.java05.AssetManagement.utils.EntityCheckUtils;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Builder
 public class CategoryServiceImpl implements CategoryService {
 
     @Autowired
@@ -26,6 +29,7 @@ public class CategoryServiceImpl implements CategoryService {
     private EntityCheckUtils entityCheckUtils;
 
     public CategoryResponseDto createCategory(CategoryRequestDto dto) {
+        entityCheckUtils.categoryCheckInsert(dto);
         Optional<List<Category>> optional = Optional.of(categoryRepository.findAll());
         if (!optional.isEmpty()) {
             for (Category category : optional.get()) {
@@ -37,7 +41,6 @@ public class CategoryServiceImpl implements CategoryService {
                 }
             }
         }
-        entityCheckUtils.categoryCheckInsert(dto);
         Category category = mapper.toEntity(dto);
         Category newcategory = categoryRepository.save(category);
 
