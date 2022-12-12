@@ -9,7 +9,6 @@ import com.nashtech.rookies.java05.AssetManagement.repository.CategoryRepository
 import com.nashtech.rookies.java05.AssetManagement.services.CategoryService;
 import com.nashtech.rookies.java05.AssetManagement.utils.EntityCheckUtils;
 import lombok.Builder;
-import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,17 +29,15 @@ public class CategoryServiceImpl implements CategoryService {
 
     public CategoryResponseDto createCategory(CategoryRequestDto dto) {
         entityCheckUtils.categoryCheckInsert(dto);
-        Optional<List<Category>> optional = Optional.of(categoryRepository.findAll());
-        if (!optional.isEmpty()) {
-            for (Category category : optional.get()) {
-                if(category.getId().equals(dto.getId())){
-                    throw new RepeatDataException("prefix already exists");
-                }
-                if(category.getName().equals(dto.getName())){
-                    throw new RepeatDataException("category already exists");
-                }
-            }
+        Category categoriesByName = categoryRepository.findCategoriesByName(dto.getName());
+        if (categoriesByName != null) {
+            throw new RepeatDataException("category already exists");
         }
+        Category categoriesById = categoryRepository.findCategoriesById(dto.getId());
+        if (categoriesById != null) {
+            throw new RepeatDataException("prefix already exists");
+        }
+
         Category category = mapper.toEntity(dto);
         Category newcategory = categoryRepository.save(category);
 

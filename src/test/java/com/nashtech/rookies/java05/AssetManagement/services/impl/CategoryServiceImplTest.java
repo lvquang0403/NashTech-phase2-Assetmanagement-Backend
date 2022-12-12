@@ -12,17 +12,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-
-import static org.mockito.Mockito.*;
-
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
 public class CategoryServiceImplTest {
     CategoryServiceImpl service;
     CategoryRepository repository;
@@ -41,7 +37,7 @@ public class CategoryServiceImplTest {
         repository = mock(CategoryRepository.class);
         categoryMapper = mock(CategoryMapper.class);
         modelMapper = mock(ModelMapper.class);
-        entityCheckUtils = new EntityCheckUtils();
+        entityCheckUtils = mock(EntityCheckUtils.class);
 
         categoryRequestDto = new CategoryRequestDto();
         initialCategory = new Category();
@@ -59,136 +55,61 @@ public class CategoryServiceImplTest {
                 .entityCheckUtils(entityCheckUtils)
                 .build();
     }
-//    test insert
 
-    @Test
-    void create_ShouldThrowNullPointerException_WhenParamsIsNull(){
-        categoryRequestDto.setId("a");
-        categoryRequestDto.setName(null);
 
-        Mockito.when(repository.findAll()).thenReturn(categoryList);
-
-        NullPointerException exception = Assertions.assertThrows(NullPointerException.class,
-                ()->service.createCategory(categoryRequestDto));
-
-        Assertions.assertEquals("null name",exception.getMessage());
-    }
-
-    @Test
-    void create_ShouldThrowIllegalArgumentException_WhenParamsIsEmptyString(){
-        categoryRequestDto.setId("");
-        categoryRequestDto.setName("a");
-
-        Mockito.when(repository.findAll()).thenReturn(categoryList);
-
-        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
-                ()->service.createCategory(categoryRequestDto));
-
-        Assertions.assertEquals("empty prefix",exception.getMessage());
-    }
-
-    @Test
-    void create_ShouldThrowIllegalArgumentException_WhenNameTooLong(){
-        categoryRequestDto.setId("qw");
-        categoryRequestDto.setName("aaaaaaaaaaaaaaaaaaaaTaaaaaaaaaaaaaaaaaaaaTaaaaaaaaaaaaaaaaaaaa");
-
-        Mockito.when(repository.findAll()).thenReturn(categoryList);
-        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
-                ()->service.createCategory(categoryRequestDto));
-
-        Assertions.assertEquals("name is too long, name up to 50 characters long",exception.getMessage());
-    }
-
-    @Test
-    void create_ShouldThrowIllegalArgumentException_WhenPrefixTooLong(){
-        categoryRequestDto.setId("qws");
-        categoryRequestDto.setName("computer1111");
-
-        Mockito.when(repository.findAll()).thenReturn(categoryList);
-        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
-                ()->service.createCategory(categoryRequestDto));
-
-        Assertions.assertEquals("prefix only 2 characters",exception.getMessage());
-    }
 
     @Test
     void create_ShouldThrowRepeatDataException_WhenCategoryAlreadyExists(){
+        doNothing().when(entityCheckUtils).categoryCheckInsert(categoryRequestDto);
         categoryRequestDto.setId("Qs");
         categoryRequestDto.setName("computer");
-        Mockito.when(repository.findAll()).thenReturn(categoryList);
+        initialCategory.setName("posusiu");
+        initialCategory.setId("ps");
+        Mockito.when(repository.findCategoriesByName("computer")).thenReturn(null);
+        Mockito.when(repository.findCategoriesById("Qs")).thenReturn(initialCategory);
+
         RepeatDataException exception = Assertions.assertThrows(RepeatDataException.class,
                 ()->service.createCategory(categoryRequestDto));
 
         Assertions.assertEquals("category already exists",exception.getMessage());
     }
-
     @Test
     void create_ShouldThrowRepeatDataException_WhenPrefixAlreadyExists(){
-        categoryRequestDto.setId("ww");
-        categoryRequestDto.setName("mahua");
-        Mockito.when(repository.findAll()).thenReturn(categoryList);
+        doNothing().when(entityCheckUtils).categoryCheckInsert(categoryRequestDto);
+        categoryRequestDto.setId("Qs");
+        categoryRequestDto.setName("computer");
+        initialCategory.setName("posusiu");
+        initialCategory.setId("ps");
+        Mockito.when(repository.findCategoriesByName("computer")).thenReturn(initialCategory);
+        Mockito.when(repository.findCategoriesById("Qs")).thenReturn(null);
+
         RepeatDataException exception = Assertions.assertThrows(RepeatDataException.class,
                 ()->service.createCategory(categoryRequestDto));
 
         Assertions.assertEquals("prefix already exists",exception.getMessage());
     }
 
+
+
     @Test
     void create_ShouldCategoryResponseInsertDto_WhenRequestValid(){
-        categoryRequestDto.setId("qc");
-        categoryRequestDto.setName("mahua");
-        expectedCategory.setId("qc");
-        expectedCategory.setName("mahua");
-        expectedResponseDto.setId("qc");
+        doNothing().when(entityCheckUtils).categoryCheckInsert(categoryRequestDto);
+        categoryRequestDto.setId("Qs");
+        categoryRequestDto.setName("computer");
+        initialCategory.setName("posusiu");
+        initialCategory.setId("ps");
 
-        Mockito.when(repository.findAll()).thenReturn(categoryList);
+        expectedCategory.setId("Qs");
+        expectedCategory.setName("computer");
+        expectedResponseDto.setId("Qs");
+
+        Mockito.when(repository.findCategoriesByName("computer")).thenReturn(initialCategory);
+        Mockito.when(repository.findCategoriesById("Qs")).thenReturn(initialCategory);
         Mockito.when(categoryMapper.toEntity(any(CategoryRequestDto.class))).thenReturn(expectedCategory);
         Mockito.when(repository.save(any(Category.class))).thenReturn(expectedCategory);
         Mockito.when(categoryMapper.toDto(expectedCategory)).thenReturn(expectedResponseDto);
 
         CategoryResponseDto actual = service.createCategory(categoryRequestDto);
         Assertions.assertEquals(categoryRequestDto.getId(), actual.getId());
-    }
-
-    @Test
-    void create_ShouldThrowIllegalArgumentException_WhenNameHasSpecialCharacters(){
-        categoryRequestDto.setId("Sw");
-        categoryRequestDto.setName("mahua~!@");
-        Mockito.when(repository.findAll()).thenReturn(categoryList);
-        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
-                ()->service.createCategory(categoryRequestDto));
-
-        Assertions.assertEquals("Name Cannot contain special characters",exception.getMessage());
-    }
-    @Test
-    void create_ShouldThrowIllegalArgumentException_WhenIdHasSpecialCharacters(){
-        categoryRequestDto.setId("S@");
-        categoryRequestDto.setName("ma - hua");
-        Mockito.when(repository.findAll()).thenReturn(categoryList);
-        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
-                ()->service.createCategory(categoryRequestDto));
-
-        Assertions.assertEquals("ID Cannot contain special characters",exception.getMessage());
-    }
-    @Test
-    void create_ShouldThrowIllegalArgumentException_WhenNameVietnameseWithAccents(){
-        categoryRequestDto.setId("SH");
-        categoryRequestDto.setName("XE số");
-        Mockito.when(repository.findAll()).thenReturn(categoryList);
-        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
-                ()->service.createCategory(categoryRequestDto));
-
-        Assertions.assertEquals("Name Do not use Vietnamese with accents",exception.getMessage());
-    }
-
-    @Test
-    void create_ShouldThrowIllegalArgumentException_WhenIdVietnameseWithAccents(){
-        categoryRequestDto.setId("sỐ");
-        categoryRequestDto.setName("XE sO");
-        Mockito.when(repository.findAll()).thenReturn(categoryList);
-        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
-                ()->service.createCategory(categoryRequestDto));
-
-        Assertions.assertEquals("ID Do not use Vietnamese with accents",exception.getMessage());
     }
 }

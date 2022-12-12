@@ -4,25 +4,18 @@ import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssetRequestDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.APIResponse;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssetResponseDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.response.AssetViewResponseDto;
-import com.nashtech.rookies.java05.AssetManagement.entities.Asset;
-import com.nashtech.rookies.java05.AssetManagement.entities.Category;
-import com.nashtech.rookies.java05.AssetManagement.entities.Returning;
+import com.nashtech.rookies.java05.AssetManagement.entities.*;
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssetState;
 import com.nashtech.rookies.java05.AssetManagement.entities.enums.AssignmentReturnState;
+import com.nashtech.rookies.java05.AssetManagement.exceptions.ResourceNotFoundException;
 import com.nashtech.rookies.java05.AssetManagement.mappers.AssetMapper;
-import com.nashtech.rookies.java05.AssetManagement.repository.AssetRepository;
-import com.nashtech.rookies.java05.AssetManagement.repository.CategoryRepository;
-import com.nashtech.rookies.java05.AssetManagement.repository.ReturningRepository;
+import com.nashtech.rookies.java05.AssetManagement.repository.*;
 import com.nashtech.rookies.java05.AssetManagement.utils.EntityCheckUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -35,13 +28,15 @@ import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
-@SpringBootTest
+
 public class AssetServiceImplTest {
-    @MockBean
+
     CategoryRepository categoryRepository;
+    LocationRepository locationRepository;
+    PresentIdRepository presentIdRepository;
     EntityCheckUtils entityCheckUtils;
     ModelMapper modelMapper;
     private AssetRepository assetRepository;
@@ -63,6 +58,10 @@ public class AssetServiceImplTest {
 
     AssetRequestDto assetRequestDto;
     Asset initialAsset;
+    Category initialCategory;
+    PresentId initialPresentId;
+    Location initialLocation;
+    AssetResponseDto expectedAssetResponseDto;
     Asset expectedAsset;
     Long oneDay = 1000 * 60 * 60 * 24L;
     java.util.Date now;
@@ -78,7 +77,7 @@ public class AssetServiceImplTest {
         assetRequestDto.setLocationId(1);
         assetRequestDto.setInstalledDate(new Date(now.getTime() - oneDay));
 
-        entityCheckUtils =new EntityCheckUtils();
+        entityCheckUtils = mock(EntityCheckUtils.class);
         asset = mock(Asset.class);
         modelMapper = mock(ModelMapper.class);
         returning = mock(Returning.class);
@@ -88,6 +87,16 @@ public class AssetServiceImplTest {
         assetRepository = mock(AssetRepository.class);
         assetMapper = mock(AssetMapper.class);
         returningRepository = mock(ReturningRepository.class);
+        locationRepository = mock(LocationRepository.class);
+        presentIdRepository = mock(PresentIdRepository.class);
+
+        initialAsset = new Asset();
+        expectedAsset = new Asset();
+        initialCategory = new Category();
+        initialLocation = new Location();
+        initialPresentId = new PresentId();
+        expectedAssetResponseDto = AssetResponseDto.builder().build();
+
         assetServiceImpl = AssetServiceImpl
                 .builder()
                 .entityCheckUtils(entityCheckUtils)
@@ -95,117 +104,89 @@ public class AssetServiceImplTest {
                 .assetMapper(assetMapper)
                 .assetRepository(assetRepository)
                 .returningRepository(returningRepository)
+                .locationRepository(locationRepository)
+                .presentIdRepository(presentIdRepository)
                 .build();
-
-        initialAsset = new Asset();
-        expectedAsset = new Asset();
     }
 
     @Test
-    void create_ShouldThrowNullPointerException_WhenParamsIsNull() {
-        assetRequestDto.setName(null);
+    void create_ShouldAssetResponseDto_WhenRequestValid() {
+        assetRequestDto.setName("hahah2");
+        assetRequestDto.setCategoryId("pc");
+        assetRequestDto.setLocationId(1);
+        initialPresentId.setAssetId(15);
+        expectedAssetResponseDto.setName("hahah2");
 
-        NullPointerException exception = Assertions.assertThrows(NullPointerException.class,
-                () -> assetServiceImpl.createAsset(assetRequestDto));
+        doNothing().when(entityCheckUtils).assetCheckInsert(assetRequestDto);
+        when(categoryRepository.findById("pc")).thenReturn(Optional.ofNullable(initialCategory));
+        when(locationRepository.findById(1)).thenReturn(Optional.ofNullable(initialLocation));
+        when(presentIdRepository.findById("count")).thenReturn(Optional.ofNullable(initialPresentId));
+        when(assetMapper.toEntityCreate(anyString(),any(AssetRequestDto.class),any(Category.class),any(Location.class))).thenReturn(initialAsset);
 
-        Assertions.assertEquals("null name", exception.getMessage());
+        when(presentIdRepository.save(any(PresentId.class))).thenReturn(initialPresentId);
+        when(assetRepository.save(initialAsset)).thenReturn(initialAsset);
+        when(assetMapper.toDto(initialAsset)).thenReturn(expectedAssetResponseDto);
+
+        AssetResponseDto exception = assetServiceImpl.createAsset(assetRequestDto);
+
+        Assertions.assertEquals("hahah2", exception.getName());
     }
-
     @Test
-    void create_ShouldThrowIllegalArgumentException_WhenParamsIsEmptyString() {
-        assetRequestDto.setName("");
+    void create_ShouldThrowIllegalArgumentException_WhenWarehouseIsFull() {
+        assetRequestDto.setName("hahah2");
+        assetRequestDto.setCategoryId("pc");
+        assetRequestDto.setLocationId(1);
+        initialPresentId.setAssetId(1000000);
+        expectedAssetResponseDto.setName("hahah2");
+
+        doNothing().when(entityCheckUtils).assetCheckInsert(assetRequestDto);
+        when(categoryRepository.findById("pc")).thenReturn(Optional.ofNullable(initialCategory));
+        when(locationRepository.findById(1)).thenReturn(Optional.ofNullable(initialLocation));
+        when(presentIdRepository.findById("count")).thenReturn(Optional.ofNullable(initialPresentId));
+        when(assetMapper.toEntityCreate(anyString(),any(AssetRequestDto.class),any(Category.class),any(Location.class))).thenReturn(initialAsset);
 
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
                 () -> assetServiceImpl.createAsset(assetRequestDto));
 
-        Assertions.assertEquals("empty name", exception.getMessage());
-    }
-
-    @Test
-    void create_ShouldThrowIllegalArgumentException_WhenNameTooLong() {
-        assetRequestDto.setName("aaaaaaaaaaaKaaaaaaaaaaaKaaaaaaaaaaaKaaaaaaaaaaaKaaaaaaaaaaa");
-
-        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
-                () -> assetServiceImpl.createAsset(assetRequestDto));
-
-
-        Assertions.assertEquals("name is too long, name up to 50 characters long", exception.getMessage());
-    }
-
-    @Test
-    void create_ShouldThrowIllegalArgumentException_WhenSpecificationTooLong() {
-        String str = "";
-        for (int i = 0; i < 51; i++) {
-            str += "1234567890";
-        }
-        assetRequestDto.setSpecification(str);
-
-        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
-                () -> assetServiceImpl.createAsset(assetRequestDto));
-
-
-        Assertions.assertEquals("specification is too long, specification up to 500 characters long", exception.getMessage());
-    }
-
-    @Test
-    void create_ShouldThrowIllegalArgumentException_WhenInstalledDateNotPastDate() {
-        assetRequestDto.setInstalledDate(new Date(now.getTime() + oneDay));
-
-        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
-                () -> assetServiceImpl.createAsset(assetRequestDto));
-
-        Assertions.assertEquals("installed date must be a date in the past", exception.getMessage());
-    }
-
-    @Test
-    void create_ShouldThrowIllegalArgumentException_WhenNameHasSpecialCharacters() {
-        assetRequestDto.setName("hahah2~");
-
-        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
-                () -> assetServiceImpl.createAsset(assetRequestDto));
-
-        Assertions.assertEquals("Cannot contain special characters", exception.getMessage());
+        Assertions.assertEquals("Asset warehouse is full", exception.getMessage());
     }
 
 
     @Test
-    void update_ShouldThrowNullPointerException_WhenParamsIsNull() {
-        assetRequestDto.setName(null);
+    void update_ShouldAssetResponseDto_WhenRequestValid() {
+        assetRequestDto.setName("hahah2");
+        expectedAssetResponseDto.setName("hahah2");
 
-        NullPointerException exception = Assertions.assertThrows(NullPointerException.class,
+        doNothing().when(entityCheckUtils).assetCheckUpdate(assetRequestDto);
+        when(assetRepository.findById("PD000001")).thenReturn(Optional.ofNullable(initialAsset));
+
+
+        when(assetMapper.toEntityUpdate(assetRequestDto,initialAsset)).thenReturn(initialAsset);
+
+        when(presentIdRepository.save(any(PresentId.class))).thenReturn(initialPresentId);
+        when(assetRepository.save(initialAsset)).thenReturn(initialAsset);
+        when(assetMapper.toDto(initialAsset)).thenReturn(expectedAssetResponseDto);
+
+        AssetResponseDto exception = assetServiceImpl.updateAsset(assetRequestDto, "PD000001");
+
+        Assertions.assertEquals("hahah2", exception.getName());
+
+    }
+
+    @Test
+    void update_ShouldThrowResourceNotFoundException_WhenAssetNotExist() {
+        assetRequestDto.setName("hahah2");
+        expectedAssetResponseDto.setName("hahah2");
+
+        doNothing().when(entityCheckUtils).assetCheckUpdate(assetRequestDto);
+        when(assetRepository.findById("PD000002")).thenReturn(Optional.ofNullable(initialAsset));
+        when(assetMapper.toEntityUpdate(assetRequestDto,initialAsset)).thenReturn(initialAsset);
+
+
+        ResourceNotFoundException exception = Assertions.assertThrows(ResourceNotFoundException.class,
                 () -> assetServiceImpl.updateAsset(assetRequestDto, "PD000001"));
+        Assertions.assertEquals("this asset not exist", exception.getMessage());
 
-        Assertions.assertEquals("null name", exception.getMessage());
-    }
-
-    @Test
-    void update_ShouldThrowIllegalArgumentException_WhenParamsIsEmptyString() {
-        assetRequestDto.setName("");
-
-        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
-                () -> assetServiceImpl.updateAsset(assetRequestDto, "PD000001"));
-
-        Assertions.assertEquals("empty name", exception.getMessage());
-    }
-
-    @Test
-    void update_ShouldThrowIllegalArgumentException_WhenInstalledDateNotPastDate() {
-        assetRequestDto.setInstalledDate(new Date(now.getTime() + oneDay));
-
-        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
-                () -> assetServiceImpl.updateAsset(assetRequestDto, "PD000001"));
-
-        Assertions.assertEquals("installed date must be a date in the past", exception.getMessage());
-    }
-
-    @Test
-    void update_ShouldThrowIllegalArgumentException_WhenNameHasSpecialCharacters() {
-        assetRequestDto.setName("hahah2~");
-
-        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
-                () -> assetServiceImpl.updateAsset(assetRequestDto, "PD000001"));
-
-        Assertions.assertEquals("Cannot contain special characters", exception.getMessage());
     }
 
     @Test
