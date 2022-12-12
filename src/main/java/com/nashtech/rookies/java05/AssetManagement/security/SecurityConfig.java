@@ -21,7 +21,6 @@ public class SecurityConfig {
     private static final String STAFF = "Staff";
     private static final String ADMIN = "Admin";
     private static final String[] AUTH_WHITELIST = {
-            // -- Swagger UI v2
             "/v3/api-docs/**",
             "/configuration/ui",
             "/swagger-resources/**",
@@ -75,6 +74,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.PUT, "/api/users/**").hasAnyAuthority(ADMIN)
 //assignments
                 .antMatchers(HttpMethod.POST, "/api/assignments").hasAnyAuthority(ADMIN)
+                .antMatchers(HttpMethod.GET, "/api/assignments").hasAnyAuthority(ADMIN)
                 .antMatchers(HttpMethod.PUT, "/api/assignments/**").hasAnyAuthority(ADMIN)
                 .antMatchers(HttpMethod.DELETE, "/api/assignments/**").hasAnyAuthority(ADMIN)
 

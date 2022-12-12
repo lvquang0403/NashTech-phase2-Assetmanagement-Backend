@@ -46,7 +46,7 @@ public class UserMapper {
                 .lastName(user.getLastName())
                 .gender(user.getGender().getName())
                 .location(LocationResponseDto.builder().cityName(user.getLocation().getCityName()).id(user.getLocation().getId()).build())
-                .State(state)
+                .status(state)
                 .build();
         return responseDto;
     }

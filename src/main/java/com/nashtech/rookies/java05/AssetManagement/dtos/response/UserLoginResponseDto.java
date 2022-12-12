@@ -23,5 +23,5 @@ public class UserLoginResponseDto {
     private RoleResponseDto role;
     private LocationResponseDto location;
     private String accessToken;
-    private String State;
+    private String status;
 }
