@@ -65,8 +65,8 @@ public class CategoryServiceImplTest {
         categoryRequestDto.setName("computer");
         initialCategory.setName("posusiu");
         initialCategory.setId("ps");
-        Mockito.when(repository.findCategoriesByName("computer")).thenReturn(null);
-        Mockito.when(repository.findCategoriesById("Qs")).thenReturn(initialCategory);
+        Mockito.when(repository.findCategoriesByName("computer")).thenReturn(initialCategory);
+        Mockito.when(repository.findCategoriesById("Qs")).thenReturn(null);
 
         RepeatDataException exception = Assertions.assertThrows(RepeatDataException.class,
                 ()->service.createCategory(categoryRequestDto));
@@ -80,8 +80,8 @@ public class CategoryServiceImplTest {
         categoryRequestDto.setName("computer");
         initialCategory.setName("posusiu");
         initialCategory.setId("ps");
-        Mockito.when(repository.findCategoriesByName("computer")).thenReturn(initialCategory);
-        Mockito.when(repository.findCategoriesById("Qs")).thenReturn(null);
+        Mockito.when(repository.findCategoriesByName("computer")).thenReturn(null);
+        Mockito.when(repository.findCategoriesById("Qs")).thenReturn(initialCategory);
 
         RepeatDataException exception = Assertions.assertThrows(RepeatDataException.class,
                 ()->service.createCategory(categoryRequestDto));
@@ -103,8 +103,8 @@ public class CategoryServiceImplTest {
         expectedCategory.setName("computer");
         expectedResponseDto.setId("Qs");
 
-        Mockito.when(repository.findCategoriesByName("computer")).thenReturn(initialCategory);
-        Mockito.when(repository.findCategoriesById("Qs")).thenReturn(initialCategory);
+        Mockito.when(repository.findCategoriesByName("computer")).thenReturn(null);
+        Mockito.when(repository.findCategoriesById("Qs")).thenReturn(null);
         Mockito.when(categoryMapper.toEntity(any(CategoryRequestDto.class))).thenReturn(expectedCategory);
         Mockito.when(repository.save(any(Category.class))).thenReturn(expectedCategory);
         Mockito.when(categoryMapper.toDto(expectedCategory)).thenReturn(expectedResponseDto);
