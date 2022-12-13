@@ -107,8 +107,8 @@ public class AssignmentServiceImpl implements AssignmentService {
         Assignment foundAssignment = assignmentRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException(String.format("Assignment with id %s is not found", id))
         );
-        if (foundAssignment.getState() != AssignmentState.WAITING) {
-            throw new BadRequestException("Only can delete assignments that have state is WATING");
+        if (foundAssignment.getState() != AssignmentState.WAITING && foundAssignment.getState() != AssignmentState.DECLINED) {
+            throw new BadRequestException("Only can delete assignments that have state is WAITING or DECLINED");
         }
         foundAssignment.getAsset().setState(AssetState.AVAILABLE);
         assignmentRepository.save(foundAssignment);

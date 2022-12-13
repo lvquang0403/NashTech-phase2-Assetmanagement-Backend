@@ -31,7 +31,7 @@ public class Assignment {
     @Column(name = "assigned_date")
     private Date assignedDate;
 
-    @Column(name = "note")
+    @Column(name = "note",  columnDefinition = "TEXT")
     private String note;
 
     @Column(name = "state")
