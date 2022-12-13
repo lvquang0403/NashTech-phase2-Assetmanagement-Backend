@@ -24,7 +24,7 @@ public class Asset {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "specification")
+    @Column(name = "specification",columnDefinition = "TEXT")
     private String specification;
 
     @Column(name = "state")
