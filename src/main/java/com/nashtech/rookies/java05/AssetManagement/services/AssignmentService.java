@@ -12,7 +12,7 @@ public interface AssignmentService {
     void updateAssignment(AssignmentDto dto, Integer id);
     void deleteAssignment(Integer id);
     APIResponse<List<AssignmentResponseDto>> getAssignmentByPredicates
-            (List<String> stateFilterList, String assignDate, String keyword, int page, String orderBy);
+            (List<String> stateFilterList, String assignDate, String keyword, int page, String orderBy, int locationId);
     AssignmentDetailDto getAssignment(int id);
     APIResponse<List<AssignmentResponseDto>> getAssignmentsByUser
             (String id, int page, String orderBy);

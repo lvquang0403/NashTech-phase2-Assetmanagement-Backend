@@ -35,9 +35,11 @@ public class AssignmentController {
              @RequestParam(required = false) String assignDate,
              @RequestParam(required = false, defaultValue = "") String keyword,
              @RequestParam(value = "page", required = false, defaultValue = "0") int page,
-             @RequestParam(defaultValue = "updatedWhen_DESC") String orderBy) {
+             @RequestParam(defaultValue = "updatedWhen_DESC") String orderBy,
+             @RequestParam int locationId
+             ) {
 
-        return assignmentService.getAssignmentByPredicates(states, assignDate, keyword, page, orderBy);
+        return assignmentService.getAssignmentByPredicates(states, assignDate, keyword, page, orderBy, locationId);
     }
 
     @GetMapping("/{id}")

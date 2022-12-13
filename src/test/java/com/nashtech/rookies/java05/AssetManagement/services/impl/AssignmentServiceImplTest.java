@@ -330,6 +330,7 @@ class AssignmentServiceImplTest {
 
     @Test
     void getAssignments_ShouldReturnValue() {
+        int locationId = 1;
         Page<Assignment> result = Mockito.mock(Page.class);
         String orderBy = "updatedWhen_DESC";
 
@@ -341,7 +342,7 @@ class AssignmentServiceImplTest {
         List<String> statesString = new ArrayList<>();
 
         Pageable pageable = PageRequest.of(0, 15, Sort.Direction.DESC, "updatedWhen");
-        when(assignmentRepository.findByPredicates(states, "2022-11-30", "la", pageable))
+        when(assignmentRepository.findByPredicates(states, "2022-11-30", "la", locationId, pageable))
                 .thenReturn(result);
 
         when(assignmentMapper2.toListResponseDto(any()))
@@ -351,7 +352,7 @@ class AssignmentServiceImplTest {
 
         APIResponse<List<AssignmentResponseDto>> listResult =
                 assignmentServiceImpl.getAssignmentByPredicates
-                        (statesString, "2022-11-30", "LA", 0, orderBy);
+                        (statesString, "2022-11-30", "LA", 0, orderBy, locationId);
 
         MatcherAssert.assertThat(expected, is(listResult));
     }
