@@ -17,6 +17,7 @@ import java.util.List;
 public interface AssignmentRepository extends JpaRepository<Assignment, Integer> {
     @Query(value = "SELECT a FROM Assignment a join a.asset" +
             " WHERE (a.state IN :states)" +
+            " AND (a.asset.location.id = :locationId)" +
             " AND ( not exists (SELECT r FROM a.returning r) OR " +
             " exists(SELECT r FROM a.returning r WHERE r.state = 'WAITING_FOR_RETURNING'))" +
             " AND (to_char(a.assignedDate, 'yyyy-mm-dd')= :assignDate Or :assignDate is null) " +
@@ -28,6 +29,7 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Integer>
             @Param("states") List<AssignmentState> states,
             @Param("assignDate") String assignDate,
             @Param("keyword") String keyword,
+            @Param("locationId") int locationId,
             Pageable pageable
     );
 

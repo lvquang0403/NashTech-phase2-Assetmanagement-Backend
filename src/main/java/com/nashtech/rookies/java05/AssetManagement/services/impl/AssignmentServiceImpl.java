@@ -117,7 +117,7 @@ public class AssignmentServiceImpl implements AssignmentService {
 
     @Override
     public APIResponse<List<AssignmentResponseDto>> getAssignmentByPredicates
-            (List<String> stateFilterList, String assignDate, String keyword, int page, String orderBy) {
+            (List<String> stateFilterList, String assignDate, String keyword, int page, String orderBy, int locationId) {
         String[] parts = orderBy.split("_");
         String columnName = parts[0];
         String order = parts[1];
@@ -145,7 +145,7 @@ public class AssignmentServiceImpl implements AssignmentService {
 
         Page<Assignment> result;
         result = assignmentRepository.findByPredicates
-                (stateList, assignDate, keyword.toLowerCase(), pageable);
+                (stateList, assignDate, keyword.toLowerCase(), locationId, pageable);
         //return null;
         return new APIResponse<>(result.getTotalPages(),
                 assignmentMapper.toListResponseDto(result.toList()));
