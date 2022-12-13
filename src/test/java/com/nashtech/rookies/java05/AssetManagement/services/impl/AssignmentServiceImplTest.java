@@ -284,7 +284,7 @@ class AssignmentServiceImplTest {
                 .thenReturn(Optional.of(Assignment.builder().state(AssignmentState.ACCEPTED).build()));
         BadRequestException badRequestException = Assertions.assertThrows(BadRequestException.class,
                 () -> assignmentService.deleteAssignment(assignmentId));
-        assertThat(badRequestException.getMessage()).isEqualTo("Only can delete assignments that have state is WATING");
+        assertThat(badRequestException.getMessage()).isEqualTo("Only can delete assignments that have state is WAITING or DECLINED");
     }
 
     @Test
