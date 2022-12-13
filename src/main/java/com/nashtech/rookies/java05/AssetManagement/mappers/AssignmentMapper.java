@@ -41,7 +41,6 @@ public class AssignmentMapper {
                     .build();
             return assetViewResponseDto;
         }).collect(Collectors.toList());
-        System.out.println(assignmentListResponseDtos);
         return assignmentListResponseDtos;
     }
 

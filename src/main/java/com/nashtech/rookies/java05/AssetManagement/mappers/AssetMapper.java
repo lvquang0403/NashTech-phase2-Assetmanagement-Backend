@@ -76,7 +76,6 @@ public class AssetMapper {
                     .build();
             return assetViewResponseDto;
         }).collect(Collectors.toList());
-        System.out.println(assetViewResponseDtoList);
         return assetViewResponseDtoList;
     }
 
