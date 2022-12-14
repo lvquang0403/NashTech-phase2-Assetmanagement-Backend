@@ -5,5 +5,5 @@ import com.nashtech.rookies.java05.AssetManagement.dtos.response.ReportDto;
 import java.util.List;
 
 public interface ReportService {
-    public List<ReportDto> getDataForReport();
+    public List<ReportDto> getDataForReport(Integer locationId);
 }

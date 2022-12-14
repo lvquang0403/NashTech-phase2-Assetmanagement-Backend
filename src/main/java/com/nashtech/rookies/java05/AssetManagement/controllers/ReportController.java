@@ -4,10 +4,7 @@ import com.nashtech.rookies.java05.AssetManagement.dtos.response.ReportDto;
 import com.nashtech.rookies.java05.AssetManagement.services.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,8 +16,8 @@ public class ReportController {
     ReportService reportService;
 
     @GetMapping
-    public ResponseEntity getDataReport(){
-        List<ReportDto> listData=reportService.getDataForReport();
+    public ResponseEntity getDataReport(@RequestParam(required = false, defaultValue = "") Integer locationId){
+        List<ReportDto> listData=reportService.getDataForReport(locationId);
         return ResponseEntity.ok(listData);
     }
 }
