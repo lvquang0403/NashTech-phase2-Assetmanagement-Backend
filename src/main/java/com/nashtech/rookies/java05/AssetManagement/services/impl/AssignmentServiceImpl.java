@@ -57,9 +57,10 @@ public class AssignmentServiceImpl implements AssignmentService {
         if (assignTo.isDisabled()) {
             throw new BadRequestException(String.format("User is assigned with id %s is disabled", assignTo.getId()));
         }
-        foundAsset.setState(AssetState.ASSIGNED);
         Date dateNow = new Date();
         Timestamp now = new Timestamp(dateNow.getTime());
+        foundAsset.setState(AssetState.ASSIGNED);
+        foundAsset.setUpdatedWhen(now);
         Assignment newAssignment =  Assignment.builder()
                 .assignedBy(assignBy)
                 .assignedTo(assignTo)
@@ -89,10 +90,12 @@ public class AssignmentServiceImpl implements AssignmentService {
         if (!foundAssignment.getState().equals(AssignmentState.WAITING)) {
             throw new BadRequestException("Only can update assignment that have state is WATING");
         }
-        foundAsset.setState(AssetState.ASSIGNED);
         Date dateNow = new Date();
         Timestamp now = new Timestamp(dateNow.getTime());
+        foundAsset.setState(AssetState.ASSIGNED);
+        foundAsset.setUpdatedWhen(now);
         foundAssignment.getAsset().setState(AssetState.AVAILABLE);
+        foundAssignment.getAsset().setUpdatedWhen(now);
         assignmentRepository.save(foundAssignment);
         foundAssignment.setAssignedTo(assignTo);
         foundAssignment.setAssignedDate(dto.getAssignedDate());

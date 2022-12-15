@@ -98,6 +98,7 @@ public class ReturningServiceImpl implements ReturningService {
         foundReturning.setReturnedDate(now);
         foundReturning.setState(AssignmentReturnState.COMPLETED);
         foundReturning.getAsset().setState(AssetState.AVAILABLE);
+        foundReturning.getAsset().setUpdatedWhen(now);
         foundReturning.setAcceptedBy(acceptBy);
         returningRepository.save(foundReturning);
     }
