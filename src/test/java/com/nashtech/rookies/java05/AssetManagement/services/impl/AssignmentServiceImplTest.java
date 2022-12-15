@@ -201,7 +201,12 @@ class AssignmentServiceImplTest {
     @Test
     void testUpdateWhenAssignmentNotExistShouldThrowException() {
         Integer assignmentIdNotExist = 999;
-        AssignmentDto dto = Mockito.mock(AssignmentDto.class);
+        AssignmentDto dto = AssignmentDto.builder()
+                .assetId("assetId")
+                .assignTo("any")
+                .note("new note")
+                .assignedDate(Date.valueOf("2022-02-02"))
+                .build();
         ResourceNotFoundException resourceNotFoundException = Assertions.assertThrows(ResourceNotFoundException.class,
                 () -> assignmentService.updateAssignment(dto, assignmentIdNotExist));
         assertThat(resourceNotFoundException.getMessage()).isEqualTo(String.format("Assignment with id %s is not found", assignmentIdNotExist));
@@ -213,6 +218,8 @@ class AssignmentServiceImplTest {
         AssignmentDto dto = AssignmentDto.builder()
                 .assetId(assetIdNotExist)
                 .assignTo("any")
+                .note("new note")
+                .assignedDate(Date.valueOf("2022-02-02"))
                 .build();
         Mockito.when(assignmentRepository.findById(any())).thenReturn(Optional.of(Assignment.builder().state(AssignmentState.WAITING).build()));
         Mockito.when(userRepository.findById("any")).thenReturn(Optional.of(Mockito.mock(User.class)));
@@ -228,6 +235,8 @@ class AssignmentServiceImplTest {
         AssignmentDto dto = AssignmentDto.builder()
                 .assetId("any")
                 .assignTo(assignToIdNotExist)
+                .note("new note")
+                .assignedDate(Date.valueOf("2022-02-02"))
                 .build();
         Mockito.when(assignmentRepository.findById(any())).thenReturn(Optional.of(Assignment.builder().state(AssignmentState.WAITING).build()));
         ResourceNotFoundException resourceNotFoundException = Assertions.assertThrows(ResourceNotFoundException.class,
