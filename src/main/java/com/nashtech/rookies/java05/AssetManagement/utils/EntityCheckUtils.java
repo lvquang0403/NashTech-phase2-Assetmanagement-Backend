@@ -1,12 +1,19 @@
 package com.nashtech.rookies.java05.AssetManagement.utils;
 
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssetRequestDto;
+import com.nashtech.rookies.java05.AssetManagement.dtos.request.AssignmentDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.CategoryRequestDto;
 import com.nashtech.rookies.java05.AssetManagement.dtos.request.RequestReturnDto;
+import com.nashtech.rookies.java05.AssetManagement.utils.constants.ErrorMessage;
 import org.springframework.stereotype.Component;
 
+import java.sql.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 public class EntityCheckUtils {
@@ -162,5 +169,42 @@ public class EntityCheckUtils {
         if (dto.getAssignmentId() == null) {
             throw new NullPointerException("null Assignment");
         }
+    }
+
+    public static Map<String, String> checkAssignmentCreate(AssignmentDto dto){
+        Map<String, String> validationError = new HashMap<>();
+        String assignByField = dto.getAssignBy();
+        if(assignByField.equals("")){
+            validationError.put("AssignBy", ErrorMessage.REQUIRED_FIELD);
+        }
+        Map<String, String> results = EntityCheckUtils.checkAssignmentUpdate(dto);
+        if(results.isEmpty() && validationError.isEmpty()){
+            return results;
+        }
+        //combine two errorMap
+        validationError.putAll(results);
+        return validationError;
+    }
+    public static Map<String, String> checkAssignmentUpdate(AssignmentDto dto){
+        Map<String, String> validationError = new HashMap<>();
+        String assignToField = dto.getAssignTo();
+        String noteField = dto.getNote();
+        String assetIdField = dto.getAssetId();
+        Date assignDateField = dto.getAssignedDate();
+
+
+        if(assignToField.equals("")){
+            validationError.put("AssignTo", ErrorMessage.REQUIRED_FIELD);
+        }
+        if(noteField.equals("")){
+            validationError.put("note", ErrorMessage.REQUIRED_FIELD);
+        }
+        if(assignDateField == null){
+            validationError.put("assignDate", ErrorMessage.REQUIRED_FIELD);
+        }
+        if(assetIdField.equals("")){
+            validationError.put("assetIdField", ErrorMessage.REQUIRED_FIELD);
+        }
+        return validationError;
     }
 }

@@ -14,6 +14,7 @@ import com.nashtech.rookies.java05.AssetManagement.exceptions.BadRequestExceptio
 import com.nashtech.rookies.java05.AssetManagement.exceptions.ResourceNotFoundException;
 import com.nashtech.rookies.java05.AssetManagement.mappers.AssignmentMapper;
 import com.nashtech.rookies.java05.AssetManagement.repository.AssignmentRepository;
+import com.nashtech.rookies.java05.AssetManagement.utils.EntityCheckUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -42,6 +43,10 @@ public class AssignmentServiceImpl implements AssignmentService {
     private AssignmentMapper assignmentMapper;
     @Override
     public AssignmentResponseDto createAssignment(AssignmentDto dto) {
+        Map<String, String> errorValidations =  EntityCheckUtils.checkAssignmentCreate(dto);
+        if(!errorValidations.isEmpty()){
+            throw new IllegalArgumentException(errorValidations.toString());
+        }
         User assignTo = userRepository.findById(dto.getAssignTo()).orElseThrow(
                 () -> new ResourceNotFoundException(String.format("User with id %s is not found", dto.getAssignTo()))
         );
@@ -78,6 +83,10 @@ public class AssignmentServiceImpl implements AssignmentService {
     @Override
     @Transactional
     public void updateAssignment(AssignmentDto dto, Integer id) {
+        Map<String, String> errorValidations =  EntityCheckUtils.checkAssignmentUpdate(dto);
+        if(!errorValidations.isEmpty()){
+            throw new IllegalArgumentException(errorValidations.toString());
+        }
         Assignment foundAssignment = assignmentRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException(String.format("Assignment with id %s is not found", id))
         );
@@ -113,7 +122,10 @@ public class AssignmentServiceImpl implements AssignmentService {
         if (foundAssignment.getState() != AssignmentState.WAITING && foundAssignment.getState() != AssignmentState.DECLINED) {
             throw new BadRequestException("Only can delete assignments that have state is WAITING or DECLINED");
         }
+        Date dateNow = new Date();
+        Timestamp now = new Timestamp(dateNow.getTime());
         foundAssignment.getAsset().setState(AssetState.AVAILABLE);
+        foundAssignment.getAsset().setUpdatedWhen(now);
         assignmentRepository.save(foundAssignment);
         assignmentRepository.delete(foundAssignment);
     }
